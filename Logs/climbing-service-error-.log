@@ -1,0 +1,3 @@
+2022-03-27 13:21:34 ERROR ClimbingAPI.Services.ClimbingSpotService.Delete - ERROR for: delete action from ClimbingSpotService. ID: "7" not found.
+2022-03-27 13:29:24 ERROR ClimbingAPI.Services.ClimbingSpotService.Delete - ERROR for: DELETE action from ClimbingSpotService. ID: "7" not found.
+2022-03-27 13:30:44 ERROR ClimbingAPI.Services.ClimbingSpotService.Delete - ERROR for: DELETE action from ClimbingSpotService. ID: "7" not found.
