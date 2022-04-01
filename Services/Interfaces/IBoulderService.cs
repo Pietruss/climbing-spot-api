@@ -13,5 +13,7 @@ namespace ClimbingAPI.Services.Interfaces
         int Create(CreateBoulderModelDto dto, int climbingSpotId);
         BoulderDto Get(int boulderId, int climbingSpotId);
         List<BoulderDto> GetAll(int climbingSpotId);
+        void Delete(int boulderId, int climbingSpotId);
+        void DeleteAll(int climbingSpotId);
     }
 }

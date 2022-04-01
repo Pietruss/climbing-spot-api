@@ -44,5 +44,19 @@ namespace ClimbingAPI.Controllers
             var climbingList = _service.GetAll(climbingSpotId);
             return Ok(climbingList);
         }
+
+        [HttpDelete("{boulderId}")]
+        public ActionResult Delete([FromRoute] int boulderId, [FromRoute] int climbingSpotId)
+        {
+            _service.Delete(boulderId, climbingSpotId);
+            return NoContent();
+        }
+
+        [HttpDelete]
+        public ActionResult DeleteAll([FromRoute] int climbingSpotId)
+        {
+            _service.DeleteAll(climbingSpotId);
+            return NoContent();
+        }
     }
 }

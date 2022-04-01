@@ -34,6 +34,7 @@ namespace ClimbingAPI.Services
             var climbingSpots = _dbContext
                 .ClimbingSpot
                 .Include(x => x.Address)
+                .Include(x => x.Boulder)
                 .ToList();
 
             var climbingSpotsDto = _mapper.Map<List<ClimbingSpotDto>>(climbingSpots);

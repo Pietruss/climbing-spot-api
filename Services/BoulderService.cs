@@ -34,9 +34,7 @@ namespace ClimbingAPI.Services
         {
             _logger.LogInformation($"INFO for: CREATE action from BoulderService. Climbing Spot ID: \"{climbingSpotId}\".");
 
-            var id = _dbContext.ClimbingSpot.FirstOrDefault(x => x.Id == climbingSpotId);
-            if (id is null)
-                throw new NotFoundException($"Climbing spot with boulderId: {climbingSpotId} not found.");
+            GetClimbingSpotById(climbingSpotId);
 
             var boulderEntity = _mapper.Map<Boulder>(dto);
             boulderEntity.ClimbingSpotId = climbingSpotId;
@@ -53,13 +51,14 @@ namespace ClimbingAPI.Services
         {
             _logger.LogInformation($"INFO for: GET action from BoulderService. Boulder Id: \"{boulderId}\", Climbing Spot Id: {climbingSpotId}.");
 
-            var climbingSpot = _dbContext.ClimbingSpot.FirstOrDefault(x => x.Id == climbingSpotId);
-            if(climbingSpot is null)
-                throw new NotFoundException($"Climbing spot with ID: {climbingSpotId} not found.");
+            var climbingSpot = GetClimbingSpotById(climbingSpotId);
 
             var boulder = _dbContext.Boulder.FirstOrDefault(x => x.Id == boulderId);
             if (boulder is null || boulder.ClimbingSpotId != climbingSpotId)
+            {
+                _logger.LogError($"ERROR for: GET action from Boulder Service. Boulder ID: \"{boulderId}\" in Climbing Spot ID: {climbingSpotId} not found.");
                 throw new NotFoundException($"Boulder with ID: {boulderId} not found for Climbing spot with ID: {climbingSpotId}.");
+            }
 
             var boulderDto = _mapper.Map<BoulderDto>(boulder);
 
@@ -70,16 +69,52 @@ namespace ClimbingAPI.Services
         {
             _logger.LogInformation($"INFO for: GETALL action from BoulderService. Climbing Spot Id: {climbingSpotId}.");
 
-            var climbingSpot = _dbContext
-                .ClimbingSpot
-                .Include(x => x.Boulder)
-                .FirstOrDefault(x => x.Id == climbingSpotId);
-            if(climbingSpot is null)
-                throw new NotFoundException($"Climbing spot with ID: {climbingSpotId} not found.");
-
+            var climbingSpot = GetClimbingSpotById(climbingSpotId);
             var boulderListDto = _mapper.Map<List<BoulderDto>>(climbingSpot.Boulder);
 
             return boulderListDto;
+        }
+
+        public void Delete(int boulderId, int climbingSpotId)
+        {
+            _logger.LogInformation($"INFO for: DELETE action from BoulderService. Boulder Id: {boulderId}.");
+
+            GetClimbingSpotById(climbingSpotId);
+            
+            var boulder = _dbContext.Boulder.FirstOrDefault(x => x.Id == boulderId);
+            if (boulder is null || boulder.ClimbingSpotId != climbingSpotId)
+            {
+                _logger.LogError($"ERROR for: DELETE action from Boulder Service. Boulder with ID: \"{boulderId}\" not found.");
+                throw new NotFoundException($"Boulder with ID: {boulderId} for Climbing Spot ID: {climbingSpotId} not found.");
+            }
+
+            _dbContext.Boulder.Remove(boulder);
+            _dbContext.SaveChanges();
+        }
+
+        public void DeleteAll(int climbingSpotId)
+        {
+            _logger.LogInformation($"INFO for: DELETEALL action from BoulderService. Climbing Spot Id: {climbingSpotId}.");
+
+            var climbingSpot = GetClimbingSpotById(climbingSpotId);
+            _dbContext.RemoveRange(climbingSpot.Boulder);
+
+            _dbContext.SaveChanges();
+        }
+
+        private ClimbingSpot GetClimbingSpotById(int id)
+        {
+            var climbingSpot =_dbContext
+                .ClimbingSpot
+                .Include(x => x.Boulder)
+                .FirstOrDefault(x => x.Id == id);
+            if (climbingSpot is null)
+            {
+                _logger.LogError($"ERROR: action from Boulder Service GetClimbingSpotById(). Climbing Spot with ID: \"{id}\" not found.");
+                throw new NotFoundException($"Climbing Spot with ID: \"{id}\" not found.");
+            }
+
+            return climbingSpot;
         }
     }
 }
