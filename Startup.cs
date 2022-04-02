@@ -31,10 +31,11 @@ namespace ClimbingAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             #region loginConfig
             var authenticationSettings = new AuthenticationSettings();
             Configuration.GetSection("Authentication").Bind(authenticationSettings);
+
+            services.AddSingleton(authenticationSettings);
 
             services.AddAuthentication(option =>
             {
@@ -69,6 +70,7 @@ namespace ClimbingAPI
             services.AddScoped<IValidator<CreateUserDto>, CreateUserDtoValidator>();
             services.AddScoped<IValidator<CreateBoulderModelDto>, CreateBoulderModelDtoValidator>();
             services.AddScoped<IValidator<CreateClimbingSpotDto>, CreateClimbingSpotDtoValidator>();
+            services.AddScoped<IValidator<LoginUserDto>, LoginUserDtoValidator>();
             #endregion
 
             #region others
@@ -77,6 +79,8 @@ namespace ClimbingAPI
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddDbContext<ClimbingDbContext>();
             services.AddScoped<ClimbingSpotSeeder>();
+            services.AddSwaggerGen();
+
             #endregion
 
         }
@@ -96,8 +100,16 @@ namespace ClimbingAPI
 
             app.UseHttpsRedirection();
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Climbing API");
+            });
+
+
             app.UseRouting();
 
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

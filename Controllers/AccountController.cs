@@ -24,5 +24,12 @@ namespace ClimbingAPI.Controllers
             return Created("User has been created.", null);
         }
 
+        [HttpPost("login")]
+        public ActionResult Login([FromBody]LoginUserDto dto)
+        {
+            var token = _service.GenerateJwt(dto);
+            return Ok(token);
+        }
+
     }
 }

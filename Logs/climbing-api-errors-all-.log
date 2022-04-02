@@ -596,3 +596,5 @@ EXCEPTION OCCURRED:System.Text.Json.JsonException A possible object cycle was de
 2022-04-01 16:08:00 ERROR ClimbingAPI.Services.BoulderService.Delete - ERROR for: DELETE action from Boulder Service. Boulder with ID: "7" not found.
 2022-04-01 16:08:42 ERROR ClimbingAPI.Services.BoulderService.Delete - ERROR for: DELETE action from Boulder Service. Boulder with ID: "7" not found.
 2022-04-01 16:10:11 ERROR ClimbingAPI.Services.BoulderService.GetClimbingSpotById - ERROR: action from Boulder Service GetClimbingSpotById(). Climbing Spot with ID: "1" not found.
+2022-04-02 20:02:48 ERROR ClimbingAPI.Services.AccountService.VerifyHashedPassword - Invalid username or password.
+2022-04-02 20:03:20 ERROR ClimbingAPI.Services.AccountService.VerifyHashedPassword - Invalid username or password.

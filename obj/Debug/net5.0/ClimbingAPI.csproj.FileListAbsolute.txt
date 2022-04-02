@@ -72,3 +72,7 @@ E:\work\files\climbing2\ClimbingAPI\bin\Debug\net5.0\FluentValidation.AspNetCore
 E:\work\files\climbing2\ClimbingAPI\bin\Debug\net5.0\FluentValidation.DependencyInjectionExtensions.dll
 E:\work\files\climbing2\ClimbingAPI\obj\Debug\net5.0\ClimbingAPI.MvcApplicationPartsAssemblyInfo.cs
 E:\work\files\climbing2\ClimbingAPI\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+E:\work\files\climbing2\ClimbingAPI\bin\Debug\net5.0\Microsoft.OpenApi.dll
+E:\work\files\climbing2\ClimbingAPI\bin\Debug\net5.0\Swashbuckle.AspNetCore.Swagger.dll
+E:\work\files\climbing2\ClimbingAPI\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+E:\work\files\climbing2\ClimbingAPI\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
