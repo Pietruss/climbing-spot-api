@@ -1,3 +1,18 @@
 2022-03-27 13:21:34 ERROR ClimbingAPI.Services.ClimbingSpotService.Delete - ERROR for: delete action from ClimbingSpotService. ID: "7" not found.
 2022-03-27 13:29:24 ERROR ClimbingAPI.Services.ClimbingSpotService.Delete - ERROR for: DELETE action from ClimbingSpotService. ID: "7" not found.
 2022-03-27 13:30:44 ERROR ClimbingAPI.Services.ClimbingSpotService.Delete - ERROR for: DELETE action from ClimbingSpotService. ID: "7" not found.
+2022-04-01 15:35:18 ERROR ClimbingAPI.Services.BoulderService.Delete - ERROR for: DELETE action from Boulder Service. ID: "1" not found.
+2022-04-01 15:36:58 ERROR ClimbingAPI.Services.BoulderService.Delete - ERROR for: DELETE action from Boulder Service. ID: "44" not found.
+2022-04-01 15:37:42 ERROR ClimbingAPI.Services.BoulderService.Delete - ERROR for: DELETE action from Boulder Service. ID: "4" not found.
+2022-04-01 15:45:36 ERROR ClimbingAPI.Services.BoulderService.Delete - ERROR for: DELETE action from Boulder Service. Boulder with ID: "5" not found.
+2022-04-01 15:46:15 ERROR ClimbingAPI.Services.BoulderService.Delete - ERROR for: DELETE action from Boulder Service. Boulder with ID: "6" not found.
+2022-04-01 15:46:33 ERROR ClimbingAPI.Services.BoulderService.Delete - ERROR for: DELETE action from Boulder Service. Boulder with ID: "7" not found.
+2022-04-01 15:47:21 ERROR ClimbingAPI.Services.BoulderService.Delete - ERROR for: DELETE action from Boulder Service. Boulder with ID: "7" not found.
+2022-04-01 16:02:12 ERROR ClimbingAPI.Services.BoulderService.Get - ERROR for: GET action from Boulder Service. Boulder ID: "71" in Climbing Spot ID: 1 not found.
+2022-04-01 16:02:19 ERROR ClimbingAPI.Services.BoulderService.GetClimbingSpotById - ERROR: action from Boulder Service GetClimbingSpotById(). Climbing Spot with ID: "12" not found.
+2022-04-01 16:04:15 ERROR ClimbingAPI.Services.BoulderService.GetClimbingSpotById - ERROR: action from Boulder Service GetClimbingSpotById(). Climbing Spot with ID: "222" not found.
+2022-04-01 16:04:32 ERROR ClimbingAPI.Services.BoulderService.GetClimbingSpotById - ERROR: action from Boulder Service GetClimbingSpotById(). Climbing Spot with ID: "12" not found.
+2022-04-01 16:04:50 ERROR ClimbingAPI.Services.BoulderService.GetClimbingSpotById - ERROR: action from Boulder Service GetClimbingSpotById(). Climbing Spot with ID: "32" not found.
+2022-04-01 16:08:00 ERROR ClimbingAPI.Services.BoulderService.Delete - ERROR for: DELETE action from Boulder Service. Boulder with ID: "7" not found.
+2022-04-01 16:08:42 ERROR ClimbingAPI.Services.BoulderService.Delete - ERROR for: DELETE action from Boulder Service. Boulder with ID: "7" not found.
+2022-04-01 16:10:11 ERROR ClimbingAPI.Services.BoulderService.GetClimbingSpotById - ERROR: action from Boulder Service GetClimbingSpotById(). Climbing Spot with ID: "1" not found.

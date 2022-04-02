@@ -39,3 +39,66 @@
 2022-03-31 22:27:59  INFO ClimbingAPI.Services.BoulderService.Get - INFO for: GET action from BoulderService. Boulder Id: "6", Climbing Spot Id: 1.
 2022-03-31 22:28:01  INFO ClimbingAPI.Services.BoulderService.Get - INFO for: GET action from BoulderService. Boulder Id: "66", Climbing Spot Id: 1.
 2022-03-31 22:28:14  INFO ClimbingAPI.Services.BoulderService.Get - INFO for: GET action from BoulderService. Boulder Id: "66", Climbing Spot Id: 155.
+2022-04-01 15:35:13  INFO ClimbingAPI.Services.BoulderService.Delete - INFO for: DELETE action from BoulderService. Boulder Id: 1.
+2022-04-01 15:36:21  INFO ClimbingAPI.Services.ClimbingSpotService.Get - INFO for: GET action from ClimbingSpotService. ID: "1".
+2022-04-01 15:36:51  INFO ClimbingAPI.Services.BoulderService.Delete - INFO for: DELETE action from BoulderService. Boulder Id: 44.
+2022-04-01 15:37:05  INFO ClimbingAPI.Services.BoulderService.Delete - INFO for: DELETE action from BoulderService. Boulder Id: 4.
+2022-04-01 15:37:24  INFO ClimbingAPI.Services.ClimbingSpotService.Get - INFO for: GET action from ClimbingSpotService. ID: "1".
+2022-04-01 15:37:39  INFO ClimbingAPI.Services.BoulderService.Delete - INFO for: DELETE action from BoulderService. Boulder Id: 4.
+2022-04-01 15:41:09  INFO ClimbingAPI.Services.BoulderService.Delete - INFO for: DELETE action from BoulderService. Boulder Id: 5.
+2022-04-01 15:42:25  INFO ClimbingAPI.Services.BoulderService.Delete - INFO for: DELETE action from BoulderService. Boulder Id: 5.
+2022-04-01 15:42:37  INFO ClimbingAPI.Services.ClimbingSpotService.Get - INFO for: GET action from ClimbingSpotService. ID: "1".
+2022-04-01 15:42:51  INFO ClimbingAPI.Services.ClimbingSpotService.Get - INFO for: GET action from ClimbingSpotService. ID: "1".
+2022-04-01 15:43:23  INFO ClimbingAPI.Services.BoulderService.Delete - INFO for: DELETE action from BoulderService. Boulder Id: 5.
+2022-04-01 15:44:07  INFO ClimbingAPI.Services.BoulderService.Delete - INFO for: DELETE action from BoulderService. Boulder Id: 5.
+2022-04-01 15:45:25  INFO ClimbingAPI.Services.BoulderService.Delete - INFO for: DELETE action from BoulderService. Boulder Id: 5.
+2022-04-01 15:45:42  INFO ClimbingAPI.Services.BoulderService.Delete - INFO for: DELETE action from BoulderService. Boulder Id: 6.
+2022-04-01 15:46:04  INFO ClimbingAPI.Services.BoulderService.Delete - INFO for: DELETE action from BoulderService. Boulder Id: 6.
+2022-04-01 15:46:20  INFO ClimbingAPI.Services.BoulderService.Delete - INFO for: DELETE action from BoulderService. Boulder Id: 7.
+2022-04-01 15:47:18  INFO ClimbingAPI.Services.BoulderService.Delete - INFO for: DELETE action from BoulderService. Boulder Id: 7.
+2022-04-01 15:59:17  INFO ClimbingAPI.Services.ClimbingSpotService.GetAll - INFO for: GETALL action from ClimbingSpotService.
+2022-04-01 15:59:36  INFO ClimbingAPI.Services.ClimbingSpotService.Get - INFO for: GET action from ClimbingSpotService. ID: "1".
+2022-04-01 16:00:37  INFO ClimbingAPI.Services.ClimbingSpotService.GetAll - INFO for: GETALL action from ClimbingSpotService.
+2022-04-01 16:00:45  INFO ClimbingAPI.Services.ClimbingSpotService.Get - INFO for: GET action from ClimbingSpotService. ID: "1".
+2022-04-01 16:00:50  INFO ClimbingAPI.Services.ClimbingSpotService.GetAll - INFO for: GETALL action from ClimbingSpotService.
+2022-04-01 16:01:45  INFO ClimbingAPI.Services.ClimbingSpotService.GetAll - INFO for: GETALL action from ClimbingSpotService.
+2022-04-01 16:01:50  INFO ClimbingAPI.Services.ClimbingSpotService.Get - INFO for: GET action from ClimbingSpotService. ID: "321".
+2022-04-01 16:01:55  INFO ClimbingAPI.Services.ClimbingSpotService.Get - INFO for: GET action from ClimbingSpotService. ID: "1".
+2022-04-01 16:02:04  INFO ClimbingAPI.Services.BoulderService.GetAll - INFO for: GETALL action from BoulderService. Climbing Spot Id: 1.
+2022-04-01 16:02:10  INFO ClimbingAPI.Services.BoulderService.Get - INFO for: GET action from BoulderService. Boulder Id: "7", Climbing Spot Id: 1.
+2022-04-01 16:02:12  INFO ClimbingAPI.Services.BoulderService.Get - INFO for: GET action from BoulderService. Boulder Id: "71", Climbing Spot Id: 1.
+2022-04-01 16:02:16  INFO ClimbingAPI.Services.BoulderService.Get - INFO for: GET action from BoulderService. Boulder Id: "7", Climbing Spot Id: 1.
+2022-04-01 16:02:19  INFO ClimbingAPI.Services.BoulderService.Get - INFO for: GET action from BoulderService. Boulder Id: "7", Climbing Spot Id: 12.
+2022-04-01 16:04:01  INFO ClimbingAPI.Services.BoulderService.Create - INFO for: CREATE action from BoulderService. Climbing Spot ID: "1".
+2022-04-01 16:04:15  INFO ClimbingAPI.Services.BoulderService.Create - INFO for: CREATE action from BoulderService. Climbing Spot ID: "222".
+2022-04-01 16:04:32  INFO ClimbingAPI.Services.BoulderService.Get - INFO for: GET action from BoulderService. Boulder Id: "7", Climbing Spot Id: 12.
+2022-04-01 16:04:36  INFO ClimbingAPI.Services.BoulderService.Get - INFO for: GET action from BoulderService. Boulder Id: "7", Climbing Spot Id: 1.
+2022-04-01 16:04:44  INFO ClimbingAPI.Services.BoulderService.GetAll - INFO for: GETALL action from BoulderService. Climbing Spot Id: 1.
+2022-04-01 16:04:50  INFO ClimbingAPI.Services.BoulderService.GetAll - INFO for: GETALL action from BoulderService. Climbing Spot Id: 32.
+2022-04-01 16:07:59  INFO ClimbingAPI.Services.BoulderService.Delete - INFO for: DELETE action from BoulderService. Boulder Id: 7.
+2022-04-01 16:08:10  INFO ClimbingAPI.Services.BoulderService.DeleteAll - INFO for: DELETEALL action from BoulderService. Climbing Spot Id: 2.
+2022-04-01 16:08:25  INFO ClimbingAPI.Services.ClimbingSpotService.Get - INFO for: GET action from ClimbingSpotService. ID: "2".
+2022-04-01 16:08:33  INFO ClimbingAPI.Services.ClimbingSpotService.Get - INFO for: GET action from ClimbingSpotService. ID: "1".
+2022-04-01 16:08:42  INFO ClimbingAPI.Services.BoulderService.Delete - INFO for: DELETE action from BoulderService. Boulder Id: 7.
+2022-04-01 16:08:47  INFO ClimbingAPI.Services.BoulderService.Delete - INFO for: DELETE action from BoulderService. Boulder Id: 7.
+2022-04-01 16:08:50  INFO ClimbingAPI.Services.ClimbingSpotService.Get - INFO for: GET action from ClimbingSpotService. ID: "1".
+2022-04-01 16:09:18  INFO ClimbingAPI.Services.ClimbingSpotService.Delete - INFO for: DELETE action from ClimbingSpotService. ID: "1".
+2022-04-01 16:09:24  INFO ClimbingAPI.Services.ClimbingSpotService.Get - INFO for: GET action from ClimbingSpotService. ID: "1".
+2022-04-01 16:09:48  INFO ClimbingAPI.Services.BoulderService.Create - INFO for: CREATE action from BoulderService. Climbing Spot ID: "2".
+2022-04-01 16:09:54  INFO ClimbingAPI.Services.ClimbingSpotService.Get - INFO for: GET action from ClimbingSpotService. ID: "2".
+2022-04-01 16:10:02  INFO ClimbingAPI.Services.BoulderService.Create - INFO for: CREATE action from BoulderService. Climbing Spot ID: "2".
+2022-04-01 16:10:05  INFO ClimbingAPI.Services.ClimbingSpotService.Get - INFO for: GET action from ClimbingSpotService. ID: "2".
+2022-04-01 16:10:11  INFO ClimbingAPI.Services.BoulderService.DeleteAll - INFO for: DELETEALL action from BoulderService. Climbing Spot Id: 1.
+2022-04-01 16:10:18  INFO ClimbingAPI.Services.BoulderService.DeleteAll - INFO for: DELETEALL action from BoulderService. Climbing Spot Id: 2.
+2022-04-01 16:10:21  INFO ClimbingAPI.Services.ClimbingSpotService.Get - INFO for: GET action from ClimbingSpotService. ID: "2".
+2022-04-01 22:05:23  INFO ClimbingAPI.Services.AccountService.Register - INFO for: REGISTER action from AccountService.
+2022-04-01 22:06:35  INFO ClimbingAPI.Services.AccountService.Register - INFO for: REGISTER action from AccountService.
+2022-04-01 22:29:42  INFO ClimbingAPI.Services.AccountService.Register - INFO for: REGISTER action from AccountService.
+2022-04-01 22:45:02  INFO ClimbingAPI.Services.AccountService.Register - INFO for: REGISTER action from AccountService.
+2022-04-01 23:09:12  INFO ClimbingAPI.Services.ClimbingSpotService.Create - INFO for: CREATE action from ClimbingSpotService.
+2022-04-01 23:09:18  INFO ClimbingAPI.Services.ClimbingSpotService.Create - INFO for: CREATE action from ClimbingSpotService.
+2022-04-01 23:10:19  INFO ClimbingAPI.Services.ClimbingSpotService.Create - INFO for: CREATE action from ClimbingSpotService.
+2022-04-01 23:11:02  INFO ClimbingAPI.Services.ClimbingSpotService.Create - INFO for: CREATE action from ClimbingSpotService.
+2022-04-01 23:11:06  INFO ClimbingAPI.Services.ClimbingSpotService.Create - INFO for: CREATE action from ClimbingSpotService.
+2022-04-01 23:11:10  INFO ClimbingAPI.Services.ClimbingSpotService.Create - INFO for: CREATE action from ClimbingSpotService.
+2022-04-01 23:11:19  INFO ClimbingAPI.Services.ClimbingSpotService.Create - INFO for: CREATE action from ClimbingSpotService.

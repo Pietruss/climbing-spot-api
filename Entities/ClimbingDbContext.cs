@@ -15,6 +15,8 @@ namespace ClimbingAPI.Entities
         public DbSet<ClimbingSpot> ClimbingSpot { get; set; }
         public DbSet<Address.Address> Addresses { get; set; }
         public DbSet<Boulder.Boulder> Boulder { get; set; }
+        public DbSet<Role> Role { get; set; }
+        public DbSet<User> User { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,6 +41,23 @@ namespace ClimbingAPI.Entities
             modelBuilder.Entity<Boulder.Boulder>()
                 .Property(x => x.Name)
                 .IsRequired();
+
+            modelBuilder.Entity<Role>()
+                .Property(x => x.Name)
+                .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .Property(x => x.Email)
+                .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .Property(x => x.LastName)
+                .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .Property(x => x.FirstName)
+                .IsRequired();
+
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

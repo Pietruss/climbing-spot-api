@@ -11,9 +11,7 @@ namespace ClimbingAPI.Models.ClimbingSpot
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        [EmailAddress]
         public string ContactEmail { get; set; }
-        [Phone]
         public string ContactNumber { get; set; }
     }
 }
