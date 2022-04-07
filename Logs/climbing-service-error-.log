@@ -18,3 +18,7 @@
 2022-04-01 16:10:11 ERROR ClimbingAPI.Services.BoulderService.GetClimbingSpotById - ERROR: action from Boulder Service GetClimbingSpotById(). Climbing Spot with ID: "1" not found.
 2022-04-02 20:02:48 ERROR ClimbingAPI.Services.AccountService.VerifyHashedPassword - Invalid username or password.
 2022-04-02 20:03:20 ERROR ClimbingAPI.Services.AccountService.VerifyHashedPassword - Invalid username or password.
+2022-04-03 17:57:39 ERROR ClimbingAPI.Services.BoulderService.GetClimbingSpotById - ERROR: action from Boulder Service GetClimbingSpotById(). Climbing Spot with ID: "-4127638" not found.
+2022-04-06 14:39:34 ERROR ClimbingAPI.Services.ClimbingSpotService.Update - INFO for: UPDATE action from ClimbingSpotService. ID: "-58619714".
+2022-04-06 14:39:59 ERROR ClimbingAPI.Services.ClimbingSpotService.Update - INFO for: UPDATE action from ClimbingSpotService. ID: "19".
+2022-04-06 14:40:29 ERROR ClimbingAPI.Services.ClimbingSpotService.Update - INFO for: UPDATE action from ClimbingSpotService. ID: "19".

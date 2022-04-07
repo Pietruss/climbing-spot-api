@@ -5,7 +5,6 @@ E:\work\files\climbing2\ClimbingAPI\bin\Debug\net5.0\ClimbingAPI.deps.json
 E:\work\files\climbing2\ClimbingAPI\bin\Debug\net5.0\ClimbingAPI.runtimeconfig.json
 E:\work\files\climbing2\ClimbingAPI\bin\Debug\net5.0\ClimbingAPI.runtimeconfig.dev.json
 E:\work\files\climbing2\ClimbingAPI\bin\Debug\net5.0\ClimbingAPI.dll
-E:\work\files\climbing2\ClimbingAPI\bin\Debug\net5.0\ref\ClimbingAPI.dll
 E:\work\files\climbing2\ClimbingAPI\bin\Debug\net5.0\ClimbingAPI.pdb
 E:\work\files\climbing2\ClimbingAPI\obj\Debug\net5.0\ClimbingAPI.GeneratedMSBuildEditorConfig.editorconfig
 E:\work\files\climbing2\ClimbingAPI\obj\Debug\net5.0\ClimbingAPI.AssemblyInfoInputs.cache
@@ -13,14 +12,12 @@ E:\work\files\climbing2\ClimbingAPI\obj\Debug\net5.0\ClimbingAPI.AssemblyInfo.cs
 E:\work\files\climbing2\ClimbingAPI\obj\Debug\net5.0\ClimbingAPI.csproj.CoreCompileInputs.cache
 E:\work\files\climbing2\ClimbingAPI\obj\Debug\net5.0\ClimbingAPI.MvcApplicationPartsAssemblyInfo.cache
 E:\work\files\climbing2\ClimbingAPI\obj\Debug\net5.0\staticwebassets\ClimbingAPI.StaticWebAssets.Manifest.cache
-E:\work\files\climbing2\ClimbingAPI\obj\Debug\net5.0\staticwebassets\ClimbingAPI.StaticWebAssets.xml
 E:\work\files\climbing2\ClimbingAPI\obj\Debug\net5.0\scopedcss\bundle\ClimbingAPI.styles.css
 E:\work\files\climbing2\ClimbingAPI\obj\Debug\net5.0\ClimbingAPI.RazorTargetAssemblyInfo.cache
 E:\work\files\climbing2\ClimbingAPI\obj\Debug\net5.0\ClimbingAPI.dll
 E:\work\files\climbing2\ClimbingAPI\obj\Debug\net5.0\ref\ClimbingAPI.dll
 E:\work\files\climbing2\ClimbingAPI\obj\Debug\net5.0\ClimbingAPI.pdb
 E:\work\files\climbing2\ClimbingAPI\obj\Debug\net5.0\ClimbingAPI.genruntimeconfig.cache
-E:\work\files\climbing2\ClimbingAPI\obj\Debug\net5.0\ClimbingAPI.csprojAssemblyReference.cache
 E:\work\files\climbing2\ClimbingAPI\bin\Debug\net5.0\Humanizer.dll
 E:\work\files\climbing2\ClimbingAPI\bin\Debug\net5.0\Microsoft.Data.SqlClient.dll
 E:\work\files\climbing2\ClimbingAPI\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.dll
@@ -76,3 +73,6 @@ E:\work\files\climbing2\ClimbingAPI\bin\Debug\net5.0\Microsoft.OpenApi.dll
 E:\work\files\climbing2\ClimbingAPI\bin\Debug\net5.0\Swashbuckle.AspNetCore.Swagger.dll
 E:\work\files\climbing2\ClimbingAPI\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 E:\work\files\climbing2\ClimbingAPI\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+E:\work\files\climbing2\ClimbingAPI\bin\Debug\net5.0\ref\ClimbingAPI.dll
+E:\work\files\climbing2\ClimbingAPI\obj\Debug\net5.0\ClimbingAPI.csprojAssemblyReference.cache
+E:\work\files\climbing2\ClimbingAPI\obj\Debug\net5.0\staticwebassets\ClimbingAPI.StaticWebAssets.xml

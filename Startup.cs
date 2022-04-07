@@ -1,4 +1,5 @@
 using System.Text;
+using ClimbingAPI.Authorization;
 using ClimbingAPI.Entities;
 using ClimbingAPI.Middleware;
 using ClimbingAPI.Models.ClimbingSpot;
@@ -8,6 +9,7 @@ using ClimbingAPI.Services;
 using ClimbingAPI.Services.Interfaces;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -73,6 +75,12 @@ namespace ClimbingAPI
             services.AddScoped<IValidator<LoginUserDto>, LoginUserDtoValidator>();
             #endregion
 
+            #region handlers
+
+            services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler>();
+
+            #endregion
+
             #region others
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddScoped<ErrorHandlingMiddleware>();
@@ -109,6 +117,7 @@ namespace ClimbingAPI
 
             app.UseRouting();
 
+            app.UseAuthorization();
             
             app.UseEndpoints(endpoints =>
             {

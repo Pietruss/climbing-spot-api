@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using ClimbingAPI.Authorization;
 using ClimbingAPI.Entities;
 using ClimbingAPI.Exceptions;
 using ClimbingAPI.Models.ClimbingSpot;
 using ClimbingAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
@@ -20,12 +23,14 @@ namespace ClimbingAPI.Services
         private readonly ClimbingDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly ILogger<ClimbingSpotService> _logger;
+        private readonly IAuthorizationService _authorizationService;
 
-        public ClimbingSpotService(ClimbingDbContext dbContext, IMapper mapper, ILogger<ClimbingSpotService>  logger)
+        public ClimbingSpotService(ClimbingDbContext dbContext, IMapper mapper, ILogger<ClimbingSpotService>  logger, IAuthorizationService authorizationService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _logger = logger;
+            _authorizationService = authorizationService;
         }
         public IEnumerable<ClimbingSpotDto> GetAll()
         {
@@ -60,20 +65,22 @@ namespace ClimbingAPI.Services
             return climbingSpotDto;
         }
 
-        public int Create(CreateClimbingSpotDto dto)
+        public int Create(CreateClimbingSpotDto dto, int userId)
         {
             _logger.LogInformation("INFO for: CREATE action from ClimbingSpotService.");
 
-            var newModel = _mapper.Map<ClimbingSpot>(dto);
+            var climbingSpot = _mapper.Map<ClimbingSpot>(dto);
 
-            _dbContext.ClimbingSpot.Add(newModel);
+            climbingSpot.CreatedById = userId;
+
+            _dbContext.ClimbingSpot.Add(climbingSpot);
 
             _dbContext.SaveChanges();
 
-            return newModel.Id;
+            return climbingSpot.Id;
         }
 
-        public void Delete(int id)
+        public void Delete(int id, ClaimsPrincipal user)
         {
             _logger.LogInformation($"INFO for: DELETE action from ClimbingSpotService. ID: \"{id}\".");
 
@@ -85,25 +92,41 @@ namespace ClimbingAPI.Services
                 throw new NotFoundException($"Restaurant with ID: {id} not found.");
             }
 
+            var authorizationResult = _authorizationService.AuthorizeAsync(user, climbingSpot,
+                new ResourceOperationRequirement(ResourceOperation.Delete)).Result;
+            if (!authorizationResult.Succeeded)
+            {
+                throw new ForbidException($"Authorization failed.");
+            }
+
             _dbContext.ClimbingSpot.Remove(climbingSpot);
             _dbContext.SaveChanges();
         }
 
-        public void Update(UpdateClimbingSpotDto dto, int id)
+        public void Update(UpdateClimbingSpotDto dto, int id, ClaimsPrincipal user)
         {
             _logger.LogError($"INFO for: UPDATE action from ClimbingSpotService. ID: \"{id}\".");
 
-            var climbingSpotToUpdate = _dbContext.ClimbingSpot.FirstOrDefault(x => x.Id == id);
+           
 
-            if (climbingSpotToUpdate is null)
+            var climbingSpot = _dbContext.ClimbingSpot.FirstOrDefault(x => x.Id == id);
+
+            if (climbingSpot is null)
                 throw new NotFoundException($"Restaurant with ID: {id} not found.");
 
-            climbingSpotToUpdate.Description = dto.Description;
-            climbingSpotToUpdate.Name = dto.Name;
-            climbingSpotToUpdate.ContactEmail = dto.ContactEmail;
-            climbingSpotToUpdate.ContactNumber = dto.ContactNumber;
+            var authorizationResult = _authorizationService.AuthorizeAsync(user, climbingSpot,
+                new ResourceOperationRequirement(ResourceOperation.Update)).Result;
+            if (!authorizationResult.Succeeded)
+            {
+                throw new ForbidException($"Authorization failed.");
+            }
 
-            _dbContext.Update(climbingSpotToUpdate);
+            climbingSpot.Description = dto.Description;
+            climbingSpot.Name = dto.Name;
+            climbingSpot.ContactEmail = dto.ContactEmail;
+            climbingSpot.ContactNumber = dto.ContactNumber;
+
+            _dbContext.Update(climbingSpot);
             _dbContext.SaveChanges();
         }
     }

@@ -19,6 +19,8 @@ namespace ClimbingAPI.Entities
         public virtual List<Boulder.Boulder> Boulder { get; set; }
         public string Author { get; set; }
         public DateTime ModificationTime { get; set; }
+        public int? CreatedById { get; set; }
+        public virtual User CreatedBy { get; set; }
 
     }
 }
