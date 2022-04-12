@@ -70,14 +70,27 @@ namespace ClimbingAPI.Services
             _logger.LogInformation("INFO for: CREATE action from ClimbingSpotService.");
 
             var climbingSpot = _mapper.Map<ClimbingSpot>(dto);
-
             climbingSpot.CreatedById = userId;
 
             _dbContext.ClimbingSpot.Add(climbingSpot);
+            _dbContext.SaveChanges();
+
+            GetUserClimbingSpotEntityByUserIdAndClimbingSpotId(userId, climbingSpot.Id);
 
             _dbContext.SaveChanges();
 
             return climbingSpot.Id;
+        }
+
+        private void GetUserClimbingSpotEntityByUserIdAndClimbingSpotId(int userId, int climbingSpotId)
+        {
+            var userClimbingSpotEntity =
+                _dbContext.UserClimbingSpot.FirstOrDefault(x => x.UserId == userId && x.ClimbingSpotId == null);
+            
+            if (userClimbingSpotEntity is null)
+                throw new NotFoundException($"User with ID: {userId} not found.");
+
+            userClimbingSpotEntity.ClimbingSpotId = climbingSpotId;
         }
 
         public void Delete(int id, ClaimsPrincipal user)
@@ -96,6 +109,7 @@ namespace ClimbingAPI.Services
                 new ResourceOperationRequirement(ResourceOperation.Delete)).Result;
             if (!authorizationResult.Succeeded)
             {
+                _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
                 throw new ForbidException($"Authorization failed.");
             }
 
@@ -107,17 +121,19 @@ namespace ClimbingAPI.Services
         {
             _logger.LogError($"INFO for: UPDATE action from ClimbingSpotService. ID: \"{id}\".");
 
-           
-
             var climbingSpot = _dbContext.ClimbingSpot.FirstOrDefault(x => x.Id == id);
 
             if (climbingSpot is null)
+            {
+                _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. ID: \"{id}\" not found.");
                 throw new NotFoundException($"Restaurant with ID: {id} not found.");
+            }
 
             var authorizationResult = _authorizationService.AuthorizeAsync(user, climbingSpot,
                 new ResourceOperationRequirement(ResourceOperation.Update)).Result;
             if (!authorizationResult.Succeeded)
             {
+                _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
                 throw new ForbidException($"Authorization failed.");
             }
 

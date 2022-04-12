@@ -60,7 +60,7 @@ namespace ClimbingAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update([FromBody] UpdateClimbingSpotDto dto, int id)
+        public ActionResult Update([FromBody] UpdateClimbingSpotDto dto, [FromRoute] int id)
         {   
             _service.Update(dto, id, User);
             return Ok();

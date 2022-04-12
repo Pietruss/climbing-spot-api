@@ -4,6 +4,7 @@ using ClimbingAPI.Entities;
 using ClimbingAPI.Middleware;
 using ClimbingAPI.Models.ClimbingSpot;
 using ClimbingAPI.Models.User;
+using ClimbingAPI.Models.UserClimbingSpot;
 using ClimbingAPI.Models.Validator;
 using ClimbingAPI.Services;
 using ClimbingAPI.Services.Interfaces;
@@ -73,11 +74,13 @@ namespace ClimbingAPI
             services.AddScoped<IValidator<CreateBoulderModelDto>, CreateBoulderModelDtoValidator>();
             services.AddScoped<IValidator<CreateClimbingSpotDto>, CreateClimbingSpotDtoValidator>();
             services.AddScoped<IValidator<LoginUserDto>, LoginUserDtoValidator>();
+            services.AddScoped<IValidator<UpdateUserClimbingSpotDto>, UpdateUserClimbingSpotDtoValidator>();
             #endregion
 
             #region handlers
 
-            services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler>();
+            services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementClimbingSpotHandler>();
+            services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementBoulderHandler>();
 
             #endregion
 

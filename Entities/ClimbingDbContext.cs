@@ -17,6 +17,7 @@ namespace ClimbingAPI.Entities
         public DbSet<Boulder.Boulder> Boulder { get; set; }
         public DbSet<Role> Role { get; set; }
         public DbSet<User> User { get; set; }
+        public DbSet<UserClimbingSpot> UserClimbingSpot { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

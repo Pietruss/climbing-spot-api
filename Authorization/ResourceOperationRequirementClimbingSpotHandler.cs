@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ClimbingAPI.Authorization
 {
-    public class ResourceOperationRequirementHandler: AuthorizationHandler<ResourceOperationRequirement, ClimbingSpot>
+    public class ResourceOperationRequirementClimbingSpotHandler: AuthorizationHandler<ResourceOperationRequirement, ClimbingSpot>
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, ResourceOperationRequirement requirement,
             ClimbingSpot climbingSpot)
@@ -21,6 +21,7 @@ namespace ClimbingAPI.Authorization
             }
 
             var userId = context.User.FindFirst(x => x.Type == ClaimTypes.NameIdentifier).Value;
+
             if (climbingSpot.CreatedById == int.Parse(userId))
             {
                 context.Succeed(requirement);

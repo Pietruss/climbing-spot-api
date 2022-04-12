@@ -22,3 +22,4 @@
 2022-04-06 14:39:34 ERROR ClimbingAPI.Services.ClimbingSpotService.Update - INFO for: UPDATE action from ClimbingSpotService. ID: "-58619714".
 2022-04-06 14:39:59 ERROR ClimbingAPI.Services.ClimbingSpotService.Update - INFO for: UPDATE action from ClimbingSpotService. ID: "19".
 2022-04-06 14:40:29 ERROR ClimbingAPI.Services.ClimbingSpotService.Update - INFO for: UPDATE action from ClimbingSpotService. ID: "19".
+2022-04-08 16:20:38 ERROR ClimbingAPI.Services.AccountService.Validate - ERROR for: UPDATE action from AccountService. Authorization failed.

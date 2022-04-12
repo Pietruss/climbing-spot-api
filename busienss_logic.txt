@@ -1,0 +1,48 @@
+logika biznesowa do projektu:
+użytkownik o roli boulder powinien mieć możliwość dodawania encji boulder do każdego climbingSpota w którym manager bądź admin ustawi mu rolę na boulder.
+
+Admin i manager posiada możliwość zmiany roli użytkownika na każdy z trzech typów ról: manager, boulder, user.
+
+
+todo:
+dodanie walidatora
+
+w tabeli User -> kolumna: ClimbingSpotId będzie odnosiła się tylko do roli Manager, Admin, Boulder, --- user będzie miał to ustawione na 0
+
+
+Rejestracja użytkownika:
+jeśli ma climbingSpotId na tabeli User na 0 - oznacza, że jest zwykłym użytkownikiem
+role ma możliwość nadania sobie przy rejestracji
+User ma możliwość przypisania jednego ClimbingSpota do konta
+
+
+
+
+
+Funkcjonalności:
+1. Utworzenie użytkownika - możliwość zaznaczenia czy jest się zwykłym userem (rola user), czy też właścicielem jakiegoś climbingSpota (rola manager).
+2. Logowanie użytkownika - otrzymuje token 
+3. Tworzenie climbing spotu:
+Każdy user z zaznaczoną rolą manager ma możliwość utworzenia climbing spota - docelowo nasza weryfikacja, czy climbing spot jest legitny
+4. Użytkownik z rolą boulder może być przypisany do wielu climbing spotów jednocześnie (może pracować w różnych miejscach w tym samym czasie)
+5. Użytkownik z rolą manager może być przypisany do wielu climbing spotów jednocześnie 
+5. Rola Boulder jest nadawana przez użytkownika z rolą (Admin bądź Manager). 
+6. 
+
+
+User journey:
+zwykły user:
+tworzę konto, mam możliwość obejrzenia wszystkich baldów jakie są w danym climbingSpocie, dodania ich do swoich ulubionych. Po utworzeniu konta, możliwość dodania balda do listy ulubionych baldów.
+
+Route setter:
+tworzę konto, user z rolą administratora bądź managera musi nadać mi rolę route setter aby mógł dodawać/edytować baldy w przypisanych do mnie climbingSpotach. Jeden route setter może mieć dostęp do wielu climbingSpotów.
+
+Manager:
+Tworzę konto, tworzę climbingSpot, mogę dodawać / usuwać bouldy przypisane do mojego climbing spota, mogę dodawać/usuwać użytkowników z rolą Route Setter, mogę nadzorować wiele climbing spotów, które są stworzone przeze mnie.
+
+
+Jak wpada to token to ja muszę wiedzieć:
+czy user jest określonej roli - admin / manager
+
+czy jest przypisany do danego climbingSpota - to wyciągam z tabeli UserClimbingSpot
+
