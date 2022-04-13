@@ -42,6 +42,7 @@ namespace ClimbingAPI.Services
 
             var boulderEntity = _mapper.Map<Boulder>(dto);
             boulderEntity.ClimbingSpotId = climbingSpotId;
+            boulderEntity.CreatedById = _userContext.GetUserId;
 
             _dbContext.Boulder.Add(boulderEntity);
             

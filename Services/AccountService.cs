@@ -44,14 +44,7 @@ namespace ClimbingAPI.Services
         {
             _logger.LogInformation("INFO for: REGISTER action from AccountService.");
 
-            var user = new User()
-            {
-                Email = dto.Email,
-                DateOfBirth = dto.DateOfBirth,
-                FirstName = dto.FirstName,
-                LastName = dto.LastName,
-                RoleId = dto.RoleId
-            };
+            var user = _mapper.Map<User>(dto);
 
             var hashedPassword = _passwordHasher.HashPassword(user, dto.Password);
             user.PasswordHash = hashedPassword;
@@ -176,7 +169,6 @@ namespace ClimbingAPI.Services
         private User GetUserByEmail(string email)
         {
             var user = _dbContext.User
-                .Include(x => x.Role)
                 .FirstOrDefault(x => x.Email == email);
             if (user is null)
             {

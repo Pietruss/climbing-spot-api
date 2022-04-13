@@ -9,6 +9,7 @@ using ClimbingAPI.Entities.Address;
 using ClimbingAPI.Entities.Boulder;
 using ClimbingAPI.Models.Boulder;
 using ClimbingAPI.Models.ClimbingSpot;
+using ClimbingAPI.Models.User;
 
 namespace ClimbingAPI.MappingProfile
 {
@@ -33,6 +34,8 @@ namespace ClimbingAPI.MappingProfile
             CreateMap<Boulder, BoulderDto>();
 
             CreateMap<CreateBoulderModelDto, Boulder>();
+
+            CreateMap<CreateUserDto, User>();
         }
     }
 }

@@ -55,6 +55,5 @@ Logika baldów:
 
 
 todo:
-posprzątać bazę, niepotrzebna kolumna: CreatedById1 na tabeli ClimbingSpot
 ogarnąć whoColumns
 
