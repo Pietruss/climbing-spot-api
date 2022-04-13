@@ -28,8 +28,9 @@ namespace ClimbingAPI.Services
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly AuthenticationSettings _settings;
         private readonly IAuthorizationService _authorizationService;
+        private readonly IUserContextService _userContext;
 
-        public AccountService(IMapper mapper, ILogger<AccountService> logger, ClimbingDbContext dbContext, IPasswordHasher<User> passwordHasher, AuthenticationSettings settings, IAuthorizationService authorizationService)
+        public AccountService(IMapper mapper, ILogger<AccountService> logger, ClimbingDbContext dbContext, IPasswordHasher<User> passwordHasher, AuthenticationSettings settings, IAuthorizationService authorizationService, IUserContextService userContext)
         {
             _mapper = mapper;
             _logger = logger;
@@ -37,6 +38,7 @@ namespace ClimbingAPI.Services
             _passwordHasher = passwordHasher;
             _settings = settings;
             _authorizationService = authorizationService;
+            _userContext = userContext;
         }
         public void Register(CreateUserDto dto)
         {
@@ -87,11 +89,11 @@ namespace ClimbingAPI.Services
             return tokenHandler.WriteToken(token);
         }
 
-        public void AssignClimbingSpotToUserWithRole(UpdateUserClimbingSpotDto dto, ClaimsPrincipal user)
+        public void AssignClimbingSpotToUserWithRole(UpdateUserClimbingSpotDto dto)
         {
             _logger.LogInformation("INFO for: AssignClimbingSpotToUserWithRole action from AccountService.");
 
-            Validate(dto.UserId, dto.ClimbingSpotId, dto.RoleId, user);
+            Validate(dto.UserId, dto.ClimbingSpotId, dto.RoleId, _userContext.User);
 
             var userClimbingSpotEntity = GetUserClimbingSpot(dto.UserId, dto.ClimbingSpotId, dto.RoleId);
             
@@ -135,7 +137,7 @@ namespace ClimbingAPI.Services
                 x.UserId == int.Parse(userClaimId) && x.ClimbingSpotId == climbingSpotId);
             if(userAssignedToClimbingSpot is null)
                 throw new BadRequestException(
-                    $"User with ID: {userClaimId} is not assigned to climbing spot: {climbingSpotId}.");
+                    $"User with ID: {userClaimId} is not assigned to climbing spot: {climbingSpotId}. You do not have enough rights.");
 
             var userClimbingSpotEntity =
                 _dbContext.UserClimbingSpot.FirstOrDefault(x => x.UserId == userId && x.ClimbingSpotId == climbingSpotId && x.RoleId == roleId);
@@ -192,7 +194,8 @@ namespace ClimbingAPI.Services
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
                 new Claim(ClaimTypes.Role, $"{user.Role.Name}"),
-                new Claim("DateOfBirth", user.DateOfBirth.Value.ToString("yyyy-MM-dd"))
+                new Claim("DateOfBirth", user.DateOfBirth.Value.ToString("yyyy-MM-dd")),
+                new Claim("RoleId", user.RoleId.ToString())
             };
         }
     }

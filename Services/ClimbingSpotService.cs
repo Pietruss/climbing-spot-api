@@ -11,6 +11,7 @@ using ClimbingAPI.Exceptions;
 using ClimbingAPI.Models.ClimbingSpot;
 using ClimbingAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
@@ -24,13 +25,15 @@ namespace ClimbingAPI.Services
         private readonly IMapper _mapper;
         private readonly ILogger<ClimbingSpotService> _logger;
         private readonly IAuthorizationService _authorizationService;
+        private readonly IUserContextService _userContext;
 
-        public ClimbingSpotService(ClimbingDbContext dbContext, IMapper mapper, ILogger<ClimbingSpotService>  logger, IAuthorizationService authorizationService)
+        public ClimbingSpotService(ClimbingDbContext dbContext, IMapper mapper, ILogger<ClimbingSpotService>  logger, IAuthorizationService authorizationService, IUserContextService userContext)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _logger = logger;
             _authorizationService = authorizationService;
+            _userContext = userContext;
         }
         public IEnumerable<ClimbingSpotDto> GetAll()
         {
@@ -65,35 +68,43 @@ namespace ClimbingAPI.Services
             return climbingSpotDto;
         }
 
-        public int Create(CreateClimbingSpotDto dto, int userId)
+        public int Create(CreateClimbingSpotDto dto)
         {
             _logger.LogInformation("INFO for: CREATE action from ClimbingSpotService.");
 
             var climbingSpot = _mapper.Map<ClimbingSpot>(dto);
-            climbingSpot.CreatedById = userId;
+            climbingSpot.CreatedById = _userContext.GetUserId;
 
             _dbContext.ClimbingSpot.Add(climbingSpot);
             _dbContext.SaveChanges();
 
-            GetUserClimbingSpotEntityByUserIdAndClimbingSpotId(userId, climbingSpot.Id);
+            AssignClimbingSpotToUser(_userContext.GetUserId, climbingSpot.Id);
 
             _dbContext.SaveChanges();
 
             return climbingSpot.Id;
         }
 
-        private void GetUserClimbingSpotEntityByUserIdAndClimbingSpotId(int userId, int climbingSpotId)
-        {
-            var userClimbingSpotEntity =
-                _dbContext.UserClimbingSpot.FirstOrDefault(x => x.UserId == userId && x.ClimbingSpotId == null);
-            
-            if (userClimbingSpotEntity is null)
-                throw new NotFoundException($"User with ID: {userId} not found.");
-
-            userClimbingSpotEntity.ClimbingSpotId = climbingSpotId;
+        private void AssignClimbingSpotToUser(int? userId, int climbingSpotId)
+        { 
+            var climbingSpotUser = _dbContext.UserClimbingSpot.FirstOrDefault(x => x.UserId == userId && x.ClimbingSpotId == null);
+            if (climbingSpotUser is null && userId != null)
+            {
+                    var userClimbingSpotEntity = new UserClimbingSpot()
+                    {
+                        ClimbingSpotId = climbingSpotId,
+                        UserId = (int) userId,
+                        RoleId = int.Parse(_userContext.User.FindFirst(c => c.Type ==  "RoleId").Value)
+                    };
+                    _dbContext.UserClimbingSpot.Add(userClimbingSpotEntity);
+            }
+            else
+            {
+                climbingSpotUser.ClimbingSpotId = climbingSpotId;
+            }
         }
 
-        public void Delete(int id, ClaimsPrincipal user)
+        public void Delete(int id)
         {
             _logger.LogInformation($"INFO for: DELETE action from ClimbingSpotService. ID: \"{id}\".");
 
@@ -105,7 +116,7 @@ namespace ClimbingAPI.Services
                 throw new NotFoundException($"Restaurant with ID: {id} not found.");
             }
 
-            var authorizationResult = _authorizationService.AuthorizeAsync(user, climbingSpot,
+            var authorizationResult = _authorizationService.AuthorizeAsync(_userContext.User, climbingSpot,
                 new ResourceOperationRequirement(ResourceOperation.Delete)).Result;
             if (!authorizationResult.Succeeded)
             {
@@ -117,7 +128,7 @@ namespace ClimbingAPI.Services
             _dbContext.SaveChanges();
         }
 
-        public void Update(UpdateClimbingSpotDto dto, int id, ClaimsPrincipal user)
+        public void Update(UpdateClimbingSpotDto dto, int id)
         {
             _logger.LogError($"INFO for: UPDATE action from ClimbingSpotService. ID: \"{id}\".");
 
@@ -129,7 +140,7 @@ namespace ClimbingAPI.Services
                 throw new NotFoundException($"Restaurant with ID: {id} not found.");
             }
 
-            var authorizationResult = _authorizationService.AuthorizeAsync(user, climbingSpot,
+            var authorizationResult = _authorizationService.AuthorizeAsync(_userContext.User, climbingSpot,
                 new ResourceOperationRequirement(ResourceOperation.Update)).Result;
             if (!authorizationResult.Succeeded)
             {

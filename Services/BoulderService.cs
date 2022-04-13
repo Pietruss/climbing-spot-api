@@ -22,17 +22,21 @@ namespace ClimbingAPI.Services
         private readonly ClimbingDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly ILogger<BoulderService> _logger;
+        private readonly IUserContextService _userContext;
 
-        public BoulderService(ClimbingDbContext dbContext, IMapper mapper, ILogger<BoulderService> logger)
+        public BoulderService(ClimbingDbContext dbContext, IMapper mapper, ILogger<BoulderService> logger, IUserContextService userContext)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _logger = logger;
+            _userContext = userContext;
         }
 
         public int Create(CreateBoulderModelDto dto, int climbingSpotId)
         {
             _logger.LogInformation($"INFO for: CREATE action from BoulderService. Climbing Spot ID: \"{climbingSpotId}\".");
+
+            ValidateUserAssignment(climbingSpotId);
 
             GetClimbingSpotById(climbingSpotId);
 
@@ -45,6 +49,15 @@ namespace ClimbingAPI.Services
             _dbContext.SaveChanges();
 
             return boulderEntity.Id;
+        }
+
+        private void ValidateUserAssignment(int climbingSpotId)
+        {
+            var userClimbingSpotEntity =_dbContext.UserClimbingSpot.FirstOrDefault(x =>
+                x.UserId == _userContext.GetUserId && x.ClimbingSpotId == climbingSpotId && (x.RoleId == 1 ||
+                x.RoleId == 2 || x.RoleId == 3));
+            if(userClimbingSpotEntity is null)
+                throw new BadRequestException("No enough rights to create boulder.");
         }
 
         public BoulderDto Get(int boulderId, int climbingSpotId)
@@ -79,6 +92,8 @@ namespace ClimbingAPI.Services
         {
             _logger.LogInformation($"INFO for: DELETE action from BoulderService. Boulder Id: {boulderId}.");
 
+            ValidateUserAssignment(climbingSpotId);
+
             GetClimbingSpotById(climbingSpotId);
             
             var boulder = _dbContext.Boulder.FirstOrDefault(x => x.Id == boulderId);
@@ -95,6 +110,8 @@ namespace ClimbingAPI.Services
         public void DeleteAll(int climbingSpotId)
         {
             _logger.LogInformation($"INFO for: DELETEALL action from BoulderService. Climbing Spot Id: {climbingSpotId}.");
+
+            ValidateUserAssignment(climbingSpotId);
 
             var climbingSpot = GetClimbingSpotById(climbingSpotId);
             _dbContext.RemoveRange(climbingSpot.Boulder);

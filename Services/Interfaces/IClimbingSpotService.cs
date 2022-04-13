@@ -13,8 +13,8 @@ namespace ClimbingAPI.Services.Interfaces
     {
         IEnumerable<ClimbingSpotDto> GetAll();
         ClimbingSpotDto Get(int id);
-        int Create(CreateClimbingSpotDto dto, int userId);
-        void Delete(int id, ClaimsPrincipal user);
-        void Update(UpdateClimbingSpotDto dto, int id, ClaimsPrincipal user);
+        int Create(CreateClimbingSpotDto dto);
+        void Delete(int id);
+        void Update(UpdateClimbingSpotDto dto, int id);
     }
 }

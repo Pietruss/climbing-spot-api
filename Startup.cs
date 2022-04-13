@@ -75,6 +75,7 @@ namespace ClimbingAPI
             services.AddScoped<IValidator<CreateClimbingSpotDto>, CreateClimbingSpotDtoValidator>();
             services.AddScoped<IValidator<LoginUserDto>, LoginUserDtoValidator>();
             services.AddScoped<IValidator<UpdateUserClimbingSpotDto>, UpdateUserClimbingSpotDtoValidator>();
+            services.AddScoped<IValidator<UpdateClimbingSpotDto>, UpdateClimbingSpotDtoValidator>();
             #endregion
 
             #region handlers
@@ -89,7 +90,9 @@ namespace ClimbingAPI
             services.AddScoped<ErrorHandlingMiddleware>();
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddDbContext<ClimbingDbContext>();
-            services.AddScoped<ClimbingSpotSeeder>();
+            services.AddScoped<UserRoleSeeder>();
+            services.AddScoped<IUserContextService, UserContextService>();
+            services.AddHttpContextAccessor();
             services.AddSwaggerGen();
 
             #endregion
@@ -97,7 +100,7 @@ namespace ClimbingAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ClimbingSpotSeeder seeder)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserRoleSeeder seeder)
         {
             seeder.Seed();
             if (env.IsDevelopment())

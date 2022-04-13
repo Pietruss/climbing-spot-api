@@ -7,11 +7,11 @@ using ClimbingAPI.Entities;
 
 namespace ClimbingAPI
 {
-    public class ClimbingSpotSeeder
+    public class UserRoleSeeder
     {
         private readonly ClimbingDbContext _dbContext;
 
-        public ClimbingSpotSeeder(ClimbingDbContext dbContext)
+        public UserRoleSeeder(ClimbingDbContext dbContext)
         {
             _dbContext = dbContext;
         }

@@ -23,3 +23,16 @@
 2022-04-06 14:39:59 ERROR ClimbingAPI.Services.ClimbingSpotService.Update - INFO for: UPDATE action from ClimbingSpotService. ID: "19".
 2022-04-06 14:40:29 ERROR ClimbingAPI.Services.ClimbingSpotService.Update - INFO for: UPDATE action from ClimbingSpotService. ID: "19".
 2022-04-08 16:20:38 ERROR ClimbingAPI.Services.AccountService.Validate - ERROR for: UPDATE action from AccountService. Authorization failed.
+2022-04-13 15:52:10 ERROR ClimbingAPI.Services.ClimbingSpotService.Update - INFO for: UPDATE action from ClimbingSpotService. ID: "63656573".
+2022-04-13 15:52:10 ERROR ClimbingAPI.Services.ClimbingSpotService.Update - ERROR for: DELETE action from ClimbingSpotService. ID: "63656573" not found.
+2022-04-13 15:52:39 ERROR ClimbingAPI.Services.ClimbingSpotService.Update - INFO for: UPDATE action from ClimbingSpotService. ID: "63656573".
+2022-04-13 15:52:39 ERROR ClimbingAPI.Services.ClimbingSpotService.Update - ERROR for: DELETE action from ClimbingSpotService. ID: "63656573" not found.
+2022-04-13 15:53:02 ERROR ClimbingAPI.Services.ClimbingSpotService.Update - INFO for: UPDATE action from ClimbingSpotService. ID: "36".
+2022-04-13 15:55:23 ERROR ClimbingAPI.Services.ClimbingSpotService.Update - INFO for: UPDATE action from ClimbingSpotService. ID: "36".
+2022-04-13 16:07:26 ERROR ClimbingAPI.Services.BoulderService.GetClimbingSpotById - ERROR: action from Boulder Service GetClimbingSpotById(). Climbing Spot with ID: "63656573" not found.
+2022-04-13 16:07:34 ERROR ClimbingAPI.Services.BoulderService.Get - ERROR for: GET action from Boulder Service. Boulder ID: "2" in Climbing Spot ID: 3 not found.
+2022-04-13 16:07:39 ERROR ClimbingAPI.Services.BoulderService.Get - ERROR for: GET action from Boulder Service. Boulder ID: "2" in Climbing Spot ID: 2 not found.
+2022-04-13 16:07:43 ERROR ClimbingAPI.Services.BoulderService.Get - ERROR for: GET action from Boulder Service. Boulder ID: "1" in Climbing Spot ID: 2 not found.
+2022-04-13 16:07:46 ERROR ClimbingAPI.Services.BoulderService.Get - ERROR for: GET action from Boulder Service. Boulder ID: "2" in Climbing Spot ID: 2 not found.
+2022-04-13 16:07:49 ERROR ClimbingAPI.Services.BoulderService.Get - ERROR for: GET action from Boulder Service. Boulder ID: "3" in Climbing Spot ID: 2 not found.
+2022-04-13 16:07:52 ERROR ClimbingAPI.Services.BoulderService.Get - ERROR for: GET action from Boulder Service. Boulder ID: "4" in Climbing Spot ID: 2 not found.

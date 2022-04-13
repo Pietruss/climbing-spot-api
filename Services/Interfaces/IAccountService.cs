@@ -13,6 +13,6 @@ namespace ClimbingAPI.Services.Interfaces
     {
         void Register(CreateUserDto dto);
         string GenerateJwt(LoginUserDto dto);
-        void AssignClimbingSpotToUserWithRole(UpdateUserClimbingSpotDto dto, ClaimsPrincipal userClaims);
+        void AssignClimbingSpotToUserWithRole(UpdateUserClimbingSpotDto dto);
     }
 }

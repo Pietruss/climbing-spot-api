@@ -47,22 +47,21 @@ namespace ClimbingAPI.Controllers
         [HttpPost]
         public ActionResult Create([FromBody]CreateClimbingSpotDto dto)
         {
-            var userId = int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
-            var id = _service.Create(dto, userId);
+            var id = _service.Create(dto);
             return Created($"/climbingSpot/{id}", null);
         }
 
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] int id)
         {
-            _service.Delete(id, User);
+            _service.Delete(id);
             return NotFound();
         }
 
         [HttpPut("{id}")]
         public ActionResult Update([FromBody] UpdateClimbingSpotDto dto, [FromRoute] int id)
         {   
-            _service.Update(dto, id, User);
+            _service.Update(dto, id);
             return Ok();
         }
     }

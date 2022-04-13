@@ -46,3 +46,15 @@ czy user jest określonej roli - admin / manager
 
 czy jest przypisany do danego climbingSpota - to wyciągam z tabeli UserClimbingSpot
 
+Logika climbing spotu:
+ClimbinSpot może usunąć tylko osoba, która go stworzyła!
+To samo z edycją - może to zrobić tylko osoba, która to stworzyła!
+Chodzi tutaj o fakt, że tylko owner może zmieniać dane firmy, oraz usunąć biznes
+
+Logika baldów:
+
+
+todo:
+posprzątać bazę, niepotrzebna kolumna: CreatedById1 na tabeli ClimbingSpot
+ogarnąć whoColumns
+
