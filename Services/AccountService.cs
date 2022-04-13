@@ -87,35 +87,13 @@ namespace ClimbingAPI.Services
             return tokenHandler.WriteToken(token);
         }
 
-        public void UpdateRole(UpdateUserRoleDto dto, ClaimsPrincipal userClaims, int userId)
+        public void AssignClimbingSpotToUserWithRole(UpdateUserClimbingSpotDto dto, ClaimsPrincipal user)
         {
-            _logger.LogInformation("INFO for: UPDATEROLE action from AccountService.");
+            _logger.LogInformation("INFO for: AssignClimbingSpotToUserWithRole action from AccountService.");
 
-            var user = GetUserById(userId);
+            Validate(dto.UserId, dto.ClimbingSpotId, dto.RoleId, user);
 
-            var authorizationResult = _authorizationService.AuthorizeAsync(userClaims, user,
-                new ResourceOperationRequirement(ResourceOperation.Update)).Result;
-            if (!authorizationResult.Succeeded)
-            {
-                _logger.LogError($"ERROR for: UPDATEROLE action from ClimbingSpotService. Authorization failed.");
-                throw new ForbidException($"Authorization failed.");
-            }
-
-            user.Role.Id = dto.RoleId;
-
-            _dbContext.Update(user);
-            _dbContext.SaveChanges();
-
-
-        }
-
-        public void AssignClimbingSpotToUser(UpdateUserClimbingSpotDto dto, ClaimsPrincipal user)
-        {
-            _logger.LogInformation("INFO for: AssignClimbingSpotToUser action from AccountService.");
-
-            Validate(dto.UserId, dto.ClimbingSpotId, user);
-
-            var userClimbingSpotEntity = ShouldUserBeCreated(dto.UserId);
+            var userClimbingSpotEntity = GetUserClimbingSpot(dto.UserId, dto.ClimbingSpotId, dto.RoleId);
             
             if (userClimbingSpotEntity is null)
             {
@@ -136,12 +114,12 @@ namespace ClimbingAPI.Services
             _dbContext.SaveChanges();
         }
 
-        private UserClimbingSpot ShouldUserBeCreated(int userId)
+        private UserClimbingSpot GetUserClimbingSpot(int userId, int climbingSpotId, int roleId)
         {
-            return _dbContext.UserClimbingSpot.FirstOrDefault(x => x.UserId == userId && x.ClimbingSpotId == null);
+            return _dbContext.UserClimbingSpot.FirstOrDefault(x => (x.UserId == userId && x.ClimbingSpotId == null) || (x.UserId == userId && x.ClimbingSpotId == climbingSpotId && x.RoleId != roleId));
         }
 
-        private void Validate(int userId, int climbingSpotId, ClaimsPrincipal userPrincipal)
+        private void Validate(int userId, int climbingSpotId, int roleId, ClaimsPrincipal userPrincipal)
         {
             var user = _dbContext.User.FirstOrDefault(x => x.Id == userId);
             if (user is null)
@@ -160,7 +138,7 @@ namespace ClimbingAPI.Services
                     $"User with ID: {userClaimId} is not assigned to climbing spot: {climbingSpotId}.");
 
             var userClimbingSpotEntity =
-                _dbContext.UserClimbingSpot.FirstOrDefault(x => x.UserId == userId && x.ClimbingSpotId == climbingSpotId);
+                _dbContext.UserClimbingSpot.FirstOrDefault(x => x.UserId == userId && x.ClimbingSpotId == climbingSpotId && x.RoleId == roleId);
             if (userClimbingSpotEntity is not null)
                 throw new BadRequestException(
                     $"User with ID: {userId} already assigned to climbing spot with ID: {climbingSpotId}.");
@@ -202,20 +180,6 @@ namespace ClimbingAPI.Services
             {
                 _logger.LogError("Invalid username or password.");
                 throw new BadRequestException("Invalid username or password.");
-            }
-
-            return user;
-        }
-
-        private User GetUserById(int id)
-        {
-            var user = _dbContext.User
-                .Include(x => x.Role)
-                .FirstOrDefault(x => x.Id == id);
-            if (user is null)
-            {
-                _logger.LogError($"No content. User with id: {id} not found.");
-                throw new NotFoundException($"No content. User with id: {id} not found.");
             }
 
             return user;

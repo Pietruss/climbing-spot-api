@@ -34,19 +34,11 @@ namespace ClimbingAPI.Controllers
             return Ok(token);
         }
 
-        [HttpPut("user/{id}")]
-        [Authorize(Roles = "Admin,Manager")]
-        public ActionResult UpdateRole([FromBody] UpdateUserRoleDto dto,[FromRoute] int id)
-        {
-             _service.UpdateRole(dto, User, id);
-            return Ok();
-        }
-
         [HttpPost("assign-climbing-spot")]
         [Authorize(Roles = "Admin,Manager")]
         public ActionResult AssignClimbingSpotToUser([FromBody] UpdateUserClimbingSpotDto dto)
         {
-            _service.AssignClimbingSpotToUser(dto, User);
+            _service.AssignClimbingSpotToUserWithRole(dto, User);
             return Ok();
         }
 
