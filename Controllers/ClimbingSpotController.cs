@@ -15,7 +15,6 @@ namespace ClimbingAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize(Roles = "Admin,Manager")]
     public class ClimbingSpotController: ControllerBase
     {
         private readonly ILogger<ClimbingSpotController> _logger;

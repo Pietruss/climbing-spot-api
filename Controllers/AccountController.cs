@@ -35,7 +35,6 @@ namespace ClimbingAPI.Controllers
         }
 
         [HttpPost("assign-climbing-spot")]
-        [Authorize(Roles = "Admin,Manager")]
         public ActionResult AssignClimbingSpotToUser([FromBody] UpdateUserClimbingSpotDto dto)
         {
             _service.AssignClimbingSpotToUserWithRole(dto);

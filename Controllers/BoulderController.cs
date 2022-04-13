@@ -14,7 +14,6 @@ namespace ClimbingAPI.Controllers
 {
     [ApiController]
     [Route(("/climbingSpot/{climbingSpotId}/boulder"))]
-    [Authorize(Roles = "Admin,Manager,Boulder")]
     public class BoulderController: ControllerBase
     {
         private readonly ILogger<BoulderController> _logger;
@@ -34,7 +33,6 @@ namespace ClimbingAPI.Controllers
 
         [HttpGet]
         [Route("{boulderId}")]
-        [AllowAnonymous]
         public ActionResult<BoulderDto> Get([FromRoute]int boulderId, [FromRoute] int climbingSpotId)
         {
             var boulderEntity = _service.Get(boulderId, climbingSpotId);
@@ -42,7 +40,6 @@ namespace ClimbingAPI.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public ActionResult<List<BoulderDto>> GetAll(int climbingSpotId)
         {
             var climbingList = _service.GetAll(climbingSpotId);

@@ -316,3 +316,33 @@
 2022-04-13 16:56:09  INFO ClimbingAPI.Services.BoulderService.Create - INFO for: CREATE action from BoulderService. Climbing Spot ID: "36".
 2022-04-13 16:57:17  INFO ClimbingAPI.Services.BoulderService.Create - INFO for: CREATE action from BoulderService. Climbing Spot ID: "36".
 2022-04-13 17:01:48  INFO ClimbingAPI.Services.AccountService.Register - INFO for: REGISTER action from AccountService.
+2022-04-13 17:19:33  INFO ClimbingAPI.Services.AccountService.Register - INFO for: REGISTER action from AccountService.
+2022-04-13 17:19:55  INFO ClimbingAPI.Services.AccountService.GenerateJwt - INFO for: GENERATEJWT action from AccountService.
+2022-04-13 17:20:07  INFO ClimbingAPI.Services.AccountService.GenerateJwt - INFO for: GENERATEJWT action from AccountService.
+2022-04-13 17:21:06  INFO ClimbingAPI.Services.AccountService.GenerateJwt - INFO for: GENERATEJWT action from AccountService.
+2022-04-13 17:21:43  INFO ClimbingAPI.Services.AccountService.AssignClimbingSpotToUserWithRole - INFO for: AssignClimbingSpotToUserWithRole action from AccountService.
+2022-04-13 17:22:03  INFO ClimbingAPI.Services.AccountService.GenerateJwt - INFO for: GENERATEJWT action from AccountService.
+2022-04-13 17:30:15  INFO ClimbingAPI.Services.AccountService.AssignClimbingSpotToUserWithRole - INFO for: AssignClimbingSpotToUserWithRole action from AccountService.
+2022-04-13 17:30:33  INFO ClimbingAPI.Services.AccountService.GenerateJwt - INFO for: GENERATEJWT action from AccountService.
+2022-04-13 17:30:40  INFO ClimbingAPI.Services.AccountService.GenerateJwt - INFO for: GENERATEJWT action from AccountService.
+2022-04-13 17:30:45  INFO ClimbingAPI.Services.AccountService.GenerateJwt - INFO for: GENERATEJWT action from AccountService.
+2022-04-13 17:30:57  INFO ClimbingAPI.Services.AccountService.GenerateJwt - INFO for: GENERATEJWT action from AccountService.
+2022-04-13 17:31:25  INFO ClimbingAPI.Services.AccountService.AssignClimbingSpotToUserWithRole - INFO for: AssignClimbingSpotToUserWithRole action from AccountService.
+2022-04-13 17:31:34  INFO ClimbingAPI.Services.AccountService.GenerateJwt - INFO for: GENERATEJWT action from AccountService.
+2022-04-13 17:31:50  INFO ClimbingAPI.Services.AccountService.AssignClimbingSpotToUserWithRole - INFO for: AssignClimbingSpotToUserWithRole action from AccountService.
+2022-04-13 17:32:06  INFO ClimbingAPI.Services.AccountService.AssignClimbingSpotToUserWithRole - INFO for: AssignClimbingSpotToUserWithRole action from AccountService.
+2022-04-13 17:32:21  INFO ClimbingAPI.Services.AccountService.AssignClimbingSpotToUserWithRole - INFO for: AssignClimbingSpotToUserWithRole action from AccountService.
+2022-04-13 17:32:51  INFO ClimbingAPI.Services.AccountService.AssignClimbingSpotToUserWithRole - INFO for: AssignClimbingSpotToUserWithRole action from AccountService.
+2022-04-13 17:34:47  INFO ClimbingAPI.Services.AccountService.AssignClimbingSpotToUserWithRole - INFO for: AssignClimbingSpotToUserWithRole action from AccountService.
+2022-04-13 17:35:15  INFO ClimbingAPI.Services.AccountService.GenerateJwt - INFO for: GENERATEJWT action from AccountService.
+2022-04-13 17:35:29  INFO ClimbingAPI.Services.AccountService.AssignClimbingSpotToUserWithRole - INFO for: AssignClimbingSpotToUserWithRole action from AccountService.
+2022-04-13 17:45:46  INFO ClimbingAPI.Services.AccountService.Register - INFO for: REGISTER action from AccountService.
+2022-04-13 17:45:53  INFO ClimbingAPI.Services.AccountService.GenerateJwt - INFO for: GENERATEJWT action from AccountService.
+2022-04-13 17:46:06  INFO ClimbingAPI.Services.ClimbingSpotService.Create - INFO for: CREATE action from ClimbingSpotService.
+2022-04-13 17:47:02  INFO ClimbingAPI.Services.AccountService.Register - INFO for: REGISTER action from AccountService.
+2022-04-13 17:47:08  INFO ClimbingAPI.Services.AccountService.GenerateJwt - INFO for: GENERATEJWT action from AccountService.
+2022-04-13 17:47:19  INFO ClimbingAPI.Services.ClimbingSpotService.Create - INFO for: CREATE action from ClimbingSpotService.
+2022-04-13 17:48:51  INFO ClimbingAPI.Services.ClimbingSpotService.Create - INFO for: CREATE action from ClimbingSpotService.
+2022-04-13 17:49:25  INFO ClimbingAPI.Services.AccountService.Register - INFO for: REGISTER action from AccountService.
+2022-04-13 17:49:31  INFO ClimbingAPI.Services.AccountService.GenerateJwt - INFO for: GENERATEJWT action from AccountService.
+2022-04-13 17:49:45  INFO ClimbingAPI.Services.ClimbingSpotService.Create - INFO for: CREATE action from ClimbingSpotService.

@@ -72,6 +72,8 @@ namespace ClimbingAPI.Services
         {
             _logger.LogInformation("INFO for: CREATE action from ClimbingSpotService.");
 
+            VerifyUserAssignment();
+
             var climbingSpot = _mapper.Map<ClimbingSpot>(dto);
             climbingSpot.CreatedById = _userContext.GetUserId;
 
@@ -83,6 +85,14 @@ namespace ClimbingAPI.Services
             _dbContext.SaveChanges();
 
             return climbingSpot.Id;
+        }
+
+        private void VerifyUserAssignment()
+        {
+            var userClimbingSpot = _dbContext.UserClimbingSpot.FirstOrDefault(x =>
+                x.UserId == _userContext.GetUserId && (x.RoleId == 1 || x.RoleId == 2));
+            if(userClimbingSpot is null)
+                throw new BadRequestException("You do not have enough rights to create ClimbingSpot.");
         }
 
         private void AssignClimbingSpotToUser(int? userId, int climbingSpotId)

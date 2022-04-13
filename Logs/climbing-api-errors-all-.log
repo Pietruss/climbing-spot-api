@@ -984,3 +984,51 @@ EXCEPTION OCCURRED:Microsoft.EntityFrameworkCore.DbUpdateException An error occu
    at ClimbingAPI.Middleware.ErrorHandlingMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in E:\work\files\climbing2\ClimbingAPI\Middleware\ErrorHandlingMiddleware.cs:line 24
 SqlException The INSERT statement conflicted with the FOREIGN KEY constraint "FK_Boulder_User_CreatedById". The conflict occurred in database "ClimbingSpot", table "dbo.User", column 'Id'.
 The statement has been terminated. Void OnError(Microsoft.Data.SqlClient.SqlException, Boolean, System.Action`1[System.Action])
+2022-04-13 17:20:02 ERROR ClimbingAPI.Middleware.ErrorHandlingMiddleware.InvokeAsync - Object reference not set to an instance of an object.
+EXCEPTION OCCURRED:System.NullReferenceException Object reference not set to an instance of an object. System.Collections.Generic.IEnumerable`1[System.Security.Claims.Claim] GenerateClaims(ClimbingAPI.Entities.User)    at ClimbingAPI.Services.AccountService.GenerateClaims(User user) in E:\work\files\climbing2\ClimbingAPI\Services\AccountService.cs:line 184
+   at ClimbingAPI.Services.AccountService.GenerateToken(User user) in E:\work\files\climbing2\ClimbingAPI\Services\AccountService.cs:line 146
+   at ClimbingAPI.Services.AccountService.GenerateJwt(LoginUserDto dto) in E:\work\files\climbing2\ClimbingAPI\Services\AccountService.cs:line 79
+   at ClimbingAPI.Controllers.AccountController.Login(LoginUserDto dto) in E:\work\files\climbing2\ClimbingAPI\Controllers\AccountController.cs:line 33
+   at lambda_method160(Closure , Object , Object[] )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|19_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at ClimbingAPI.Middleware.ErrorHandlingMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in E:\work\files\climbing2\ClimbingAPI\Middleware\ErrorHandlingMiddleware.cs:line 24
+2022-04-13 17:20:20 ERROR ClimbingAPI.Middleware.ErrorHandlingMiddleware.InvokeAsync - Object reference not set to an instance of an object.
+EXCEPTION OCCURRED:System.NullReferenceException Object reference not set to an instance of an object. System.Collections.Generic.IEnumerable`1[System.Security.Claims.Claim] GenerateClaims(ClimbingAPI.Entities.User)    at ClimbingAPI.Services.AccountService.GenerateClaims(User user) in E:\work\files\climbing2\ClimbingAPI\Services\AccountService.cs:line 184
+   at ClimbingAPI.Services.AccountService.GenerateToken(User user) in E:\work\files\climbing2\ClimbingAPI\Services\AccountService.cs:line 146
+   at ClimbingAPI.Services.AccountService.GenerateJwt(LoginUserDto dto) in E:\work\files\climbing2\ClimbingAPI\Services\AccountService.cs:line 79
+   at ClimbingAPI.Controllers.AccountController.Login(LoginUserDto dto) in E:\work\files\climbing2\ClimbingAPI\Controllers\AccountController.cs:line 33
+   at lambda_method160(Closure , Object , Object[] )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|19_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at ClimbingAPI.Middleware.ErrorHandlingMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in E:\work\files\climbing2\ClimbingAPI\Middleware\ErrorHandlingMiddleware.cs:line 24
+2022-04-13 17:30:33 ERROR ClimbingAPI.Services.AccountService.GetUserByEmail - Invalid username or password.
+2022-04-13 17:30:40 ERROR ClimbingAPI.Services.AccountService.GetUserByEmail - Invalid username or password.

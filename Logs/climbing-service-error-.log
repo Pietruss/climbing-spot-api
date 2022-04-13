@@ -36,3 +36,5 @@
 2022-04-13 16:07:46 ERROR ClimbingAPI.Services.BoulderService.Get - ERROR for: GET action from Boulder Service. Boulder ID: "2" in Climbing Spot ID: 2 not found.
 2022-04-13 16:07:49 ERROR ClimbingAPI.Services.BoulderService.Get - ERROR for: GET action from Boulder Service. Boulder ID: "3" in Climbing Spot ID: 2 not found.
 2022-04-13 16:07:52 ERROR ClimbingAPI.Services.BoulderService.Get - ERROR for: GET action from Boulder Service. Boulder ID: "4" in Climbing Spot ID: 2 not found.
+2022-04-13 17:30:33 ERROR ClimbingAPI.Services.AccountService.GetUserByEmail - Invalid username or password.
+2022-04-13 17:30:40 ERROR ClimbingAPI.Services.AccountService.GetUserByEmail - Invalid username or password.

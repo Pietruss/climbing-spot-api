@@ -56,4 +56,5 @@ Logika baldów:
 
 todo:
 ogarnąć whoColumns
+pozbyc sie z ClimbingSpotController [Authorize(Roles = "Admin,Manager")]
 

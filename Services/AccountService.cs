@@ -127,7 +127,7 @@ namespace ClimbingAPI.Services
             //checking if user is assigned to climbing spot. If not means that is not a manager or admin in that climbingSpot
             var userClaimId = userPrincipal.FindFirst(x => x.Type == ClaimTypes.NameIdentifier).Value;
             var userAssignedToClimbingSpot = _dbContext.UserClimbingSpot.FirstOrDefault(x =>
-                x.UserId == int.Parse(userClaimId) && x.ClimbingSpotId == climbingSpotId);
+                x.UserId == int.Parse(userClaimId) && x.ClimbingSpotId == climbingSpotId  && (x.RoleId == 1 || x.RoleId == 2));
             if(userAssignedToClimbingSpot is null)
                 throw new BadRequestException(
                     $"User with ID: {userClaimId} is not assigned to climbing spot: {climbingSpotId}. You do not have enough rights.");
@@ -185,9 +185,7 @@ namespace ClimbingAPI.Services
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
-                new Claim(ClaimTypes.Role, $"{user.Role.Name}"),
-                new Claim("DateOfBirth", user.DateOfBirth.Value.ToString("yyyy-MM-dd")),
-                new Claim("RoleId", user.RoleId.ToString())
+                new Claim("DateOfBirth", user.DateOfBirth.Value.ToString("yyyy-MM-dd"))
             };
         }
     }
