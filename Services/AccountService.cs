@@ -30,6 +30,10 @@ namespace ClimbingAPI.Services
         private readonly IAuthorizationService _authorizationService;
         private readonly IUserContextService _userContext;
 
+        public AccountService()
+        {
+            
+        }
         public AccountService(IMapper mapper, ILogger<AccountService> logger, ClimbingDbContext dbContext, IPasswordHasher<User> passwordHasher, AuthenticationSettings settings, IAuthorizationService authorizationService, IUserContextService userContext)
         {
             _mapper = mapper;
@@ -179,7 +183,7 @@ namespace ClimbingAPI.Services
             return user;
         }
 
-        private IEnumerable<Claim> GenerateClaims(User user)
+        public IEnumerable<Claim> GenerateClaims(User user)
         {
             return new List<Claim>()
             {
