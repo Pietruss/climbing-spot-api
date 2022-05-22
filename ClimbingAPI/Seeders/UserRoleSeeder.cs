@@ -1,10 +1,7 @@
-﻿using System;
+﻿using ClimbingAPI.Entities;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ClimbingAPI.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace ClimbingAPI
 {

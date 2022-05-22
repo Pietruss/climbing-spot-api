@@ -104,7 +104,7 @@ namespace ClimbingAPI.Services
                     {
                         ClimbingSpotId = climbingSpotId,
                         UserId = (int) userId,
-                        RoleId = int.Parse(_userContext.User.FindFirst(c => c.Type ==  "RoleId").Value)
+                        RoleId = 2
                     };
                     _dbContext.UserClimbingSpot.Add(userClimbingSpotEntity);
             }

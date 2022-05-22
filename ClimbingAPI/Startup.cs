@@ -6,6 +6,7 @@ using ClimbingAPI.Models.ClimbingSpot;
 using ClimbingAPI.Models.User;
 using ClimbingAPI.Models.UserClimbingSpot;
 using ClimbingAPI.Models.Validator;
+using ClimbingAPI.Seeders;
 using ClimbingAPI.Services;
 using ClimbingAPI.Services.Interfaces;
 using FluentValidation;
@@ -91,7 +92,11 @@ namespace ClimbingAPI
             services.AddScoped<ErrorHandlingMiddleware>();
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddDbContext<ClimbingDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DbConnection")));
+
             services.AddScoped<UserRoleSeeder>();
+            services.AddScoped<ClimbingSpotSeeder>();
+            services.AddScoped<UserClimbingSpotSeeder>();
+
             services.AddScoped<IUserContextService, UserContextService>();
             services.AddHttpContextAccessor();
             services.AddSwaggerGen();
@@ -101,9 +106,12 @@ namespace ClimbingAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserRoleSeeder seeder)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserRoleSeeder seeder, ClimbingSpotSeeder climbingSpotSeeder, UserClimbingSpotSeeder userClimbingSpot)
         {
             seeder.Seed();
+            climbingSpotSeeder.Seed();
+            userClimbingSpot.Seed();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

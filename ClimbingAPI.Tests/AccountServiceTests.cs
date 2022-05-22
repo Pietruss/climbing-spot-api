@@ -55,20 +55,5 @@ namespace ClimbingAPI.Tests
             UserDateOfBirth.Should()
                 .Be(claimsList.Where(x => x.Type.Contains("DateOfBirth")).Select(x => x.Value).First());
         }
-
-        // [Theory]
-        // [InlineData("test@gmail.com")]
-        // public void GetUserByEmail_ForGivenUser_ReturnsUser(string email)
-        // {
-        //     //arrange
-        //     AccountService accountService = new AccountService();
-        //     
-        //     //act
-        //     var user = accountService.GetUserByEmail(email);
-        //
-        //     //assert
-        //     user.Email.Should().Be("test@gmail.com");
-        // }
-
     }
 }
