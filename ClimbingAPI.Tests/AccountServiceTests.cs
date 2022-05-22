@@ -1,12 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Security.Claims;
 using ClimbingAPI.Entities;
 using ClimbingAPI.Services;
 using FluentAssertions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using Xunit;
+using Moq;
 
 namespace ClimbingAPI.Tests
 {
@@ -55,6 +55,20 @@ namespace ClimbingAPI.Tests
             UserDateOfBirth.Should()
                 .Be(claimsList.Where(x => x.Type.Contains("DateOfBirth")).Select(x => x.Value).First());
         }
+
+        // [Theory]
+        // [InlineData("test@gmail.com")]
+        // public void GetUserByEmail_ForGivenUser_ReturnsUser(string email)
+        // {
+        //     //arrange
+        //     AccountService accountService = new AccountService();
+        //     
+        //     //act
+        //     var user = accountService.GetUserByEmail(email);
+        //
+        //     //assert
+        //     user.Email.Should().Be("test@gmail.com");
+        // }
 
     }
 }

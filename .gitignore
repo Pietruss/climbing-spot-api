@@ -1,0 +1,6 @@
+.idea
+.vs
+Logs
+**/bin/
+**/obj/
+/.vs
