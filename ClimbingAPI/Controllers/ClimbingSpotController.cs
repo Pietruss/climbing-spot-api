@@ -42,7 +42,7 @@ namespace ClimbingAPI.Controllers
         public ActionResult Delete([FromRoute] int id)
         {
             _service.Delete(id);
-            return NotFound();
+            return NoContent();
         }
 
         [HttpPut("{id}")]

@@ -22,8 +22,8 @@ namespace ClimbingAPI.Seeders
                 {
                     if (!_dbContext.UserClimbingSpot.Any())
                     {
-                        _dbContext.UserClimbingSpot.AddRange(GetUserClimbingSpot());
-                        _dbContext.SaveChanges();
+                        // _dbContext.UserClimbingSpot.AddRange(GetUserClimbingSpot());
+                        // _dbContext.SaveChanges();
                     }
                 }
             }

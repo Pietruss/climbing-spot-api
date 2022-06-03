@@ -135,6 +135,12 @@ namespace ClimbingAPI.Services
                 throw new ForbidException($"Authorization failed.");
             }
 
+            var userClimbingSpot = _dbContext.UserClimbingSpot.Where(x => x.ClimbingSpotId == id);
+            foreach (var item in userClimbingSpot)
+            {
+                _dbContext.UserClimbingSpot.Remove(item);
+            }
+
             _dbContext.ClimbingSpot.Remove(climbingSpot);
             _dbContext.SaveChanges();
         }
