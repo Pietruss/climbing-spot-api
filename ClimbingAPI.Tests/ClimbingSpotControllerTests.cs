@@ -89,7 +89,7 @@ namespace ClimbingAPI.Tests
         }
 
         [Fact]
-        public async Task Create_WithValidModel_ReturnsCreatedStatus()
+        public async Task Create_WithoutPermission_ReturnsBadRequest()
         {
             //arrange
             var model = new CreateClimbingSpotDto()
@@ -103,6 +103,42 @@ namespace ClimbingAPI.Tests
                 Street = "Kompozytorow 19"
             };
 
+
+            var httpContent = model.ToJsonHttpContent();
+
+            //act
+            var response = await _client.PostAsync("/climbingspot", httpContent);
+
+            //asset
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task Create_WithValidModel_ReturnsBadRequest()
+        {
+            //arrange
+            var model = new CreateClimbingSpotDto()
+            {
+                Name = "Forteca",
+                Description = "test123",
+                City = "Krakow",
+                ContactEmail = "test@gmail.com",
+                ContactNumber = "123321123",
+                PostalCode = "29-292",
+                Street = "Kompozytorow 19"
+            };
+
+            var userClimbingSpot = new UserClimbingSpot()
+            {
+                ClimbingSpotId = 1,
+                Id = 1,
+                RoleId = 1,
+                UserId = 1
+            };
+
+            //seed
+            SeedUserClimbingSpot(userClimbingSpot);
+
             var httpContent = model.ToJsonHttpContent();
 
             //act
@@ -110,7 +146,6 @@ namespace ClimbingAPI.Tests
 
             //asset
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
-            response.Headers.Location.Should().NotBeNull();
         }
 
 
@@ -189,6 +224,17 @@ namespace ClimbingAPI.Tests
             var dbContext = scope.ServiceProvider.GetService<ClimbingDbContext>();
 
             dbContext.ClimbingSpot.Add(climbingSpot);
+            dbContext.SaveChanges();
+        }
+
+        private void SeedUserClimbingSpot(UserClimbingSpot userClimbingSpot)
+        {
+            //seed
+            var scopedFactory = _factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopedFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetService<ClimbingDbContext>();
+
+            dbContext.UserClimbingSpot.Add(userClimbingSpot);
             dbContext.SaveChanges();
         }
     }

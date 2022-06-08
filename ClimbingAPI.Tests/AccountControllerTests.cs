@@ -1,23 +1,24 @@
 using ClimbingAPI.Entities;
+using ClimbingAPI.Models.User;
 using ClimbingAPI.Services;
+using ClimbingAPI.Services.Interfaces;
+using ClimbingAPI.Tests.Helpers;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using ClimbingAPI.Models.User;
-using ClimbingAPI.Models.Validator;
-using ClimbingAPI.Tests.Helpers;
 using Xunit;
 
 namespace ClimbingAPI.Tests
 {
-    public class AccountServiceTests: IClassFixture<WebApplicationFactory<Startup>>
+    public class AccountControllerTests: IClassFixture<WebApplicationFactory<Startup>>
     {
         public static readonly object[][] UserTestData =
         {
@@ -26,8 +27,9 @@ namespace ClimbingAPI.Tests
         };
 
         private readonly HttpClient _client;
+        private Mock<IAccountService> _accountServiceMock = new Mock<IAccountService>();
 
-        public AccountServiceTests(WebApplicationFactory<Startup> factory)
+        public AccountControllerTests(WebApplicationFactory<Startup> factory)
         {
             _client = factory
                 .WithWebHostBuilder(builder => {
@@ -37,6 +39,7 @@ namespace ClimbingAPI.Tests
                             service.ServiceType == typeof(DbContextOptions<ClimbingDbContext>));
 
                         services.Remove(dbContextOptions);
+                        services.AddSingleton(_accountServiceMock.Object);
                         services.AddDbContext<ClimbingDbContext>(options => options.UseInMemoryDatabase("ClimbingSpotDb"));
                     });
                 })
@@ -127,6 +130,29 @@ namespace ClimbingAPI.Tests
                 .Select(x => x.Value).First());
             UserDateOfBirth.Should()
                 .Be(claimsList.Where(x => x.Type.Contains("DateOfBirth")).Select(x => x.Value).First());
+        }
+
+        [Fact]
+        public async Task Login_ForRegisteredUser_ReturnsOk()
+        {
+            //arrange
+            _accountServiceMock
+                .Setup(e => e.GenerateJwt(It.IsAny<LoginUserDto>())).Returns("jwt");
+
+            var loginDto = new LoginUserDto
+            {
+                Email = "test@gmail.com",
+                Password = "test12"
+            };
+
+            var httpContent = loginDto.ToJsonHttpContent();
+
+            //act
+            var result = await _client.PostAsync("/account/login/", httpContent);
+
+
+            //assert
+            result.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
     }
 }

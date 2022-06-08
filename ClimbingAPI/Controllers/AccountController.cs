@@ -1,7 +1,6 @@
 ﻿using ClimbingAPI.Models.User;
 using ClimbingAPI.Models.UserClimbingSpot;
 using ClimbingAPI.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClimbingAPI.Controllers
