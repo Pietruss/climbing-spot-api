@@ -54,7 +54,7 @@ namespace ClimbingAPI.Services
 
         private void ValidateUserAssignment(int climbingSpotId)
         {
-            var userClimbingSpotEntity =_dbContext.UserClimbingSpot.FirstOrDefault(x =>
+            var userClimbingSpotEntity =_dbContext.UserClimbingSpotLinks.FirstOrDefault(x =>
                 x.UserId == _userContext.GetUserId && x.ClimbingSpotId == climbingSpotId && (x.RoleId == 1 ||
                 x.RoleId == 2 || x.RoleId == 3));
             if(userClimbingSpotEntity is null)

@@ -11,23 +11,22 @@ namespace ClimbingAPI.Entities
         public DbSet<Boulder.Boulder> Boulder { get; set; }
         public DbSet<Role> Role { get; set; }
         public DbSet<User> User { get; set; }
-        public DbSet<UserClimbingSpot> UserClimbingSpot { get; set; }
+        public DbSet<UserClimbingSpotLinks> UserClimbingSpotLinks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ClimbingSpot>()
-                .Property(x => x.Name)
-                .IsRequired()
-                .HasMaxLength(150);
+            modelBuilder.Entity<ClimbingSpot>(eb =>
+            {
+                eb.Property(x => x.Name)
+                    .IsRequired()
+                    .HasMaxLength(150);
 
-            modelBuilder.Entity<ClimbingSpot>()
-                .Property(x => x.ContactEmail)
-                .IsRequired();
+                eb.Property(x => x.ContactEmail)
+                    .IsRequired();
 
-            modelBuilder.Entity<ClimbingSpot>()
-                .Property(x => x.ContactNumber)
-                .IsRequired();
-
+                eb.Property(x => x.ContactNumber)
+                    .IsRequired();
+            });
 
             modelBuilder.Entity<Address.Address>()
                 .Property(x => x.City)
@@ -41,18 +40,17 @@ namespace ClimbingAPI.Entities
                 .Property(x => x.Name)
                 .IsRequired();
 
-            modelBuilder.Entity<User>()
-                .Property(x => x.Email)
-                .IsRequired();
+            modelBuilder.Entity<User>(eb =>
+            {
+                eb.Property(x => x.Email)
+                    .IsRequired();
 
-            modelBuilder.Entity<User>()
-                .Property(x => x.LastName)
-                .IsRequired();
+                eb.Property(x => x.LastName)
+                    .IsRequired();
 
-            modelBuilder.Entity<User>()
-                .Property(x => x.FirstName)
-                .IsRequired();
-
+                eb.Property(x => x.FirstName)
+                    .IsRequired();
+            });
         }
     }
 }

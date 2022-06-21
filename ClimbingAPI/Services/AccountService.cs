@@ -55,13 +55,13 @@ namespace ClimbingAPI.Services
 
             var userClimbingSpot = CreateUserClimbingSpotEntity(user.Id, dto.RoleId);
             
-            _dbContext.UserClimbingSpot.Add(userClimbingSpot);
+            _dbContext.UserClimbingSpotLinks.Add(userClimbingSpot);
             _dbContext.SaveChanges();
         }
 
-        private UserClimbingSpot CreateUserClimbingSpotEntity(int userId, int roleId)
+        private UserClimbingSpotLinks CreateUserClimbingSpotEntity(int userId, int roleId)
         {
-            return new UserClimbingSpot()
+            return new UserClimbingSpotLinks()
             {
                 UserId = userId,
                 ClimbingSpotId = null,
@@ -93,13 +93,13 @@ namespace ClimbingAPI.Services
             
             if (userClimbingSpotEntity is null)
             {
-                var userClimbingSpot = new UserClimbingSpot()
+                var userClimbingSpot = new UserClimbingSpotLinks()
                 {
                     ClimbingSpotId = dto.ClimbingSpotId,
                     UserId = dto.UserId,
                     RoleId = dto.RoleId
                 };
-                _dbContext.UserClimbingSpot.Add(userClimbingSpot);
+                _dbContext.UserClimbingSpotLinks.Add(userClimbingSpot);
             }
             else
             {
@@ -110,9 +110,9 @@ namespace ClimbingAPI.Services
             _dbContext.SaveChanges();
         }
 
-        private UserClimbingSpot GetUserClimbingSpot(int userId, int climbingSpotId, int roleId)
+        private UserClimbingSpotLinks GetUserClimbingSpot(int userId, int climbingSpotId, int roleId)
         {
-            return _dbContext.UserClimbingSpot.FirstOrDefault(x => (x.UserId == userId && x.ClimbingSpotId == null) || (x.UserId == userId && x.ClimbingSpotId == climbingSpotId && x.RoleId != roleId));
+            return _dbContext.UserClimbingSpotLinks.FirstOrDefault(x => (x.UserId == userId && x.ClimbingSpotId == null) || (x.UserId == userId && x.ClimbingSpotId == climbingSpotId && x.RoleId != roleId));
         }
 
         private void Validate(int userId, int climbingSpotId, int roleId, ClaimsPrincipal userPrincipal)
@@ -127,14 +127,14 @@ namespace ClimbingAPI.Services
 
             //checking if user is assigned to climbing spot. If not means that is not a manager or admin in that climbingSpot
             var userClaimId = userPrincipal.FindFirst(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            var userAssignedToClimbingSpot = _dbContext.UserClimbingSpot.FirstOrDefault(x =>
+            var userAssignedToClimbingSpot = _dbContext.UserClimbingSpotLinks.FirstOrDefault(x =>
                 x.UserId == int.Parse(userClaimId) && x.ClimbingSpotId == climbingSpotId  && (x.RoleId == 1 || x.RoleId == 2));
             if(userAssignedToClimbingSpot is null)
                 throw new BadRequestException(
                     $"User with ID: {userClaimId} is not assigned to climbing spot: {climbingSpotId}. You do not have enough rights.");
 
             var userClimbingSpotEntity =
-                _dbContext.UserClimbingSpot.FirstOrDefault(x => x.UserId == userId && x.ClimbingSpotId == climbingSpotId && x.RoleId == roleId);
+                _dbContext.UserClimbingSpotLinks.FirstOrDefault(x => x.UserId == userId && x.ClimbingSpotId == climbingSpotId && x.RoleId == roleId);
             if (userClimbingSpotEntity is not null)
                 throw new BadRequestException(
                     $"User with ID: {userId} already assigned to climbing spot with ID: {climbingSpotId}.");

@@ -89,7 +89,7 @@ namespace ClimbingAPI.Services
 
         private void VerifyUserAssignment()
         {
-            var userClimbingSpot = _dbContext.UserClimbingSpot.FirstOrDefault(x =>
+            var userClimbingSpot = _dbContext.UserClimbingSpotLinks.FirstOrDefault(x =>
                 x.UserId == _userContext.GetUserId && (x.RoleId == 1 || x.RoleId == 2));
             if(userClimbingSpot is null)
                 throw new BadRequestException("You do not have enough rights to create ClimbingSpot.");
@@ -97,16 +97,16 @@ namespace ClimbingAPI.Services
 
         private void AssignClimbingSpotToUser(int? userId, int climbingSpotId)
         { 
-            var climbingSpotUser = _dbContext.UserClimbingSpot.FirstOrDefault(x => x.UserId == userId && x.ClimbingSpotId == null);
+            var climbingSpotUser = _dbContext.UserClimbingSpotLinks.FirstOrDefault(x => x.UserId == userId && x.ClimbingSpotId == null);
             if (climbingSpotUser is null && userId != null)
             {
-                    var userClimbingSpotEntity = new UserClimbingSpot()
+                    var userClimbingSpotEntity = new UserClimbingSpotLinks()
                     {
                         ClimbingSpotId = climbingSpotId,
                         UserId = (int) userId,
                         RoleId = 2
                     };
-                    _dbContext.UserClimbingSpot.Add(userClimbingSpotEntity);
+                    _dbContext.UserClimbingSpotLinks.Add(userClimbingSpotEntity);
             }
             else
             {
@@ -135,10 +135,10 @@ namespace ClimbingAPI.Services
                 throw new ForbidException($"Authorization failed.");
             }
 
-            var userClimbingSpot = _dbContext.UserClimbingSpot.Where(x => x.ClimbingSpotId == id);
+            var userClimbingSpot = _dbContext.UserClimbingSpotLinks.Where(x => x.ClimbingSpotId == id);
             foreach (var item in userClimbingSpot)
             {
-                _dbContext.UserClimbingSpot.Remove(item);
+                _dbContext.UserClimbingSpotLinks.Remove(item);
             }
 
             _dbContext.ClimbingSpot.Remove(climbingSpot);
