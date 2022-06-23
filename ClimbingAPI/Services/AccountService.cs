@@ -130,13 +130,13 @@ namespace ClimbingAPI.Services
             var userAssignedToClimbingSpot = _dbContext.UserClimbingSpotLinks.FirstOrDefault(x =>
                 x.UserId == int.Parse(userClaimId) && x.ClimbingSpotId == climbingSpotId  && (x.RoleId == 1 || x.RoleId == 2));
             if(userAssignedToClimbingSpot is null)
-                throw new UnAuthorizeException(
+                throw new ForbidException(
                     $"User with ID: {userClaimId} is not assigned to climbing spot: {climbingSpotId}. You do not have enough rights.");
 
             var userClimbingSpotEntity =
                 _dbContext.UserClimbingSpotLinks.FirstOrDefault(x => x.UserId == userId && x.ClimbingSpotId == climbingSpotId && x.RoleId == roleId);
             if (userClimbingSpotEntity is not null)
-                throw new UnAuthorizeException(
+                throw new ForbidException(
                     $"User with ID: {userId} already assigned to climbing spot with ID: {climbingSpotId}.");
 
             

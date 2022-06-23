@@ -97,7 +97,7 @@ namespace ClimbingAPI.Tests
         }
 
         [Fact]
-        public async Task AssignClimbingSpotToUser_ForNonAssignedUserWithAdminOrManagerRoleToClimbingSpot_ReturnsUnauthorizedException()
+        public async Task AssignClimbingSpotToUser_ForNonAssignedUserWithAdminOrManagerRoleToClimbingSpot_ReturnsForbiddenException()
         {
             //arrange
 
@@ -113,11 +113,11 @@ namespace ClimbingAPI.Tests
 
 
             //assert
-            result.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
+            result.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
         }
 
         [Fact]
-        public async Task AssignClimbingSpotToUser_ForAlreadyAssignedUser_ReturnsUnauthorizedException()
+        public async Task AssignClimbingSpotToUser_ForAlreadyAssignedUser_ReturnsForbiddenException()
         {
             //arrange
 
@@ -133,7 +133,7 @@ namespace ClimbingAPI.Tests
 
 
             //assert
-            result.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
+            result.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
         }
 
         private static List<UserClimbingSpotLinks> CreateCorrectTestData(out User user, out ClimbingSpot climbingSpot,
@@ -243,7 +243,7 @@ namespace ClimbingAPI.Tests
                 new UserClimbingSpotLinks()
                 {
                     ClimbingSpotId = 7,
-                    Id = 32,
+                    Id = 9,
                     RoleId = 1,
                     UserId = 7
                 }
