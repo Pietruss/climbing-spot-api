@@ -8,6 +8,7 @@ namespace ClimbingAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class ClimbingSpotController: ControllerBase
     {
         private readonly IClimbingSpotService _service;
@@ -18,6 +19,7 @@ namespace ClimbingAPI.Controllers
         }
 
         [HttpGet()]
+        [AllowAnonymous]
         public ActionResult<IEnumerable<ClimbingSpotDto>> GetAll()
         {
             var result = _service.GetAll();
@@ -25,6 +27,7 @@ namespace ClimbingAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public ActionResult<ClimbingSpotDto> Get([FromRoute]int id)
         {
             var climbingSpot =_service.Get(id);

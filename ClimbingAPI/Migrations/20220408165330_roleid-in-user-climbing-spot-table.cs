@@ -8,7 +8,7 @@ namespace ClimbingAPI.Migrations
         {
             migrationBuilder.AddColumn<int>(
                 name: "RoleId",
-                table: "UserClimbingSpot",
+                table: "UserClimbingSpotLinks",
                 type: "int",
                 nullable: true);
         }
@@ -17,7 +17,7 @@ namespace ClimbingAPI.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "RoleId",
-                table: "UserClimbingSpot");
+                table: "UserClimbingSpotLinks");
         }
     }
 }

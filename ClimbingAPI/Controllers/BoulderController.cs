@@ -2,11 +2,13 @@
 using ClimbingAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClimbingAPI.Controllers
 {
     [ApiController]
     [Route(("/climbingSpot/{climbingSpotId}/boulder"))]
+    [Authorize]
     public class BoulderController: ControllerBase
     {
         private readonly IBoulderService _service;
@@ -24,6 +26,7 @@ namespace ClimbingAPI.Controllers
 
         [HttpGet]
         [Route("{boulderId}")]
+        [AllowAnonymous]
         public ActionResult<BoulderDto> Get([FromRoute]int boulderId, [FromRoute] int climbingSpotId)
         {
             var boulderEntity = _service.Get(boulderId, climbingSpotId);
@@ -31,6 +34,7 @@ namespace ClimbingAPI.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult<List<BoulderDto>> GetAll(int climbingSpotId)
         {
             var climbingList = _service.GetAll(climbingSpotId);
