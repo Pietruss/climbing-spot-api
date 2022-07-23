@@ -1,11 +1,6 @@
-﻿using System;
+﻿using ClimbingAPI.Models.ClimbingSpot;
+using ClimbingAPI.Models.UserClimbingSpot;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using ClimbingAPI.Models.ClimbingSpot;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ClimbingAPI.Services.Interfaces
 {
@@ -16,5 +11,6 @@ namespace ClimbingAPI.Services.Interfaces
         int Create(CreateClimbingSpotDto dto);
         void Delete(int id);
         void Update(UpdateClimbingSpotDto dto, int id);
+        void AssignClimbingSpotToUserWithRole(UpdateUserClimbingSpotDto dto);
     }
 }

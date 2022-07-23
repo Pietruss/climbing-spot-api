@@ -23,7 +23,7 @@ namespace ClimbingAPI.Migrations
                 table: "ClimbingSpot");
 
             migrationBuilder.CreateTable(
-                name: "UserClimbingSpot",
+                name: "UserClimbingSpotLinks",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -57,7 +57,7 @@ namespace ClimbingAPI.Migrations
                 table: "ClimbingSpot");
 
             migrationBuilder.DropTable(
-                name: "UserClimbingSpot");
+                name: "UserClimbingSpotLinks");
 
             migrationBuilder.DropIndex(
                 name: "IX_ClimbingSpot_CreatedById",

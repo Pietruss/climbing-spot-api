@@ -2,7 +2,6 @@
 using ClimbingAPI.Entities;
 using ClimbingAPI.Exceptions;
 using ClimbingAPI.Models.User;
-using ClimbingAPI.Models.UserClimbingSpot;
 using ClimbingAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -55,13 +54,13 @@ namespace ClimbingAPI.Services
 
             var userClimbingSpot = CreateUserClimbingSpotEntity(user.Id, dto.RoleId);
             
-            _dbContext.UserClimbingSpot.Add(userClimbingSpot);
+            _dbContext.UserClimbingSpotLinks.Add(userClimbingSpot);
             _dbContext.SaveChanges();
         }
 
-        private UserClimbingSpot CreateUserClimbingSpotEntity(int userId, int roleId)
+        private UserClimbingSpotLinks CreateUserClimbingSpotEntity(int userId, int roleId)
         {
-            return new UserClimbingSpot()
+            return new UserClimbingSpotLinks()
             {
                 UserId = userId,
                 ClimbingSpotId = null,
@@ -82,66 +81,6 @@ namespace ClimbingAPI.Services
             var tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(token);
         }
-
-        public void AssignClimbingSpotToUserWithRole(UpdateUserClimbingSpotDto dto)
-        {
-            _logger.LogInformation("INFO for: AssignClimbingSpotToUserWithRole action from AccountService.");
-
-            Validate(dto.UserId, dto.ClimbingSpotId, dto.RoleId, _userContext.User);
-
-            var userClimbingSpotEntity = GetUserClimbingSpot(dto.UserId, dto.ClimbingSpotId, dto.RoleId);
-            
-            if (userClimbingSpotEntity is null)
-            {
-                var userClimbingSpot = new UserClimbingSpot()
-                {
-                    ClimbingSpotId = dto.ClimbingSpotId,
-                    UserId = dto.UserId,
-                    RoleId = dto.RoleId
-                };
-                _dbContext.UserClimbingSpot.Add(userClimbingSpot);
-            }
-            else
-            {
-                userClimbingSpotEntity.ClimbingSpotId = dto.ClimbingSpotId;
-                userClimbingSpotEntity.UserId = dto.UserId;
-                userClimbingSpotEntity.RoleId = dto.RoleId;
-            }
-            _dbContext.SaveChanges();
-        }
-
-        private UserClimbingSpot GetUserClimbingSpot(int userId, int climbingSpotId, int roleId)
-        {
-            return _dbContext.UserClimbingSpot.FirstOrDefault(x => (x.UserId == userId && x.ClimbingSpotId == null) || (x.UserId == userId && x.ClimbingSpotId == climbingSpotId && x.RoleId != roleId));
-        }
-
-        private void Validate(int userId, int climbingSpotId, int roleId, ClaimsPrincipal userPrincipal)
-        {
-            var user = _dbContext.User.FirstOrDefault(x => x.Id == userId);
-            if (user is null)
-                throw new NotFoundException($"User with ID: {userId} not exists.");
-
-            var climbingSpot = _dbContext.ClimbingSpot.FirstOrDefault(x => x.Id == climbingSpotId);
-            if (climbingSpot is null)
-                throw new NotFoundException($"Climbing spot with ID: {climbingSpotId} not exists.");
-
-            //checking if user is assigned to climbing spot. If not means that is not a manager or admin in that climbingSpot
-            var userClaimId = userPrincipal.FindFirst(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            var userAssignedToClimbingSpot = _dbContext.UserClimbingSpot.FirstOrDefault(x =>
-                x.UserId == int.Parse(userClaimId) && x.ClimbingSpotId == climbingSpotId  && (x.RoleId == 1 || x.RoleId == 2));
-            if(userAssignedToClimbingSpot is null)
-                throw new BadRequestException(
-                    $"User with ID: {userClaimId} is not assigned to climbing spot: {climbingSpotId}. You do not have enough rights.");
-
-            var userClimbingSpotEntity =
-                _dbContext.UserClimbingSpot.FirstOrDefault(x => x.UserId == userId && x.ClimbingSpotId == climbingSpotId && x.RoleId == roleId);
-            if (userClimbingSpotEntity is not null)
-                throw new BadRequestException(
-                    $"User with ID: {userId} already assigned to climbing spot with ID: {climbingSpotId}.");
-
-            
-        }
-
         private JwtSecurityToken GenerateToken(User user)
         {
             var claims = GenerateClaims(user);

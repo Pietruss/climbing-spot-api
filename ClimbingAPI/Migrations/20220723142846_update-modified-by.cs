@@ -2,22 +2,22 @@
 
 namespace ClimbingAPI.Migrations
 {
-    public partial class roleidinuserclimbingspottable : Migration
+    public partial class updatemodifiedby : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "RoleId",
-                table: "UserClimbingSpotLinks",
-                type: "int",
+            migrationBuilder.AddColumn<string>(
+                name: "ModifiedBy",
+                table: "Boulder",
+                type: "nvarchar(max)",
                 nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "RoleId",
-                table: "UserClimbingSpotLinks");
+                name: "ModifiedBy",
+                table: "Boulder");
         }
     }
 }

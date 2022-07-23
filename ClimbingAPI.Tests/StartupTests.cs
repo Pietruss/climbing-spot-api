@@ -14,8 +14,6 @@ namespace ClimbingAPI.Tests
     {
         private readonly WebApplicationFactory<Startup> _factory;
         private readonly List<Type> _controllerTypes;
-
-
         public StartupTests(WebApplicationFactory<Startup> factory)
         {
             _controllerTypes = typeof(Startup)

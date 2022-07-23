@@ -2,8 +2,8 @@
 
 namespace ClimbingAPI.Exceptions
 {
-    public class UnauthorizeException: Exception
+    public class UnAuthorizeException: Exception
     {
-        public UnauthorizeException(string message) : base(message) { }
+        public UnAuthorizeException(string message) : base(message) { }
     }
 }

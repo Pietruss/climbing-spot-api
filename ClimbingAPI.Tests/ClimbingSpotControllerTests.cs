@@ -128,7 +128,7 @@ namespace ClimbingAPI.Tests
                 Street = "Kompozytorow 19"
             };
 
-            var userClimbingSpot = new UserClimbingSpot()
+            var userClimbingSpot = new UserClimbingSpotLinks()
             {
                 ClimbingSpotId = 1,
                 Id = 1,
@@ -227,14 +227,14 @@ namespace ClimbingAPI.Tests
             dbContext.SaveChanges();
         }
 
-        private void SeedUserClimbingSpot(UserClimbingSpot userClimbingSpot)
+        private void SeedUserClimbingSpot(UserClimbingSpotLinks userClimbingSpot)
         {
             //seed
             var scopedFactory = _factory.Services.GetService<IServiceScopeFactory>();
             using var scope = scopedFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetService<ClimbingDbContext>();
 
-            dbContext.UserClimbingSpot.Add(userClimbingSpot);
+            dbContext.UserClimbingSpotLinks.Add(userClimbingSpot);
             dbContext.SaveChanges();
         }
     }

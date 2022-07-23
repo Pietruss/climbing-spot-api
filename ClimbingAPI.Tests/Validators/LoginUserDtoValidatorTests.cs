@@ -28,21 +28,25 @@ namespace ClimbingAPI.Tests.Validators
         {
             var list = new List<LoginUserDto>
             {
+                //wrong email
                 new LoginUserDto()
                 {
                     Email = "test@@gmail.com",
                     Password = "test12"
                 },
+                //empty password
                 new LoginUserDto()
                 {
                     Email = "test@gmail.com",
                     Password = ""
                 },
+                //empty email
                 new LoginUserDto()
                 {
                     Email = "",
                     Password = "test12"
                 },
+                //empty email and password
                 new LoginUserDto()
                 {
                     Email = "",
