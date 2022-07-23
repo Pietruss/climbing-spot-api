@@ -48,6 +48,13 @@ namespace ClimbingAPI.Controllers
             return NoContent();
         }
 
+        [HttpPut("{boulderId}")]
+        public ActionResult Update([FromRoute] int boulderId, [FromRoute] int climbingSpotId, [FromBody] UpdateBoulderDto dto)
+        {
+            _service.Update(boulderId, climbingSpotId, dto);
+            return Ok();
+        }
+
         [HttpDelete]
         public ActionResult DeleteAll([FromRoute] int climbingSpotId)
         {

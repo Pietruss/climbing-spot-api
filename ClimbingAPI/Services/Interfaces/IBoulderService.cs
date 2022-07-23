@@ -1,10 +1,5 @@
-﻿using System;
+﻿using ClimbingAPI.Models.Boulder;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ClimbingAPI.Models.Boulder;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ClimbingAPI.Services.Interfaces
 {
@@ -15,5 +10,6 @@ namespace ClimbingAPI.Services.Interfaces
         List<BoulderDto> GetAll(int climbingSpotId);
         void Delete(int boulderId, int climbingSpotId);
         void DeleteAll(int climbingSpotId);
+        void Update(int boulderId, int climbingSpotId, UpdateBoulderDto dto);
     }
 }

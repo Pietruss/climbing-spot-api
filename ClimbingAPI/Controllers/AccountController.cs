@@ -30,14 +30,5 @@ namespace ClimbingAPI.Controllers
             var token = _service.GenerateJwt(dto);
             return Ok(token);
         }
-
-        [HttpPost("assign-climbing-spot")]
-        [Authorize]
-        public ActionResult AssignClimbingSpotToUser([FromBody] UpdateUserClimbingSpotDto dto)
-        {
-            _service.AssignClimbingSpotToUserWithRole(dto);
-            return Ok();
-        }
-
     }
 }

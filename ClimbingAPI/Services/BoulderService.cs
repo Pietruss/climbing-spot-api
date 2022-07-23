@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
+using ClimbingAPI.Authorization;
 using ClimbingAPI.Entities;
 using ClimbingAPI.Entities.Boulder;
 using ClimbingAPI.Exceptions;
 using ClimbingAPI.Models.Boulder;
 using ClimbingAPI.Services.Interfaces;
 using ClimbingAPI.Utils;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ClimbingAPI.Services
 {
@@ -23,13 +20,15 @@ namespace ClimbingAPI.Services
         private readonly IMapper _mapper;
         private readonly ILogger<BoulderService> _logger;
         private readonly IUserContextService _userContext;
+        private readonly IAuthorizationService _authorizationService;
 
-        public BoulderService(ClimbingDbContext dbContext, IMapper mapper, ILogger<BoulderService> logger, IUserContextService userContext)
+        public BoulderService(ClimbingDbContext dbContext, IMapper mapper, ILogger<BoulderService> logger, IUserContextService userContext, IAuthorizationService authorizationService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _logger = logger;
             _userContext = userContext;
+            _authorizationService = authorizationService;
         }
 
         public int Create(CreateBoulderModelDto dto, int climbingSpotId)
@@ -43,6 +42,7 @@ namespace ClimbingAPI.Services
             var boulderEntity = _mapper.Map<Boulder>(dto);
             boulderEntity.ClimbingSpotId = climbingSpotId;
             boulderEntity.CreatedById = _userContext.GetUserId;
+            boulderEntity.ModifiedByUserId = _userContext.GetUserId;
 
             _dbContext.Boulder.Add(boulderEntity);
             
@@ -133,6 +133,41 @@ namespace ClimbingAPI.Services
             }
 
             return climbingSpot;
+        }
+
+        public void Update(int boulderId, int climbingSpotId, UpdateBoulderDto dto)
+        {
+            _logger.LogInformation($"INFO for: UPDATE action from BoulderService. Boulder Id: {boulderId}.");
+
+            var boulderUpdate = new BoulderUpdate()
+            {
+                BoulderId = boulderId,
+                ClimbingSpotId = climbingSpotId
+            };
+
+            var authorizationResult = _authorizationService.AuthorizeAsync(_userContext.User, boulderUpdate,
+                new ResourceOperationRequirement(ResourceOperation.Update)).Result;
+            if (!authorizationResult.Succeeded)
+            {
+                _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
+                throw new UnAuthorizeException($"Authorization failed.");
+            }
+
+            Boulder boulder = UpdateBoulderField(boulderId, dto);
+
+            _dbContext.Boulder.Update(boulder);
+            _dbContext.SaveChanges();
+        }
+
+        private Boulder UpdateBoulderField(int boulderId, UpdateBoulderDto dto)
+        {
+            var boulder = _dbContext.Boulder.FirstOrDefault(x => x.Id == boulderId);
+
+            boulder.Name = dto.Name;
+            boulder.Level = dto.Level;
+            boulder.Description = dto.Description;
+
+            return boulder;
         }
     }
 }

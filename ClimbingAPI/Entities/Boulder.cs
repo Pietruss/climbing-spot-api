@@ -9,6 +9,7 @@ namespace ClimbingAPI.Entities.Boulder
         public string Description { get; set; }
         public string Level { get; set; }
         public int ClimbingSpotId { get; set; }
+        public int? ModifiedByUserId { get; set; }
         public string Author { get; set; }
         public DateTime ModificationTime { get; set; }
         public int? CreatedById { get; set; }

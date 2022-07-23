@@ -1,4 +1,5 @@
 ﻿using ClimbingAPI.Models.ClimbingSpot;
+using ClimbingAPI.Models.UserClimbingSpot;
 using ClimbingAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -52,6 +53,14 @@ namespace ClimbingAPI.Controllers
         public ActionResult Update([FromBody] UpdateClimbingSpotDto dto, [FromRoute] int id)
         {   
             _service.Update(dto, id);
+            return Ok();
+        }
+
+        [HttpPost("assign-climbing-spot")]
+        [Authorize]
+        public ActionResult AssignClimbingSpotToUser([FromBody] UpdateUserClimbingSpotDto dto)
+        {
+            _service.AssignClimbingSpotToUserWithRole(dto);
             return Ok();
         }
     }

@@ -49,7 +49,7 @@ namespace ClimbingAPI.Tests
             var httpContent = updateUserClimbingSpotDto.ToJsonHttpContent();
 
             //act
-            var result = await _client.PostAsync("/account/assign-climbing-spot/", httpContent);
+            var result = await _client.PostAsync("/ClimbingSpot/assign-climbing-spot/", httpContent);
 
 
             //assert
@@ -109,7 +109,7 @@ namespace ClimbingAPI.Tests
             var httpContent = updateUserClimbingSpotDto.ToJsonHttpContent();
 
             //act
-            var result = await _client.PostAsync("/account/assign-climbing-spot/", httpContent);
+            var result = await _client.PostAsync("/ClimbingSpot/assign-climbing-spot/", httpContent);
 
 
             //assert
@@ -129,7 +129,7 @@ namespace ClimbingAPI.Tests
             var httpContent = updateUserClimbingSpotDto.ToJsonHttpContent();
 
             //act
-            var result = await _client.PostAsync("/account/assign-climbing-spot/", httpContent);
+            var result = await _client.PostAsync("/ClimbingSpot/assign-climbing-spot/", httpContent);
 
 
             //assert
