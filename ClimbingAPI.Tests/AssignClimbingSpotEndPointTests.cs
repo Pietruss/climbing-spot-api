@@ -44,7 +44,7 @@ namespace ClimbingAPI.Tests
             var userClimbingSpot = CreateCorrectTestData(out var user, out var climbingSpot, out var updateUserClimbingSpotDto);
 
             //seed
-            SeedUserClimbingSpot(userClimbingSpot, user, climbingSpot);
+            SeedHelper.SeedUserClimbingSpotAndUserAndClimbingSpot(userClimbingSpot, user, climbingSpot, _factory);
 
             var httpContent = updateUserClimbingSpotDto.ToJsonHttpContent();
 
@@ -64,7 +64,7 @@ namespace ClimbingAPI.Tests
             var userClimbingSpot = CreateIncorrectForNonExistingUserTestData(out var user, out var climbingSpot, out var updateUserClimbingSpotDto);
 
             //seed
-            SeedUserClimbingSpot(userClimbingSpot, user, climbingSpot);
+            SeedHelper.SeedUserClimbingSpotAndUserAndClimbingSpot(userClimbingSpot, user, climbingSpot, _factory);
 
             var httpContent = updateUserClimbingSpotDto.ToJsonHttpContent();
 
@@ -84,7 +84,7 @@ namespace ClimbingAPI.Tests
             var userClimbingSpot = CreateIncorrectForNonExistingClimbingSpotTestData(out var user, out var climbingSpot, out var updateUserClimbingSpotDto);
 
             //seed
-            SeedUserClimbingSpot(userClimbingSpot, user, climbingSpot);
+            SeedHelper.SeedUserClimbingSpotAndUserAndClimbingSpot(userClimbingSpot, user, climbingSpot, _factory);
 
             var httpContent = updateUserClimbingSpotDto.ToJsonHttpContent();
 
@@ -104,7 +104,7 @@ namespace ClimbingAPI.Tests
             var userClimbingSpot = CreateIncorrectForNotAssignedUserWithAdminOrManagerRoleToClimbingSpotTestData(out var user, out var climbingSpot, out var updateUserClimbingSpotDto);
 
             //seed
-            SeedUserClimbingSpot(userClimbingSpot, user, climbingSpot);
+            SeedHelper.SeedUserClimbingSpotAndUserAndClimbingSpot(userClimbingSpot, user, climbingSpot, _factory);
 
             var httpContent = updateUserClimbingSpotDto.ToJsonHttpContent();
 
@@ -124,7 +124,7 @@ namespace ClimbingAPI.Tests
             var userClimbingSpot = CreateIncorrectForAlreadyAssignedUserToClimbingSpotTestData(out var user, out var climbingSpot, out var updateUserClimbingSpotDto);
 
             //seed
-            SeedUserClimbingSpot(userClimbingSpot, user, climbingSpot);
+            SeedHelper.SeedUserClimbingSpotAndUserAndClimbingSpot(userClimbingSpot, user, climbingSpot, _factory);
 
             var httpContent = updateUserClimbingSpotDto.ToJsonHttpContent();
 
@@ -309,17 +309,5 @@ namespace ClimbingAPI.Tests
             return userClimbingSpot;
         }
 
-        private void SeedUserClimbingSpot(List<UserClimbingSpotLinks> userClimbingSpot, User user, ClimbingSpot climbingSpot)
-        {
-            //seed
-            var scopedFactory = _factory.Services.GetService<IServiceScopeFactory>();
-            using var scope = scopedFactory.CreateScope();
-            var dbContext = scope.ServiceProvider.GetService<ClimbingDbContext>();
-
-            dbContext.UserClimbingSpotLinks.AddRange(userClimbingSpot);
-            dbContext.User.Add(user);
-            dbContext.ClimbingSpot.Add(climbingSpot);
-            dbContext.SaveChanges();
-        }
     }
 }

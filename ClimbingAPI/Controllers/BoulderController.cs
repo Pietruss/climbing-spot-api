@@ -27,9 +27,9 @@ namespace ClimbingAPI.Controllers
         [HttpGet]
         [Route("{boulderId}")]
         [AllowAnonymous]
-        public ActionResult<BoulderDto> Get([FromRoute]int boulderId, [FromRoute] int climbingSpotId)
+        public ActionResult<BoulderDto> Get([FromRoute]int climbingSpotId, [FromRoute] int boulderId)
         {
-            var boulderEntity = _service.Get(boulderId, climbingSpotId);
+            var boulderEntity = _service.Get(climbingSpotId, boulderId);
             return Ok(boulderEntity);
         }
 
@@ -42,16 +42,16 @@ namespace ClimbingAPI.Controllers
         }
 
         [HttpDelete("{boulderId}")]
-        public ActionResult Delete([FromRoute] int boulderId, [FromRoute] int climbingSpotId)
+        public ActionResult Delete([FromRoute] int climbingSpotId, [FromRoute] int boulderId)
         {
-            _service.Delete(boulderId, climbingSpotId);
+            _service.Delete(climbingSpotId, boulderId);
             return NoContent();
         }
 
         [HttpPut("{boulderId}")]
-        public ActionResult Update([FromRoute] int boulderId, [FromRoute] int climbingSpotId, [FromBody] UpdateBoulderDto dto)
+        public ActionResult Update([FromRoute] int climbingSpotId, [FromRoute] int boulderId, [FromBody] UpdateBoulderDto dto)
         {
-            _service.Update(boulderId, climbingSpotId, dto);
+            _service.Update(climbingSpotId, boulderId, dto);
             return Ok();
         }
 

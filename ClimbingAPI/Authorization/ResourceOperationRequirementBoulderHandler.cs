@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ClimbingAPI.Authorization
 {
-    public class ResourceOperationRequirementBoulderHandler: AuthorizationHandler<ResourceOperationRequirement, BoulderUpdate>
+    public class ResourceOperationRequirementBoulderHandler: AuthorizationHandler<ResourceOperationRequirement, BoulderUpdateAuthorization>
     {
         private readonly ClimbingDbContext _dbContext;
         public ResourceOperationRequirementBoulderHandler(ClimbingDbContext dbContext)
@@ -15,7 +15,7 @@ namespace ClimbingAPI.Authorization
         }
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
             ResourceOperationRequirement requirement,
-            BoulderUpdate boulderUpdate)
+            BoulderUpdateAuthorization boulderUpdate)
         {
             if (requirement.ResourceOperation == ResourceOperation.Create ||
                 requirement.ResourceOperation == ResourceOperation.Read || requirement.ResourceOperation == ResourceOperation.Delete)
