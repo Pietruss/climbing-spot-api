@@ -43,6 +43,7 @@ namespace ClimbingAPI.Services
             boulderEntity.ModifiedByUserId = _userContext.GetUserId;
 
 
+
             _dbContext.Boulder.Add(boulderEntity);
             
             WhoColumns.Fill(boulderEntity);
