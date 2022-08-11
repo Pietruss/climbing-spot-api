@@ -25,4 +25,4 @@ jobs:
         working-directory: ClimbingAPI/
       - name: Test
         run: dotnet test
-        working-directory: ClimbingAPI.Tests/
+        working-directory: ClimbingAPI/
