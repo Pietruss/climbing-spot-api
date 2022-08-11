@@ -501,7 +501,7 @@ namespace ClimbingAPI.Tests
             var response = await _client.PostAsync($"/climbingSpot/232/boulder", httpContent);
 
             //assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
         }
 
     }
