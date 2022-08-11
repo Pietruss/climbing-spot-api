@@ -33,6 +33,11 @@ namespace ClimbingAPI.Middleware
                 context.Response.StatusCode = 400;
                 await context.Response.WriteAsync(ex.Message);
             }
+            catch (UnAuthorizeException ex)
+            {
+                context.Response.StatusCode = 401;
+                await context.Response.WriteAsync(ex.Message);
+            }
             catch (ForbidException ex)
             {
                 context.Response.StatusCode = 403;

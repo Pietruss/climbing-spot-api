@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
+using ClimbingAPI.Authorization;
 using ClimbingAPI.Entities;
 using ClimbingAPI.Entities.Boulder;
 using ClimbingAPI.Exceptions;
 using ClimbingAPI.Models.Boulder;
 using ClimbingAPI.Services.Interfaces;
 using ClimbingAPI.Utils;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ClimbingAPI.Services
 {
@@ -23,13 +20,15 @@ namespace ClimbingAPI.Services
         private readonly IMapper _mapper;
         private readonly ILogger<BoulderService> _logger;
         private readonly IUserContextService _userContext;
+        private readonly IAuthorizationService _authorizationService;
 
-        public BoulderService(ClimbingDbContext dbContext, IMapper mapper, ILogger<BoulderService> logger, IUserContextService userContext)
+        public BoulderService(ClimbingDbContext dbContext, IMapper mapper, ILogger<BoulderService> logger, IUserContextService userContext, IAuthorizationService authorizationService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _logger = logger;
             _userContext = userContext;
+            _authorizationService = authorizationService;
         }
 
         public int Create(CreateBoulderModelDto dto, int climbingSpotId)
@@ -38,11 +37,10 @@ namespace ClimbingAPI.Services
 
             ValidateUserAssignment(climbingSpotId);
 
-            GetClimbingSpotById(climbingSpotId);
-
             var boulderEntity = _mapper.Map<Boulder>(dto);
             boulderEntity.ClimbingSpotId = climbingSpotId;
             boulderEntity.CreatedById = _userContext.GetUserId;
+            boulderEntity.ModifiedByUserId = _userContext.GetUserId;
 
             _dbContext.Boulder.Add(boulderEntity);
             
@@ -54,21 +52,22 @@ namespace ClimbingAPI.Services
 
         private void ValidateUserAssignment(int climbingSpotId)
         {
-            var userClimbingSpotEntity =_dbContext.UserClimbingSpot.FirstOrDefault(x =>
+            var userClimbingSpotEntity =_dbContext.UserClimbingSpotLinks.FirstOrDefault(x =>
                 x.UserId == _userContext.GetUserId && x.ClimbingSpotId == climbingSpotId && (x.RoleId == 1 ||
                 x.RoleId == 2 || x.RoleId == 3));
             if(userClimbingSpotEntity is null)
-                throw new BadRequestException("No enough rights to create boulder.");
+                throw new UnAuthorizeException("No enough rights to create boulder.");
         }
 
-        public BoulderDto Get(int boulderId, int climbingSpotId)
+        public BoulderDto Get(int climbingSpotId, int boulderId)
         {
             _logger.LogInformation($"INFO for: GET action from BoulderService. Boulder Id: \"{boulderId}\", Climbing Spot Id: {climbingSpotId}.");
 
             var climbingSpot = GetClimbingSpotById(climbingSpotId);
 
-            var boulder = _dbContext.Boulder.FirstOrDefault(x => x.Id == boulderId);
-            if (boulder is null || boulder.ClimbingSpotId != climbingSpotId)
+            var boulder = climbingSpot.Boulder.FirstOrDefault(x => x.Id == boulderId);
+
+            if (boulder is null)
             {
                 _logger.LogError($"ERROR for: GET action from Boulder Service. Boulder ID: \"{boulderId}\" in Climbing Spot ID: {climbingSpotId} not found.");
                 throw new NotFoundException($"Boulder with ID: {boulderId} not found for Climbing spot with ID: {climbingSpotId}.");
@@ -89,16 +88,16 @@ namespace ClimbingAPI.Services
             return boulderListDto;
         }
 
-        public void Delete(int boulderId, int climbingSpotId)
+        public void Delete(int climbingSpotId, int boulderId)
         {
             _logger.LogInformation($"INFO for: DELETE action from BoulderService. Boulder Id: {boulderId}.");
 
             ValidateUserAssignment(climbingSpotId);
 
-            GetClimbingSpotById(climbingSpotId);
+            var climbingSpot = GetClimbingSpotById(climbingSpotId);
             
-            var boulder = _dbContext.Boulder.FirstOrDefault(x => x.Id == boulderId);
-            if (boulder is null || boulder.ClimbingSpotId != climbingSpotId)
+            var boulder = climbingSpot.Boulder.FirstOrDefault(x => x.Id == boulderId);
+            if (boulder is null)
             {
                 _logger.LogError($"ERROR for: DELETE action from Boulder Service. Boulder with ID: \"{boulderId}\" not found.");
                 throw new NotFoundException($"Boulder with ID: {boulderId} for Climbing Spot ID: {climbingSpotId} not found.");
@@ -133,6 +132,39 @@ namespace ClimbingAPI.Services
             }
 
             return climbingSpot;
+        }
+
+        public void Update(int climbingSpotId, int boulderId, UpdateBoulderDto dto)
+        {
+            _logger.LogInformation($"INFO for: UPDATE action from BoulderService. Boulder Id: {boulderId}.");
+
+            var boulderUpdate = new BoulderUpdateAuthorization()
+            {
+                BoulderId = boulderId,
+                ClimbingSpotId = climbingSpotId
+            };
+
+            var authorizationResult = _authorizationService.AuthorizeAsync(_userContext.User, boulderUpdate,
+                new ResourceOperationRequirement(ResourceOperation.Update)).Result;
+            if (!authorizationResult.Succeeded)
+            {
+                _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
+                throw new UnAuthorizeException($"Authorization failed.");
+            }
+            var boulder = _dbContext.Boulder.FirstOrDefault(x => x.Id == boulderId);
+            boulder = UpdateBoulderField(boulder, dto);
+
+            _dbContext.Boulder.Update(boulder);
+            _dbContext.SaveChanges();
+        }
+
+        private Boulder UpdateBoulderField(Boulder boulder, UpdateBoulderDto dto)
+        {
+            boulder.Name = dto.Name;
+            boulder.Level = dto.Level;
+            boulder.Description = dto.Description;
+
+            return boulder;
         }
     }
 }

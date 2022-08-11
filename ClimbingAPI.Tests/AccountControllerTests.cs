@@ -4,6 +4,7 @@ using ClimbingAPI.Services;
 using ClimbingAPI.Services.Interfaces;
 using ClimbingAPI.Tests.Helpers;
 using FluentAssertions;
+using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,10 +29,11 @@ namespace ClimbingAPI.Tests
 
         private readonly HttpClient _client;
         private Mock<IAccountService> _accountServiceMock = new Mock<IAccountService>();
+        private readonly WebApplicationFactory<Startup> _factory;
 
         public AccountControllerTests(WebApplicationFactory<Startup> factory)
         {
-            _client = factory
+            _factory = factory
                 .WithWebHostBuilder(builder => {
                     builder.ConfigureServices(services =>
                     {
@@ -39,11 +41,13 @@ namespace ClimbingAPI.Tests
                             service.ServiceType == typeof(DbContextOptions<ClimbingDbContext>));
 
                         services.Remove(dbContextOptions);
+                        services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
+                        services.AddMvc(option => option.Filters.Add(new FakeUserAdminRoleFilter()));
                         services.AddSingleton(_accountServiceMock.Object);
-                        services.AddDbContext<ClimbingDbContext>(options => options.UseInMemoryDatabase("ClimbingSpotDb"));
+                        services.AddDbContext<ClimbingDbContext>(options => options.UseInMemoryDatabase("ClimbingSpotDb1"));
                     });
-                })
-                .CreateClient();
+                });
+            _client = _factory.CreateClient();
         }
 
         [Fact]
@@ -135,9 +139,9 @@ namespace ClimbingAPI.Tests
         [Fact]
         public async Task Login_ForRegisteredUser_ReturnsOk()
         {
-            //arrange
-            _accountServiceMock
-                .Setup(e => e.GenerateJwt(It.IsAny<LoginUserDto>())).Returns("jwt");
+            // arrange
+             _accountServiceMock
+                 .Setup(e => e.GenerateJwt(It.IsAny<LoginUserDto>())).Returns("jwt");
 
             var loginDto = new LoginUserDto
             {

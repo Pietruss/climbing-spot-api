@@ -18,13 +18,10 @@ namespace ClimbingAPI
         {
             if (_dbContext.Database.CanConnect())
             {
-                if (!_dbContext.Database.IsRelational())
+                if (!_dbContext.Role.Any())
                 {
-                    if (!_dbContext.Role.Any())
-                    {
-                        _dbContext.Role.AddRange(GetRoles());
-                        _dbContext.SaveChanges();
-                    }
+                    _dbContext.Role.AddRange(GetRoles());
+                    _dbContext.SaveChanges();
                 }
             }
         }
@@ -43,7 +40,7 @@ namespace ClimbingAPI
                 },
                 new Role()
                 {
-                    Name = "Bald Builder"
+                    Name = "Routesetter"
                 },
                 new Role()
                 {

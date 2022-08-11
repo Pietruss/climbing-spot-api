@@ -183,7 +183,7 @@ namespace ClimbingAPI.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("ClimbingAPI.Entities.UserClimbingSpot", b =>
+            modelBuilder.Entity("ClimbingAPI.Entities.UserClimbingSpotLinks", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -201,7 +201,7 @@ namespace ClimbingAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserClimbingSpot");
+                    b.ToTable("UserClimbingSpotLinks");
                 });
 
             modelBuilder.Entity("ClimbingAPI.Entities.Boulder.Boulder", b =>

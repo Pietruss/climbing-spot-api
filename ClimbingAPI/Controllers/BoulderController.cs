@@ -2,11 +2,13 @@
 using ClimbingAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClimbingAPI.Controllers
 {
     [ApiController]
     [Route(("/climbingSpot/{climbingSpotId}/boulder"))]
+    [Authorize]
     public class BoulderController: ControllerBase
     {
         private readonly IBoulderService _service;
@@ -24,13 +26,15 @@ namespace ClimbingAPI.Controllers
 
         [HttpGet]
         [Route("{boulderId}")]
-        public ActionResult<BoulderDto> Get([FromRoute]int boulderId, [FromRoute] int climbingSpotId)
+        [AllowAnonymous]
+        public ActionResult<BoulderDto> Get([FromRoute]int climbingSpotId, [FromRoute] int boulderId)
         {
-            var boulderEntity = _service.Get(boulderId, climbingSpotId);
+            var boulderEntity = _service.Get(climbingSpotId, boulderId);
             return Ok(boulderEntity);
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult<List<BoulderDto>> GetAll(int climbingSpotId)
         {
             var climbingList = _service.GetAll(climbingSpotId);
@@ -38,10 +42,17 @@ namespace ClimbingAPI.Controllers
         }
 
         [HttpDelete("{boulderId}")]
-        public ActionResult Delete([FromRoute] int boulderId, [FromRoute] int climbingSpotId)
+        public ActionResult Delete([FromRoute] int climbingSpotId, [FromRoute] int boulderId)
         {
-            _service.Delete(boulderId, climbingSpotId);
+            _service.Delete(climbingSpotId, boulderId);
             return NoContent();
+        }
+
+        [HttpPut("{boulderId}")]
+        public ActionResult Update([FromRoute] int climbingSpotId, [FromRoute] int boulderId, [FromBody] UpdateBoulderDto dto)
+        {
+            _service.Update(climbingSpotId, boulderId, dto);
+            return Ok();
         }
 
         [HttpDelete]

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClimbingAPI.Migrations
 {
     [DbContext(typeof(ClimbingDbContext))]
-    [Migration("20220408170716_drop-roleid-from-user-table")]
-    partial class droproleidfromusertable
+    [Migration("20220723142846_update-modified-by")]
+    partial class updatemodifiedby
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -74,6 +74,9 @@ namespace ClimbingAPI.Migrations
                     b.Property<DateTime>("ModificationTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -111,9 +114,6 @@ namespace ClimbingAPI.Migrations
                     b.Property<int?>("CreatedById")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CreatedById1")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -130,7 +130,7 @@ namespace ClimbingAPI.Migrations
                     b.HasIndex("AddressId")
                         .IsUnique();
 
-                    b.HasIndex("CreatedById1");
+                    b.HasIndex("CreatedById");
 
                     b.ToTable("ClimbingSpot");
                 });
@@ -158,9 +158,6 @@ namespace ClimbingAPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ClimbingSpotId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime2");
 
@@ -179,12 +176,7 @@ namespace ClimbingAPI.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RoleId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
 
                     b.ToTable("User");
                 });
@@ -235,20 +227,11 @@ namespace ClimbingAPI.Migrations
 
                     b.HasOne("ClimbingAPI.Entities.User", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById1");
+                        .HasForeignKey("CreatedById");
 
                     b.Navigation("Address");
 
                     b.Navigation("CreatedBy");
-                });
-
-            modelBuilder.Entity("ClimbingAPI.Entities.User", b =>
-                {
-                    b.HasOne("ClimbingAPI.Entities.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId");
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("ClimbingAPI.Entities.Address.Address", b =>
