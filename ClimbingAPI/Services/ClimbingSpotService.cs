@@ -5,6 +5,7 @@ using ClimbingAPI.Exceptions;
 using ClimbingAPI.Models.ClimbingSpot;
 using ClimbingAPI.Models.UserClimbingSpot;
 using ClimbingAPI.Services.Interfaces;
+using ClimbingAPI.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -73,6 +74,10 @@ namespace ClimbingAPI.Services
             climbingSpot.CreatedById = _userContext.GetUserId;
 
             _dbContext.ClimbingSpot.Add(climbingSpot);
+
+            WhoColumns.CreationFiller(climbingSpot, _userContext.GetUserId);
+            WhoColumns.CreationFiller(climbingSpot.Address, _userContext.GetUserId);
+
             _dbContext.SaveChanges();
 
             AssignClimbingSpotToUser(_userContext.GetUserId, climbingSpot.Id);
@@ -101,12 +106,16 @@ namespace ClimbingAPI.Services
                         UserId = (int) userId,
                         RoleId = 2
                     };
+                    WhoColumns.CreationFiller(userClimbingSpotEntity, _userContext.GetUserId);
                     _dbContext.UserClimbingSpotLinks.Add(userClimbingSpotEntity);
             }
             else
             {
-                if (climbingSpotUser != null) 
+                if (climbingSpotUser != null)
+                {
                     climbingSpotUser.ClimbingSpotId = climbingSpotId;
+                    WhoColumns.CreationFiller(climbingSpotUser, _userContext.GetUserId);
+                }
             }
         }
 
@@ -166,6 +175,9 @@ namespace ClimbingAPI.Services
             climbingSpot.ContactNumber = dto.ContactNumber;
 
             _dbContext.Update(climbingSpot);
+
+            WhoColumns.ModificationFiller(climbingSpot, _userContext.GetUserId);
+
             _dbContext.SaveChanges();
         }
 
@@ -185,6 +197,9 @@ namespace ClimbingAPI.Services
                     UserId = dto.UserId,
                     RoleId = dto.RoleId
                 };
+
+                WhoColumns.CreationFiller(userClimbingSpot, _userContext.GetUserId);
+
                 _dbContext.UserClimbingSpotLinks.Add(userClimbingSpot);
             }
             else
@@ -192,6 +207,7 @@ namespace ClimbingAPI.Services
                 userClimbingSpotEntity.ClimbingSpotId = dto.ClimbingSpotId;
                 userClimbingSpotEntity.UserId = dto.UserId;
                 userClimbingSpotEntity.RoleId = dto.RoleId;
+                WhoColumns.ModificationFiller(userClimbingSpotEntity, _userContext.GetUserId);
             }
             _dbContext.SaveChanges();
         }

@@ -40,13 +40,10 @@ namespace ClimbingAPI.Services
             var boulderEntity = _mapper.Map<Boulder>(dto);
             boulderEntity.ClimbingSpotId = climbingSpotId;
             boulderEntity.CreatedById = _userContext.GetUserId;
-            boulderEntity.ModifiedByUserId = _userContext.GetUserId;
-
-
 
             _dbContext.Boulder.Add(boulderEntity);
             
-            WhoColumns.Fill(boulderEntity);
+            WhoColumns.CreationFiller(boulderEntity, _userContext.GetUserId);
             _dbContext.SaveChanges();
 
             return boulderEntity.Id;
@@ -156,6 +153,7 @@ namespace ClimbingAPI.Services
             var boulder = _dbContext.Boulder.FirstOrDefault(x => x.Id == boulderId);
             boulder = UpdateBoulderField(boulder, dto);
 
+            WhoColumns.ModificationFiller(boulder, _userContext.GetUserId);
             _dbContext.Boulder.Update(boulder);
             _dbContext.SaveChanges();
         }

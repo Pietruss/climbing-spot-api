@@ -4,14 +4,16 @@ using ClimbingAPI.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ClimbingAPI.Migrations
 {
     [DbContext(typeof(ClimbingDbContext))]
-    partial class ClimbingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220812105932_whoColumns")]
+    partial class whoColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,7 +41,7 @@ namespace ClimbingAPI.Migrations
                     b.Property<DateTime>("ModificationDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ModifiedByUserId")
+                    b.Property<string>("ModifiedUserId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PostalCode")
@@ -81,7 +83,7 @@ namespace ClimbingAPI.Migrations
                     b.Property<DateTime>("ModificationDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ModifiedByUserId")
+                    b.Property<string>("ModifiedUserId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -130,7 +132,7 @@ namespace ClimbingAPI.Migrations
                     b.Property<DateTime>("ModificationDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ModifiedByUserId")
+                    b.Property<string>("ModifiedUserId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -164,7 +166,7 @@ namespace ClimbingAPI.Migrations
                     b.Property<DateTime>("ModificationDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ModifiedByUserId")
+                    b.Property<string>("ModifiedUserId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -207,7 +209,7 @@ namespace ClimbingAPI.Migrations
                     b.Property<DateTime>("ModificationDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ModifiedByUserId")
+                    b.Property<string>("ModifiedUserId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
@@ -237,7 +239,7 @@ namespace ClimbingAPI.Migrations
                     b.Property<DateTime>("ModificationDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ModifiedByUserId")
+                    b.Property<string>("ModifiedUserId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("RoleId")

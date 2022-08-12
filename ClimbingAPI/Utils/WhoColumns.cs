@@ -1,19 +1,58 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ClimbingAPI.Entities;
-using ClimbingAPI.Entities.Boulder;
+using System.Reflection;
 
 namespace ClimbingAPI.Utils
 {
-    public static class WhoColumns
+    public class WhoColumns
     {
-        public static void Fill(Boulder boulder)
+        public static void CreationFiller(object obj, int? userId)
         {
-            boulder.Author = "Admin"; //TODO: implement after authentication
-            boulder.ModificationTime = DateTime.Now;
+            var properties = GetObjectProperties(obj);
+
+            foreach (var property in properties)
+            {
+                SetCreationValues(property, obj, userId);
+            }
+        }
+
+        public static void ModificationFiller(object obj, int? userId)
+        {
+            var properties = GetObjectProperties(obj);
+
+            foreach (var property in properties)
+            {
+                SetModificationValues(property, obj, userId);
+            }
+        }
+
+        private static PropertyInfo[] GetObjectProperties(object obj)
+        {
+            Type objType = obj.GetType();
+            return objType.GetProperties();
+        }
+
+        private static void SetModificationValues(PropertyInfo property, object obj, int? userId)
+        {
+            if (property.Name.Equals("ModifiedByUserId"))
+            {
+                property.SetValue(obj, userId.ToString());
+            }
+            if (property.Name.Equals("ModificationDateTime"))
+            {
+                property.SetValue(obj, DateTime.Now);
+            }
+        }
+
+        private static void SetCreationValues(PropertyInfo property, object obj, int? userId)
+        {
+            if (property.Name.Equals("CreatedByUserId"))
+            {
+                property.SetValue(obj, userId.ToString());
+            }
+            if (property.Name.Equals("CreationDateTime"))
+            {
+                property.SetValue(obj, DateTime.Now);
+            }
         }
     }
 }
