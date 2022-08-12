@@ -7,10 +7,10 @@ namespace ClimbingAPI.Services.Interfaces
     public interface IClimbingSpotService
     {
         IEnumerable<ClimbingSpotDto> GetAll();
-        ClimbingSpotDto Get(int id);
+        ClimbingSpotDto Get(int climbingSpotId);
         int Create(CreateClimbingSpotDto dto);
-        void Delete(int id);
-        void Update(UpdateClimbingSpotDto dto, int id);
+        void Delete(int climbingSpotId);
+        void Update(UpdateClimbingSpotDto dto, int climbingSpotId);
         void AssignClimbingSpotToUserWithRole(UpdateUserClimbingSpotDto dto);
     }
 }

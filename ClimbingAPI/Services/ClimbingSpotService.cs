@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ClimbingAPI.Authorization;
+using ClimbingAPI.Authorization.AuthorizationEntity;
 using ClimbingAPI.Entities;
 using ClimbingAPI.Exceptions;
 using ClimbingAPI.Models.ClimbingSpot;
@@ -68,7 +69,12 @@ namespace ClimbingAPI.Services
         {
             _logger.LogInformation("INFO for: CREATE action from ClimbingSpotService.");
 
-            VerifyUserAssignment();
+            var authorizationResult = Authorize(ResourceOperation.Create, new ClimbingSpotAuthorization() { });
+            if (!authorizationResult.Succeeded)
+            {
+                _logger.LogError($"ERROR for: CREATE action from ClimbingSpotService. Authorization failed.");
+                throw new UnAuthorizeException($"Authorization failed.");
+            }
 
             var climbingSpot = _mapper.Map<ClimbingSpot>(dto);
             climbingSpot.CreatedById = _userContext.GetUserId;
@@ -85,14 +91,6 @@ namespace ClimbingAPI.Services
             _dbContext.SaveChanges();
 
             return climbingSpot.Id;
-        }
-
-        private void VerifyUserAssignment()
-        {
-            var userClimbingSpot = _dbContext.UserClimbingSpotLinks.FirstOrDefault(x =>
-                x.UserId == _userContext.GetUserId && (x.RoleId == 1 || x.RoleId == 2));
-            if(userClimbingSpot is null)
-                throw new BadRequestException("You do not have enough rights to create ClimbingSpot.");
         }
 
         private void AssignClimbingSpotToUser(int? userId, int climbingSpotId)
@@ -119,27 +117,26 @@ namespace ClimbingAPI.Services
             }
         }
 
-        public void Delete(int id)
+        public void Delete(int climbingSpotId)
         {
-            _logger.LogInformation($"INFO for: DELETE action from ClimbingSpotService. ID: \"{id}\".");
+            _logger.LogInformation($"INFO for: DELETE action from ClimbingSpotService. ID: \"{climbingSpotId}\".");
 
-            var climbingSpot = _dbContext.ClimbingSpot.FirstOrDefault(x => x.Id == id);
-
+            var climbingSpot = _dbContext.ClimbingSpot.FirstOrDefault(x => x.Id == climbingSpotId);
             if (climbingSpot is null)
             {
-                _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. ID: \"{id}\" not found.");
-                throw new NotFoundException($"Restaurant with ID: {id} not found.");
+                //I do not want to show user that mentioned record is not present in the database 
+                _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
+                throw new UnAuthorizeException($"Authorization failed.");
             }
 
-            var authorizationResult = _authorizationService.AuthorizeAsync(_userContext.User, climbingSpot,
-                new ResourceOperationRequirement(ResourceOperation.Delete)).Result;
+            var authorizationResult = Authorize(ResourceOperation.Delete, new ClimbingSpotAuthorization() { CreatedById = climbingSpot.CreatedById });
             if (!authorizationResult.Succeeded)
             {
                 _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
-                throw new ForbidException($"Authorization failed.");
+                throw new UnAuthorizeException($"Authorization failed.");
             }
 
-            var userClimbingSpot = _dbContext.UserClimbingSpotLinks.Where(x => x.ClimbingSpotId == id);
+            var userClimbingSpot = _dbContext.UserClimbingSpotLinks.Where(x => x.ClimbingSpotId == climbingSpotId);
             foreach (var item in userClimbingSpot)
             {
                 _dbContext.UserClimbingSpotLinks.Remove(item);
@@ -149,20 +146,20 @@ namespace ClimbingAPI.Services
             _dbContext.SaveChanges();
         }
 
-        public void Update(UpdateClimbingSpotDto dto, int id)
+        public void Update(UpdateClimbingSpotDto dto, int climbingSpotId)
         {
-            _logger.LogError($"INFO for: UPDATE action from ClimbingSpotService. ID: \"{id}\".");
+            _logger.LogError($"INFO for: UPDATE action from ClimbingSpotService. ID: \"{climbingSpotId}\".");
 
-            var climbingSpot = _dbContext.ClimbingSpot.FirstOrDefault(x => x.Id == id);
-
+            
+            var climbingSpot = _dbContext.ClimbingSpot.FirstOrDefault(x => x.Id == climbingSpotId);
             if (climbingSpot is null)
             {
-                _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. ID: \"{id}\" not found.");
-                throw new NotFoundException($"Restaurant with ID: {id} not found.");
+                //I do not want to show user that mentioned record is not present in the database 
+                _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
+                throw new ForbidException($"Authorization failed.");
             }
 
-            var authorizationResult = _authorizationService.AuthorizeAsync(_userContext.User, climbingSpot,
-                new ResourceOperationRequirement(ResourceOperation.Update)).Result;
+            var authorizationResult = Authorize(ResourceOperation.Update, new ClimbingSpotAuthorization() { CreatedById = climbingSpot.CreatedById });
             if (!authorizationResult.Succeeded)
             {
                 _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
@@ -242,6 +239,12 @@ namespace ClimbingAPI.Services
                     $"User with ID: {userId} already assigned to climbing spot with ID: {climbingSpotId}.");
 
 
+        }
+
+        private AuthorizationResult Authorize(ResourceOperation resourceOperation, ClimbingSpotAuthorization climbingSpotAuthorization)
+        {
+            return _authorizationService.AuthorizeAsync(_userContext.User, climbingSpotAuthorization,
+                new ResourceOperationRequirement(resourceOperation)).Result;
         }
     }
 }
