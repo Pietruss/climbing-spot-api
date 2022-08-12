@@ -4,6 +4,7 @@ using ClimbingAPI.Authorization.AuthorizationEntity;
 using ClimbingAPI.Entities;
 using ClimbingAPI.Exceptions;
 using ClimbingAPI.Models.ClimbingSpot;
+using ClimbingAPI.Models.Role;
 using ClimbingAPI.Models.UserClimbingSpot;
 using ClimbingAPI.Services.Interfaces;
 using ClimbingAPI.Utils;
@@ -232,7 +233,7 @@ namespace ClimbingAPI.Services
             //checking if user is assigned to climbing spot. If not means that is not a manager or admin in that climbingSpot
             var userClaimId = userPrincipal.FindFirst(x => x.Type == ClaimTypes.NameIdentifier).Value;
             var userAssignedToClimbingSpot = _dbContext.UserClimbingSpotLinks.FirstOrDefault(x =>
-                x.UserId == int.Parse(userClaimId) && x.ClimbingSpotId == climbingSpotId && (x.RoleId == 1 || x.RoleId == 2));
+                x.UserId == int.Parse(userClaimId) && x.ClimbingSpotId == climbingSpotId && (x.RoleId == (int)Roles.Admin || x.RoleId == (int)Roles.Manager));
             if (userAssignedToClimbingSpot is null)
                 throw new UnAuthorizeException(
                     $"User with ID: {userId} is not assigned to climbing spot: {climbingSpotId}. You do not have enough rights.");

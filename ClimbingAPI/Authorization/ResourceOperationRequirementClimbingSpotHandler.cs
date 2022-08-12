@@ -1,5 +1,6 @@
 ﻿using ClimbingAPI.Authorization.AuthorizationEntity;
 using ClimbingAPI.Entities;
+using ClimbingAPI.Models.Role;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using System.Security.Claims;
@@ -23,7 +24,7 @@ namespace ClimbingAPI.Authorization
             if (requirement.ResourceOperation == ResourceOperation.Create)
             {
                 var userClimbingSpot = _dbContext.UserClimbingSpotLinks.FirstOrDefault(x =>
-                x.UserId == userId && (x.RoleId == 1 || x.RoleId == 2));
+                x.UserId == userId && (x.RoleId == (int)Roles.Admin || x.RoleId == (int)Roles.Manager));
                 if (userClimbingSpot is null)
                     return Task.CompletedTask;
 
