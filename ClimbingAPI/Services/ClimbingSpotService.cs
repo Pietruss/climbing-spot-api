@@ -58,7 +58,7 @@ namespace ClimbingAPI.Services
                 .FirstOrDefault(x => x.Id == id);
 
             if(climbingSpot is null)
-                throw new NotFoundException($"Restaurant with ID: {id} not found.");
+                throw new NotFoundException($"ClimbingSpot with ID: {id} not found.");
 
             var climbingSpotDto = _mapper.Map<ClimbingSpotDto>(climbingSpot);
 
@@ -139,7 +139,10 @@ namespace ClimbingAPI.Services
             var userClimbingSpot = _dbContext.UserClimbingSpotLinks.Where(x => x.ClimbingSpotId == climbingSpotId);
             foreach (var item in userClimbingSpot)
             {
-                _dbContext.UserClimbingSpotLinks.Remove(item);
+                if(item.UserId == _userContext.GetUserId)
+                    item.ClimbingSpotId = null;
+                else
+                    _dbContext.UserClimbingSpotLinks.Remove(item);
             }
 
             _dbContext.ClimbingSpot.Remove(climbingSpot);
@@ -218,11 +221,13 @@ namespace ClimbingAPI.Services
         {
             var user = _dbContext.User.FirstOrDefault(x => x.Id == userId);
             if (user is null)
-                throw new NotFoundException($"User with ID: {userId} not exists.");
+                throw new UnAuthorizeException(
+                    $"User with ID: {userId} is not assigned to climbing spot: {climbingSpotId}. You do not have enough rights.");
 
             var climbingSpot = _dbContext.ClimbingSpot.FirstOrDefault(x => x.Id == climbingSpotId);
             if (climbingSpot is null)
-                throw new NotFoundException($"Climbing spot with ID: {climbingSpotId} not exists.");
+                throw new UnAuthorizeException(
+                    $"User with ID: {userId} is not assigned to climbing spot: {climbingSpotId}. You do not have enough rights.");
 
             //checking if user is assigned to climbing spot. If not means that is not a manager or admin in that climbingSpot
             var userClaimId = userPrincipal.FindFirst(x => x.Type == ClaimTypes.NameIdentifier).Value;
@@ -230,7 +235,7 @@ namespace ClimbingAPI.Services
                 x.UserId == int.Parse(userClaimId) && x.ClimbingSpotId == climbingSpotId && (x.RoleId == 1 || x.RoleId == 2));
             if (userAssignedToClimbingSpot is null)
                 throw new UnAuthorizeException(
-                    $"User with ID: {userClaimId} is not assigned to climbing spot: {climbingSpotId}. You do not have enough rights.");
+                    $"User with ID: {userId} is not assigned to climbing spot: {climbingSpotId}. You do not have enough rights.");
 
             var userClimbingSpotEntity =
                 _dbContext.UserClimbingSpotLinks.FirstOrDefault(x => x.UserId == userId && x.ClimbingSpotId == climbingSpotId && x.RoleId == roleId);

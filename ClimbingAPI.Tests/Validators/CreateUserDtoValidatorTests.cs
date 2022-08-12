@@ -101,7 +101,7 @@ namespace ClimbingAPI.Tests.Validators
                     DateOfBirth = new DateTime?(),
                     RoleId = 1
                 },
-                //for invalid email
+                //invalid email
                 new CreateUserDto()
                 {
                     Email = "tes@t2@gmail.com",
@@ -111,7 +111,19 @@ namespace ClimbingAPI.Tests.Validators
                     ConfirmPassword = "test123",
                     DateOfBirth = new DateTime?(),
                     RoleId = 1
+                },
+                //invalid roleId
+                new CreateUserDto()
+                {
+                    Email = "tes@t2@gmail.com",
+                    FirstName = "Adam",
+                    LastName = "Qwerty",
+                    Password = "test12",
+                    ConfirmPassword = "test123",
+                    DateOfBirth = new DateTime?(),
+                    RoleId = 5
                 }
+
             };
 
             return list.Select(x => new object[] { x });

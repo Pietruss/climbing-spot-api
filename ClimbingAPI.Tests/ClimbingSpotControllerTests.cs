@@ -53,7 +53,7 @@ namespace ClimbingAPI.Tests
         {
             var climbingSpot = new ClimbingSpot()
             {
-                Id = 2000,
+                Id = 55,
                 Address = new Address()
                 {
                     Id = 3
@@ -148,7 +148,6 @@ namespace ClimbingAPI.Tests
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
         }
 
-
         [Fact]
         public async Task Create_WithInvalidModel_ReturnsBadRequestStatus()
         {
@@ -189,7 +188,7 @@ namespace ClimbingAPI.Tests
         }
 
         [Fact]
-        public async Task Delete_ForNonRestaurantOwner_ReturnsUnAuthorizeStatus()
+        public async Task Delete_ForNonClimbingSpotOwner_ReturnsUnAuthorizeStatus()
         {
             //arrange
             var climbingSpot = new ClimbingSpot()
@@ -212,6 +211,91 @@ namespace ClimbingAPI.Tests
         {
             //act
             var response = await _client.DeleteAsync($"/climbingspot/{id}");
+
+            //asset
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
+        }
+
+        [Fact]
+        public async Task Update_ForGivenDataSet_ReturnsOkStatus()
+        {
+            //arrange
+            var climbingSpot = new ClimbingSpot()
+            {
+                CreatedById = 1
+            };
+
+            var updateClimbingSpot = new UpdateClimbingSpotDto()
+            {
+                ContactEmail = "updated@gmail.com",
+                ContactNumber = "111222333",
+                Description = "updated",
+                Name = "NameUpdated!"
+            };
+
+            var httpContent = HttpContentHelper.ToJsonHttpContent(updateClimbingSpot);
+
+            SeedHelper.SeedClimbingSpot(climbingSpot, _factory);
+
+            //act
+            var response = await _client.PutAsync($"/climbingspot/{climbingSpot.Id}", httpContent);
+
+            //asset
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public async Task Update_ForNonClimbingSpotOwner_ReturnsUnAuthorizeStatus()
+        {
+            //arrange
+            var climbingSpot = new ClimbingSpot()
+            {
+                CreatedById = 2
+            };
+
+            var updateClimbingSpot = new UpdateClimbingSpotDto()
+            {
+                ContactEmail = "updated@gmail.com",
+                ContactNumber = "111222333",
+                Description = "updated",
+                Name = "NameUpdated!"
+            };
+
+            var httpContent = HttpContentHelper.ToJsonHttpContent(updateClimbingSpot);
+
+            SeedHelper.SeedClimbingSpot(climbingSpot, _factory);
+
+            //act
+            var response = await _client.PutAsync($"/climbingspot/{climbingSpot.Id}", httpContent);
+
+            //asset
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
+        }
+
+        [Fact]
+        public async Task Update_ForNotValidClimbingSpotId_ReturnsUnAuthorizeStatus()
+        {
+            //arrange
+            var climbingSpot = new ClimbingSpot()
+            {
+                Id = 205,
+                CreatedById = 2
+            };
+
+            var updateClimbingSpot = new UpdateClimbingSpotDto()
+            {
+                ContactEmail = "updated@gmail.com",
+                ContactNumber = "111222333",
+                Description = "updated",
+                Name = "NameUpdated!"
+            };
+
+            var httpContent = HttpContentHelper.ToJsonHttpContent(updateClimbingSpot);
+
+            SeedHelper.SeedClimbingSpot(climbingSpot, _factory);
+
+            //act
+            var response = await _client.PutAsync($"/climbingspot/{climbingSpot.Id + 1}", httpContent);
 
             //asset
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
