@@ -27,11 +27,11 @@ namespace ClimbingAPI.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{climbingSpotId}")]
         [AllowAnonymous]
-        public ActionResult<ClimbingSpotDto> Get([FromRoute]int id)
+        public ActionResult<ClimbingSpotDto> Get([FromRoute]int climbingSpotId)
         {
-            var climbingSpot =_service.Get(id);
+            var climbingSpot =_service.Get(climbingSpotId);
             return Ok(climbingSpot);
         }
 
@@ -42,17 +42,17 @@ namespace ClimbingAPI.Controllers
             return Created($"/climbingSpot/{id}", null);
         }
 
-        [HttpDelete("{id}")]
-        public ActionResult Delete([FromRoute] int id)
+        [HttpDelete("{climbingSpotId}")]
+        public ActionResult Delete([FromRoute] int climbingSpotId)
         {
-            _service.Delete(id);
+            _service.Delete(climbingSpotId);
             return NoContent();
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update([FromBody] UpdateClimbingSpotDto dto, [FromRoute] int id)
+        public ActionResult Update([FromBody] UpdateClimbingSpotDto dto, [FromRoute] int climbingSpotId)
         {   
-            _service.Update(dto, id);
+            _service.Update(dto, climbingSpotId);
             return Ok();
         }
 

@@ -89,7 +89,7 @@ namespace ClimbingAPI.Tests
         }
 
         [Fact]
-        public async Task Create_WithoutPermission_ReturnsBadRequest()
+        public async Task Create_WithoutPermission_ReturnsUnAuthorizeStatus()
         {
             //arrange
             var model = new CreateClimbingSpotDto()
@@ -110,7 +110,7 @@ namespace ClimbingAPI.Tests
             var response = await _client.PostAsync("/climbingspot", httpContent);
 
             //asset
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -174,6 +174,7 @@ namespace ClimbingAPI.Tests
             //arrange
             var climbingSpot = new ClimbingSpot()
             {
+                Id = 5,
                 CreatedById = 1
             };
 
@@ -188,7 +189,7 @@ namespace ClimbingAPI.Tests
         }
 
         [Fact]
-        public async Task Delete_ForNonRestaurantOwner_ReturnsForbidden()
+        public async Task Delete_ForNonRestaurantOwner_ReturnsUnAuthorizeStatus()
         {
             //arrange
             var climbingSpot = new ClimbingSpot()
@@ -202,18 +203,18 @@ namespace ClimbingAPI.Tests
             var response = await _client.DeleteAsync($"/climbingspot/{climbingSpot.Id}");
 
             //asset
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
         }
 
         [Theory]
         [InlineData(10)]
-        public async Task Delete_WithInvalidClimbingSpotId_ReturnsNotFound(int id)
+        public async Task Delete_WithInvalidClimbingSpotId_ReturnsUnAuthorizeStatus(int id)
         {
             //act
             var response = await _client.DeleteAsync($"/climbingspot/{id}");
 
             //asset
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
         }
     }
 }

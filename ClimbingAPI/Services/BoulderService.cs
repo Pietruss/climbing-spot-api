@@ -35,7 +35,12 @@ namespace ClimbingAPI.Services
         {
             _logger.LogInformation($"INFO for: CREATE action from BoulderService. Climbing Spot ID: \"{climbingSpotId}\".");
 
-            ValidateUserAssignment(climbingSpotId);
+            var authorizationResult = Authorize(climbingSpotId, 0, ResourceOperation.Create);
+            if (!authorizationResult.Succeeded)
+            {
+                _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
+                throw new UnAuthorizeException($"Authorization failed.");
+            }
 
             var boulderEntity = _mapper.Map<Boulder>(dto);
             boulderEntity.ClimbingSpotId = climbingSpotId;
@@ -47,15 +52,6 @@ namespace ClimbingAPI.Services
             _dbContext.SaveChanges();
 
             return boulderEntity.Id;
-        }
-
-        private void ValidateUserAssignment(int climbingSpotId)
-        {
-            var userClimbingSpotEntity =_dbContext.UserClimbingSpotLinks.FirstOrDefault(x =>
-                x.UserId == _userContext.GetUserId && x.ClimbingSpotId == climbingSpotId && (x.RoleId == 1 ||
-                x.RoleId == 2 || x.RoleId == 3));
-            if(userClimbingSpotEntity is null)
-                throw new UnAuthorizeException("No enough rights to create boulder.");
         }
 
         public BoulderDto Get(int climbingSpotId, int boulderId)
@@ -91,7 +87,12 @@ namespace ClimbingAPI.Services
         {
             _logger.LogInformation($"INFO for: DELETE action from BoulderService. Boulder Id: {boulderId}.");
 
-            ValidateUserAssignment(climbingSpotId);
+            var authorizationResult = Authorize(climbingSpotId, boulderId, ResourceOperation.Delete);
+            if (!authorizationResult.Succeeded)
+            {
+                _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
+                throw new UnAuthorizeException($"Authorization failed.");
+            }
 
             var climbingSpot = GetClimbingSpotById(climbingSpotId);
             
@@ -110,7 +111,12 @@ namespace ClimbingAPI.Services
         {
             _logger.LogInformation($"INFO for: DELETEALL action from BoulderService. Climbing Spot Id: {climbingSpotId}.");
 
-            ValidateUserAssignment(climbingSpotId);
+            var authorizationResult = Authorize(climbingSpotId, 0, ResourceOperation.Delete);
+            if (!authorizationResult.Succeeded)
+            {
+                _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
+                throw new UnAuthorizeException($"Authorization failed.");
+            }
 
             var climbingSpot = GetClimbingSpotById(climbingSpotId);
             _dbContext.RemoveRange(climbingSpot.Boulder);
@@ -137,17 +143,10 @@ namespace ClimbingAPI.Services
         {
             _logger.LogInformation($"INFO for: UPDATE action from BoulderService. Boulder Id: {boulderId}.");
 
-            var boulderUpdate = new BoulderUpdateAuthorization()
-            {
-                BoulderId = boulderId,
-                ClimbingSpotId = climbingSpotId
-            };
-
-            var authorizationResult = _authorizationService.AuthorizeAsync(_userContext.User, boulderUpdate,
-                new ResourceOperationRequirement(ResourceOperation.Update)).Result;
+            var authorizationResult = Authorize(climbingSpotId, boulderId, ResourceOperation.Update);
             if (!authorizationResult.Succeeded)
             {
-                _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
+                _logger.LogError($"ERROR for: UPDATE action from ClimbingSpotService. Authorization failed.");
                 throw new UnAuthorizeException($"Authorization failed.");
             }
             var boulder = _dbContext.Boulder.FirstOrDefault(x => x.Id == boulderId);
@@ -156,6 +155,18 @@ namespace ClimbingAPI.Services
             WhoColumns.ModificationFiller(boulder, _userContext.GetUserId);
             _dbContext.Boulder.Update(boulder);
             _dbContext.SaveChanges();
+        }
+
+        private AuthorizationResult Authorize(int climbingSpotId, int boulderId, ResourceOperation resourceOperation)
+        {
+            var authorizationBoulder = new BoulderAuthorization()
+            {
+                BoulderId = boulderId,
+                ClimbingSpotId = climbingSpotId
+            };
+
+            return _authorizationService.AuthorizeAsync(_userContext.User, authorizationBoulder,
+                new ResourceOperationRequirement(resourceOperation)).Result;
         }
 
         private Boulder UpdateBoulderField(Boulder boulder, UpdateBoulderDto dto)
