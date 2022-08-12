@@ -1,4 +1,5 @@
 ﻿using ClimbingAPI.Entities;
+using ClimbingAPI.Models.Role;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -45,8 +46,8 @@ namespace ClimbingAPI.Authorization
         {
             var userId = context.User.FindFirst(x => x.Type == ClaimTypes.NameIdentifier).Value;
             return  _dbContext.UserClimbingSpotLinks.FirstOrDefault(x =>
-                 x.UserId == int.Parse(userId) && x.ClimbingSpotId == boulderAuthorization.ClimbingSpotId && (x.RoleId == 1 ||
-                 x.RoleId == 2 || x.RoleId == 3));
+                 x.UserId == int.Parse(userId) && x.ClimbingSpotId == boulderAuthorization.ClimbingSpotId && (x.RoleId == (int)Roles.Admin ||
+                 x.RoleId == (int)Roles.Manager || x.RoleId == (int)Roles.Routesetter));
         }
     }
 }
