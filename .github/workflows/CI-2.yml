@@ -1,0 +1,28 @@
+
+name: CI
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v2.1.0
+        with:
+          dotnet-version: 5.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: ClimbingAPI/
+      - name: Build
+        run: dotnet build --no-restore
+        working-directory: ClimbingAPI/
+      - name: Test
+        run: dotnet test
+        working-directory: ClimbingAPI/
