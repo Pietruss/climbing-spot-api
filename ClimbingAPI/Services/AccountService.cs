@@ -3,6 +3,7 @@ using ClimbingAPI.Entities;
 using ClimbingAPI.Exceptions;
 using ClimbingAPI.Models.User;
 using ClimbingAPI.Services.Interfaces;
+using ClimbingAPI.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -51,9 +52,11 @@ namespace ClimbingAPI.Services
 
             _dbContext.User.Add(user);
             _dbContext.SaveChanges();
+            WhoColumns.CreationFiller(user, user.Id);
 
             var userClimbingSpot = CreateUserClimbingSpotEntity(user.Id, dto.RoleId);
-            
+
+            WhoColumns.CreationFiller(userClimbingSpot, user.Id);
             _dbContext.UserClimbingSpotLinks.Add(userClimbingSpot);
             _dbContext.SaveChanges();
         }

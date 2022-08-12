@@ -318,7 +318,6 @@ namespace ClimbingAPI.Tests
                     new Boulder()
                     {
                         Id = 523,
-                        Author = "Piotr",
                         Name = "Wszystko",
                         Level = "5d",
                         Description = "qwerty"
