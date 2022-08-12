@@ -49,7 +49,7 @@ namespace ClimbingAPI.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{climbingSpotId}")]
         public ActionResult Update([FromBody] UpdateClimbingSpotDto dto, [FromRoute] int climbingSpotId)
         {   
             _service.Update(dto, climbingSpotId);
@@ -57,7 +57,6 @@ namespace ClimbingAPI.Controllers
         }
 
         [HttpPost("assign-climbing-spot")]
-        [Authorize]
         public ActionResult AssignClimbingSpotToUser([FromBody] UpdateUserClimbingSpotDto dto)
         {
             _service.AssignClimbingSpotToUserWithRole(dto);
