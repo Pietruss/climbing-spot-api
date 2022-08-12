@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace ClimbingAPI.Utils
 {
-    public class WhoColumns
+    public static class WhoColumns
     {
         public static void CreationFiller(object obj, int? userId)
         {
@@ -25,13 +25,13 @@ namespace ClimbingAPI.Utils
             }
         }
 
-        private static PropertyInfo[] GetObjectProperties(object obj)
+        public static PropertyInfo[] GetObjectProperties(object obj)
         {
             Type objType = obj.GetType();
             return objType.GetProperties();
         }
 
-        private static void SetModificationValues(PropertyInfo property, object obj, int? userId)
+        public static void SetModificationValues(PropertyInfo property, object obj, int? userId)
         {
             if (property.Name.Equals("ModifiedByUserId"))
             {
@@ -43,7 +43,7 @@ namespace ClimbingAPI.Utils
             }
         }
 
-        private static void SetCreationValues(PropertyInfo property, object obj, int? userId)
+        public static void SetCreationValues(PropertyInfo property, object obj, int? userId)
         {
             if (property.Name.Equals("CreatedByUserId"))
             {
