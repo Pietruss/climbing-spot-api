@@ -30,5 +30,13 @@ namespace ClimbingAPI.Controllers
             var token = _service.GenerateJwt(dto);
             return Ok(token);
         }
+
+        [HttpPatch("update-user/{userId}")]
+        [Authorize]
+        public ActionResult Update([FromBody] UpdateUserDto dto, [FromRoute] int userId)
+        {
+            _service.Update(dto, userId);
+            return Ok();
+        }
     }
 }
