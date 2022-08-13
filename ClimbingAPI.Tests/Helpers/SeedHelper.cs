@@ -52,5 +52,15 @@ namespace ClimbingAPI.Tests.Helpers
             dbContext.User.Add(user);
             dbContext.SaveChanges();
         }
+
+        internal static void RemoveUsers(User user, WebApplicationFactory<Startup> factory)
+        {
+            var scopedFactory = factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopedFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetService<ClimbingDbContext>();
+
+            dbContext.User.Remove(user);
+            dbContext.SaveChanges();
+        }
     }
 }

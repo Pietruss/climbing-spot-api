@@ -38,5 +38,13 @@ namespace ClimbingAPI.Controllers
             _service.Update(dto, userId);
             return Ok();
         }
+
+        [HttpPatch("change-password/{userId}")]
+        [Authorize]
+        public ActionResult ChangePassword([FromBody] UpdateUserPasswordDto dto, [FromRoute] int userId)
+        {
+            _service.ChangePassword(dto, userId);
+            return Ok();
+        }
     }
 }

@@ -1,8 +1,8 @@
 ﻿namespace ClimbingAPI.Models.User
 {
-    public class LoginUserDto
+    public class UpdateUserPasswordDto
     {
-        public string Email { get; set; }
         public string Password { get; set; }
+        public string ConfirmPassword { get; set; }
     }
 }
