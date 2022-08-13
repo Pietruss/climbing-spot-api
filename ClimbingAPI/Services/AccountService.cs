@@ -54,11 +54,11 @@ namespace ClimbingAPI.Services
 
             _dbContext.User.Add(user);
             _dbContext.SaveChanges();
-            WhoColumns.CreationFiller(user, user.Id);
+            WhoColumns.CreationFiller(user, user.Id, DateTime.Now);
 
             var userClimbingSpot = CreateUserClimbingSpotEntity(user.Id, dto.RoleId);
 
-            WhoColumns.CreationFiller(userClimbingSpot, user.Id);
+            WhoColumns.CreationFiller(userClimbingSpot, user.Id, DateTime.Now);
             _dbContext.UserClimbingSpotLinks.Add(userClimbingSpot);
             _dbContext.SaveChanges();
         }
@@ -151,7 +151,7 @@ namespace ClimbingAPI.Services
             }
 
             user = UpdateUser(user, dto);
-            WhoColumns.ModificationFiller(user, userId);
+            WhoColumns.ModificationFiller(user, userId, DateTime.Now);
 
             _dbContext.Update(user);
             _dbContext.SaveChanges();
