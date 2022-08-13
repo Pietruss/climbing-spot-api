@@ -49,7 +49,7 @@ namespace ClimbingAPI.Controllers
             return NoContent();
         }
 
-        [HttpPut("{climbingSpotId}")]
+        [HttpPatch("{climbingSpotId}")]
         public ActionResult Update([FromBody] UpdateClimbingSpotDto dto, [FromRoute] int climbingSpotId)
         {   
             _service.Update(dto, climbingSpotId);
