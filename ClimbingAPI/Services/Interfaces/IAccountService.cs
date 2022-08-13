@@ -1,5 +1,4 @@
 ﻿using ClimbingAPI.Models.User;
-using ClimbingAPI.Models.UserClimbingSpot;
 
 namespace ClimbingAPI.Services.Interfaces
 {
@@ -7,5 +6,6 @@ namespace ClimbingAPI.Services.Interfaces
     {
         void Register(CreateUserDto dto);
         string GenerateJwt(LoginUserDto dto);
+        void Update(UpdateUserDto dto, int userId);
     }
 }

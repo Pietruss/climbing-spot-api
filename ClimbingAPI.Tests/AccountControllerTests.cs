@@ -158,5 +158,73 @@ namespace ClimbingAPI.Tests
             //assert
             result.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
+
+        [Fact]
+        public async Task Patch_ForGivenUser_ReturnsOk()
+        {
+            var updateUserDto = new UpdateUserDto
+            {
+                DateOfBirth = DateTime.Now,
+                Email = "updated@gmail.com",
+                FirstName = "Piotr",
+                LastName = "Maklowicz"
+            };
+
+            var user = new User()
+            {
+                Id = 100,
+                DateOfBirth = DateTime.Now,
+                Email = "updated111@gmail.com",
+                FirstName = "Piotr1",
+                LastName = "Maklowicz1"
+            };
+
+            var httpContent = updateUserDto.ToJsonHttpContent();
+
+            //seed
+            SeedHelper.SeedUser(user, _factory);
+
+            //act
+            var result = await _client.PatchAsync($"/account/update-user/{user.Id}", httpContent);
+
+            //assert
+            result.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public async Task Patch_ForTakenEmail_ReturnsBadRequestStatus()
+        {
+            var updateUserDto = new UpdateUserDto
+            {
+                DateOfBirth = DateTime.Now,
+                Email = "a@gmail.com",
+                FirstName = "Piotr",
+                LastName = "Maklowicz"
+            };
+
+            var user = new User()
+            {
+                Id = 200,
+                Email = "ab@gmail.com",
+            };
+
+            var user2 = new User()
+            {
+                Id = 201,
+                Email = "a@gmail.com",
+            };
+
+            var httpContent = updateUserDto.ToJsonHttpContent();
+
+            //seed
+            SeedHelper.SeedUser(user, _factory);
+            SeedHelper.SeedUser(user2, _factory);
+
+            //act
+            var result = await _client.PatchAsync($"/account/update-user/{user.Id}", httpContent);
+
+            //assert
+            result.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
     }
 }

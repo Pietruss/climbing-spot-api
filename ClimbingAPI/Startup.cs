@@ -77,12 +77,14 @@ namespace ClimbingAPI
             services.AddScoped<IValidator<LoginUserDto>, LoginUserDtoValidator>();
             services.AddScoped<IValidator<UpdateUserClimbingSpotDto>, UpdateUserClimbingSpotDtoValidator>();
             services.AddScoped<IValidator<UpdateClimbingSpotDto>, UpdateClimbingSpotDtoValidator>();
+            services.AddScoped<IValidator<UpdateUserDto>, UpdateUserDtoValidator>();
             #endregion
 
             #region handlers
 
             services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementClimbingSpotHandler>();
             services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementBoulderHandler>();
+            services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementAccountHandler>();
 
             #endregion
 

@@ -42,5 +42,15 @@ namespace ClimbingAPI.Tests.Helpers
             dbContext.ClimbingSpot.Add(climbingSpot);
             dbContext.SaveChanges();
         }
+
+        public static void SeedUser(User user, WebApplicationFactory<Startup> factory)
+        {
+            var scopedFactory = factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopedFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetService<ClimbingDbContext>();
+
+            dbContext.User.Add(user);
+            dbContext.SaveChanges();
+        }
     }
 }

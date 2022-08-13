@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using ClimbingAPI.Authorization;
+using ClimbingAPI.Authorization.AuthorizationEntity;
 using ClimbingAPI.Entities;
 using ClimbingAPI.Exceptions;
 using ClimbingAPI.Models.User;
@@ -76,6 +78,11 @@ namespace ClimbingAPI.Services
             _logger.LogInformation("INFO for: GENERATEJWT action from AccountService.");
 
             var user = GetUserByEmail(dto.Email);
+            if (user is null)
+            {
+                _logger.LogError("Invalid username or password.");
+                throw new BadRequestException("Invalid username or password.");
+            }
 
             VerifyHashedPassword(dto, user);
 
@@ -111,15 +118,8 @@ namespace ClimbingAPI.Services
 
         public User GetUserByEmail(string email)
         {
-            var user = _dbContext.User
+            return _dbContext.User
                 .FirstOrDefault(x => x.Email == email);
-            if (user is null)
-            {
-                _logger.LogError("Invalid username or password.");
-                throw new BadRequestException("Invalid username or password.");
-            }
-
-            return user;
         }
 
         public IEnumerable<Claim> GenerateClaims(User user)
@@ -130,6 +130,52 @@ namespace ClimbingAPI.Services
                 new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
                 new Claim("DateOfBirth", user.DateOfBirth.Value.ToString("yyyy-MM-dd"))
             };
+        }
+
+        public void Update(UpdateUserDto dto, int userId)
+        {
+            _logger.LogInformation($"INFO for: UPDATE action from AccountService. User Id: {userId}.");
+
+            var authorizationResult = Authorize(ResourceOperation.Update, new AccountAuthorization() { UserId =  userId});
+            if (!authorizationResult.Succeeded)
+            {
+                _logger.LogError($"ERROR for: UPDATE action from AccountService. Authorization failed.");
+                throw new UnAuthorizeException($"Authorization failed.");
+            }
+
+            var user = GetUserById(userId);
+            if(user is null)
+            {
+                _logger.LogError($"ERROR for: UPDATE action from ClimbingSpotService. User with id not found {userId}.");
+                throw new NotFoundException($"User with id not found {userId}.");
+            }
+
+            user = UpdateUser(user, dto);
+            WhoColumns.ModificationFiller(user, userId);
+
+            _dbContext.Update(user);
+            _dbContext.SaveChanges();
+        }
+
+        private User UpdateUser(User user, UpdateUserDto dto)
+        {
+            user.Email = dto.Email;
+            user.FirstName = dto.FirstName;
+            user.LastName = dto.LastName;
+            user.DateOfBirth = dto.DateOfBirth;
+
+            return user;
+        }
+
+        private User GetUserById(int userId)
+        {
+            return _dbContext.User.FirstOrDefault(x => x.Id == userId);
+        }
+
+        private AuthorizationResult Authorize(ResourceOperation resourceOperation, AccountAuthorization accountAuthorization)
+        {
+            return _authorizationService.AuthorizeAsync(_userContext.User, accountAuthorization,
+                new ResourceOperationRequirement(resourceOperation)).Result;
         }
     }
 }
