@@ -7,5 +7,6 @@ namespace ClimbingAPI.Services.Interfaces
         void Register(CreateUserDto dto);
         string GenerateJwt(LoginUserDto dto);
         void Update(UpdateUserDto dto, int userId);
+        void ChangePassword(UpdateUserPasswordDto dto, int userId);
     }
 }

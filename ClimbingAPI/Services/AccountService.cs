@@ -49,9 +49,8 @@ namespace ClimbingAPI.Services
 
             var user = _mapper.Map<User>(dto);
 
-            var hashedPassword = _passwordHasher.HashPassword(user, dto.Password);
-            user.PasswordHash = hashedPassword;
-
+            user.PasswordHash = _passwordHasher.HashPassword(user, dto.Password);
+            
             _dbContext.User.Add(user);
             _dbContext.SaveChanges();
             WhoColumns.CreationFiller(user, user.Id, DateTime.Now);
@@ -176,6 +175,44 @@ namespace ClimbingAPI.Services
         {
             return _authorizationService.AuthorizeAsync(_userContext.User, accountAuthorization,
                 new ResourceOperationRequirement(resourceOperation)).Result;
+        }
+
+        public void ChangePassword(UpdateUserPasswordDto dto, int userId)
+        {
+            _logger.LogInformation($"INFO for: CHANGEPASSWORD action from AccountService. User Id: {userId}.");
+
+            var authorizationResult = Authorize(ResourceOperation.Update, new AccountAuthorization() { UserId = userId });
+            if (!authorizationResult.Succeeded)
+            {
+                _logger.LogError($"ERROR for: CHANGEPASSWORD action from AccountService. Authorization failed.");
+                throw new UnAuthorizeException($"Authorization failed.");
+            }
+
+            var user = GetUserById(userId);
+            if (user is null)
+            {
+                _logger.LogError($"ERROR for: CHANGEPASSWORD action from AccountService. User not found.");
+                throw new UnAuthorizeException($"User not found.");
+            }
+
+            var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
+            if (result == PasswordVerificationResult.Success)
+            {
+                _logger.LogError($"ERROR for: CHANGEPASSWORD action from AccountService.New passowrd is the same as old one. Please change it.");
+                throw new BadRequestException($"New passowrd is the same as old one. Please change it.");
+            }
+
+            UpdateUserPassword(dto, user);
+        }
+
+        private void UpdateUserPassword(UpdateUserPasswordDto dto, User user)
+        {
+            user.PasswordHash = _passwordHasher.HashPassword(user, dto.Password);
+
+            WhoColumns.ModificationFiller(user, user.Id, DateTime.Now);
+
+            _dbContext.User.Update(user);
+            _dbContext.SaveChanges();
         }
     }
 }

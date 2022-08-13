@@ -78,6 +78,7 @@ namespace ClimbingAPI
             services.AddScoped<IValidator<UpdateUserClimbingSpotDto>, UpdateUserClimbingSpotDtoValidator>();
             services.AddScoped<IValidator<UpdateClimbingSpotDto>, UpdateClimbingSpotDtoValidator>();
             services.AddScoped<IValidator<UpdateUserDto>, UpdateUserDtoValidator>();
+            services.AddScoped<IValidator<UpdateUserPasswordDto>, UpdateUserPasswordDtoValidator>();
             #endregion
 
             #region handlers
