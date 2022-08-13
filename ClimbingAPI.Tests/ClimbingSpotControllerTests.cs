@@ -238,7 +238,7 @@ namespace ClimbingAPI.Tests
             SeedHelper.SeedClimbingSpot(climbingSpot, _factory);
 
             //act
-            var response = await _client.PutAsync($"/climbingspot/{climbingSpot.Id}", httpContent);
+            var response = await _client.PatchAsync($"/climbingspot/{climbingSpot.Id}", httpContent);
 
             //asset
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
@@ -266,7 +266,7 @@ namespace ClimbingAPI.Tests
             SeedHelper.SeedClimbingSpot(climbingSpot, _factory);
 
             //act
-            var response = await _client.PutAsync($"/climbingspot/{climbingSpot.Id}", httpContent);
+            var response = await _client.PatchAsync($"/climbingspot/{climbingSpot.Id}", httpContent);
 
             //asset
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
@@ -295,7 +295,7 @@ namespace ClimbingAPI.Tests
             SeedHelper.SeedClimbingSpot(climbingSpot, _factory);
 
             //act
-            var response = await _client.PutAsync($"/climbingspot/{climbingSpot.Id + 1}", httpContent);
+            var response = await _client.PatchAsync($"/climbingspot/{climbingSpot.Id + 1}", httpContent);
 
             //asset
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
