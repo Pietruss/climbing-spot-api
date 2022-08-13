@@ -9,6 +9,7 @@ using ClimbingAPI.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -48,7 +49,7 @@ namespace ClimbingAPI.Services
 
             _dbContext.Boulder.Add(boulderEntity);
             
-            WhoColumns.CreationFiller(boulderEntity, _userContext.GetUserId);
+            WhoColumns.CreationFiller(boulderEntity, _userContext.GetUserId, DateTime.Now);
             _dbContext.SaveChanges();
 
             return boulderEntity.Id;
@@ -152,7 +153,7 @@ namespace ClimbingAPI.Services
             var boulder = _dbContext.Boulder.FirstOrDefault(x => x.Id == boulderId);
             boulder = UpdateBoulderField(boulder, dto);
 
-            WhoColumns.ModificationFiller(boulder, _userContext.GetUserId);
+            WhoColumns.ModificationFiller(boulder, _userContext.GetUserId, DateTime.Now);
             _dbContext.Boulder.Update(boulder);
             _dbContext.SaveChanges();
         }

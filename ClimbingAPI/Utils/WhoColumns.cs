@@ -5,23 +5,23 @@ namespace ClimbingAPI.Utils
 {
     public static class WhoColumns
     {
-        public static void CreationFiller(object obj, int? userId)
+        public static void CreationFiller(object obj, int? userId, DateTime dateTime)
         {
             var properties = GetObjectProperties(obj);
 
             foreach (var property in properties)
             {
-                SetCreationValues(property, obj, userId);
+                SetCreationValues(property, obj, userId, dateTime);
             }
         }
 
-        public static void ModificationFiller(object obj, int? userId)
+        public static void ModificationFiller(object obj, int? userId, DateTime dateTime)
         {
             var properties = GetObjectProperties(obj);
 
             foreach (var property in properties)
             {
-                SetModificationValues(property, obj, userId);
+                SetModificationValues(property, obj, userId, dateTime);
             }
         }
 
@@ -31,7 +31,7 @@ namespace ClimbingAPI.Utils
             return objType.GetProperties();
         }
 
-        public static void SetModificationValues(PropertyInfo property, object obj, int? userId)
+        public static void SetModificationValues(PropertyInfo property, object obj, int? userId, DateTime dateTime)
         {
             if (property.Name.Equals("ModifiedByUserId"))
             {
@@ -39,11 +39,11 @@ namespace ClimbingAPI.Utils
             }
             if (property.Name.Equals("ModificationDateTime"))
             {
-                property.SetValue(obj, DateTime.Now);
+                property.SetValue(obj, dateTime);
             }
         }
 
-        public static void SetCreationValues(PropertyInfo property, object obj, int? userId)
+        public static void SetCreationValues(PropertyInfo property, object obj, int? userId, DateTime dateTime)
         {
             if (property.Name.Equals("CreatedByUserId"))
             {
@@ -51,7 +51,7 @@ namespace ClimbingAPI.Utils
             }
             if (property.Name.Equals("CreationDateTime"))
             {
-                property.SetValue(obj, DateTime.Now);
+                property.SetValue(obj, dateTime);
             }
         }
     }
