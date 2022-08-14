@@ -195,19 +195,31 @@ namespace ClimbingAPI.Services
                 throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
             }
 
-            var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
-            if (result == PasswordVerificationResult.Success)
+            var isOldPasswordCorrect = IsTheSamePassword(user, dto.OldPassword);
+            if (isOldPasswordCorrect == PasswordVerificationResult.Failed)
             {
-                _logger.LogError($"ERROR for: CHANGEPASSWORD action from AccountService.New passowrd is the same as old one. Please change it.");
+                _logger.LogError($"ERROR for: CHANGEPASSWORD action from AccountService. Wrong password.");
+                throw new BadRequestException(Literals.Literals.InvalidPassowrd.GetDescription());
+            }
+
+            var isNewPasswordDifferentThanOld = IsTheSamePassword(user, dto.NewPassword);
+            if (isNewPasswordDifferentThanOld == PasswordVerificationResult.Success)
+            {
+                _logger.LogError($"ERROR for: CHANGEPASSWORD action from AccountService. New passowrd is the same as old one. Please change it.");
                 throw new BadRequestException(Literals.Literals.PasswordsAreIdentical.GetDescription());
             }
 
             UpdateUserPassword(dto, user);
         }
 
+        private PasswordVerificationResult IsTheSamePassword(User user, string oldPassword)
+        {
+            return _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, oldPassword);
+        }
+
         private void UpdateUserPassword(UpdateUserPasswordDto dto, User user)
         {
-            user.PasswordHash = _passwordHasher.HashPassword(user, dto.Password);
+            user.PasswordHash = _passwordHasher.HashPassword(user, dto.NewPassword);
 
             WhoColumns.ModificationFiller(user, user.Id, DateTime.Now);
 

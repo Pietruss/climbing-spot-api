@@ -11,8 +11,9 @@ namespace ClimbingAPI.Models.Validator
     {
         public UpdateUserPasswordDtoValidator()
         {
-            RuleFor(x => x.Password).MinimumLength(6).NotEmpty();
-            RuleFor(x => x.ConfirmPassword).Equal(e => e.Password).NotEmpty();
+            RuleFor(x => x.NewPassword).MinimumLength(6).NotEmpty();
+            RuleFor(x => x.ConfirmNewPassword).Equal(e => e.NewPassword).NotEmpty();
+            RuleFor(x => x.OldPassword).NotEqual(x => x.NewPassword);
         }
     }
 }

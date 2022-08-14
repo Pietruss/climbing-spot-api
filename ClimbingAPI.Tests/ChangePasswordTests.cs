@@ -45,8 +45,9 @@ namespace ClimbingAPI.Tests
         {
             var updateUserPasswordDto = new UpdateUserPasswordDto
             {
-                ConfirmPassword = "test123",
-                Password = "test123"
+                ConfirmNewPassword = "test123",
+                NewPassword = "test123",
+                OldPassword = "test1234"
             };
 
             var createUserDto = new CreateUserDto()
@@ -80,8 +81,9 @@ namespace ClimbingAPI.Tests
         {
             var updateUserPasswordDto = new UpdateUserPasswordDto
             {
-                ConfirmPassword = "test123",
-                Password = "test123"
+                ConfirmNewPassword = "test123",
+                NewPassword = "test123",
+                OldPassword = "test123"
             };
 
             var createUserDto = new CreateUserDto()

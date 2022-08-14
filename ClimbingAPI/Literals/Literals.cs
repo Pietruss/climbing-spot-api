@@ -17,6 +17,9 @@ namespace ClimbingAPI.Literals
         PasswordsAreIdentical,
 
         [Description("Invalid username or password.")]
-        InvalidUsernameOrPassowrd
+        InvalidUsernameOrPassowrd,
+
+        [Description("Invalid password.")]
+        InvalidPassowrd
     }
 }
