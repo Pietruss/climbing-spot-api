@@ -76,7 +76,7 @@ namespace ClimbingAPI.Services
             if (!authorizationResult.Succeeded)
             {
                 _logger.LogError($"ERROR for: CREATE action from ClimbingSpotService. Authorization failed.");
-                throw new UnAuthorizeException($"Authorization failed.");
+                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
             }
 
             var climbingSpot = _mapper.Map<ClimbingSpot>(dto);
@@ -129,27 +129,32 @@ namespace ClimbingAPI.Services
             {
                 //I do not want to show user that mentioned record is not present in the database 
                 _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
-                throw new UnAuthorizeException($"Authorization failed.");
+                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
             }
 
             var authorizationResult = Authorize(ResourceOperation.Delete, new ClimbingSpotAuthorization() { CreatedById = climbingSpot.CreatedById });
             if (!authorizationResult.Succeeded)
             {
                 _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
-                throw new UnAuthorizeException($"Authorization failed.");
+                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
             }
 
-            var userClimbingSpot = _dbContext.UserClimbingSpotLinks.Where(x => x.ClimbingSpotId == climbingSpotId);
-            foreach (var item in userClimbingSpot)
-            {
-                if(item.UserId == _userContext.GetUserId)
-                    item.ClimbingSpotId = null;
-                else
-                    _dbContext.UserClimbingSpotLinks.Remove(item);
-            }
+            RemoveAllUserExceptFromOwner(climbingSpotId);
 
             _dbContext.ClimbingSpot.Remove(climbingSpot);
             _dbContext.SaveChanges();
+        }
+
+        private void RemoveAllUserExceptFromOwner(int climbingSpotId)
+        {
+            var userClimbingSpots = _dbContext.UserClimbingSpotLinks.Where(x => x.ClimbingSpotId == climbingSpotId);
+            foreach (var user in userClimbingSpots)
+            {
+                if (user.UserId == _userContext.GetUserId)
+                    user.ClimbingSpotId = null;
+                else
+                    _dbContext.UserClimbingSpotLinks.Remove(user);
+            }
         }
 
         public void Update(UpdateClimbingSpotDto dto, int climbingSpotId)
@@ -162,14 +167,14 @@ namespace ClimbingAPI.Services
             {
                 //I do not want to show user that mentioned record is not present in the database 
                 _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
-                throw new UnAuthorizeException($"Authorization failed.");
+                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
             }
 
             var authorizationResult = Authorize(ResourceOperation.Update, new ClimbingSpotAuthorization() { CreatedById = climbingSpot.CreatedById });
             if (!authorizationResult.Succeeded)
             {
                 _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
-                throw new UnAuthorizeException($"Authorization failed.");
+                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
             }
 
             climbingSpot.Description = dto.Description;
@@ -224,21 +229,18 @@ namespace ClimbingAPI.Services
         {
             var user = _dbContext.User.FirstOrDefault(x => x.Id == userId);
             if (user is null)
-                throw new UnAuthorizeException(
-                    $"User with ID: {userId} is not assigned to climbing spot: {climbingSpotId}. You do not have enough rights.");
+                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
 
             var climbingSpot = _dbContext.ClimbingSpot.FirstOrDefault(x => x.Id == climbingSpotId);
             if (climbingSpot is null)
-                throw new UnAuthorizeException(
-                    $"User with ID: {userId} is not assigned to climbing spot: {climbingSpotId}. You do not have enough rights.");
+                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
 
             //checking if user is assigned to climbing spot. If not means that is not a manager or admin in that climbingSpot
             var userClaimId = userPrincipal.FindFirst(x => x.Type == ClaimTypes.NameIdentifier).Value;
             var userAssignedToClimbingSpot = _dbContext.UserClimbingSpotLinks.FirstOrDefault(x =>
                 x.UserId == int.Parse(userClaimId) && x.ClimbingSpotId == climbingSpotId && (x.RoleId == (int)Roles.Admin || x.RoleId == (int)Roles.Manager));
             if (userAssignedToClimbingSpot is null)
-                throw new UnAuthorizeException(
-                    $"User with ID: {userId} is not assigned to climbing spot: {climbingSpotId}. You do not have enough rights.");
+                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
 
             var userClimbingSpotEntity =
                 _dbContext.UserClimbingSpotLinks.FirstOrDefault(x => x.UserId == userId && x.ClimbingSpotId == climbingSpotId && x.RoleId == roleId);

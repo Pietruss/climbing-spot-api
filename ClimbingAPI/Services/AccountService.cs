@@ -80,7 +80,7 @@ namespace ClimbingAPI.Services
             if (user is null)
             {
                 _logger.LogError("Invalid username or password.");
-                throw new BadRequestException("Invalid username or password.");
+                throw new BadRequestException(Literals.Literals.InvalidUsernameOrPassowrd.GetDescription());
             }
 
             VerifyHashedPassword(dto, user);
@@ -111,7 +111,7 @@ namespace ClimbingAPI.Services
             if (result == PasswordVerificationResult.Failed)
             {
                 _logger.LogError("Invalid username or password.");
-                throw new BadRequestException("Invalid username or password.");
+                throw new BadRequestException(Literals.Literals.InvalidUsernameOrPassowrd.GetDescription());
             }
         }
 
@@ -139,7 +139,7 @@ namespace ClimbingAPI.Services
             if (!authorizationResult.Succeeded)
             {
                 _logger.LogError($"ERROR for: UPDATE action from AccountService. Authorization failed.");
-                throw new UnAuthorizeException($"Authorization failed.");
+                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
             }
 
             var user = GetUserById(userId);
@@ -185,21 +185,21 @@ namespace ClimbingAPI.Services
             if (!authorizationResult.Succeeded)
             {
                 _logger.LogError($"ERROR for: CHANGEPASSWORD action from AccountService. Authorization failed.");
-                throw new UnAuthorizeException($"Authorization failed.");
+                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
             }
 
             var user = GetUserById(userId);
             if (user is null)
             {
                 _logger.LogError($"ERROR for: CHANGEPASSWORD action from AccountService. User not found.");
-                throw new UnAuthorizeException($"User not found.");
+                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
             }
 
             var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
             if (result == PasswordVerificationResult.Success)
             {
                 _logger.LogError($"ERROR for: CHANGEPASSWORD action from AccountService.New passowrd is the same as old one. Please change it.");
-                throw new BadRequestException($"New passowrd is the same as old one. Please change it.");
+                throw new BadRequestException(Literals.Literals.PasswordsAreIdentical.GetDescription());
             }
 
             UpdateUserPassword(dto, user);

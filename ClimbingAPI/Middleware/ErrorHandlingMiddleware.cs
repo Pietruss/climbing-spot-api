@@ -1,4 +1,5 @@
 ﻿using ClimbingAPI.Exceptions;
+using ClimbingAPI.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
@@ -45,7 +46,7 @@ namespace ClimbingAPI.Middleware
                 _logger.LogError(e, e.Message);
 
                 context.Response.StatusCode = 500;
-                await context.Response.WriteAsync("Something went wrong.");
+                await context.Response.WriteAsync(Literals.Literals.InternalError.GetDescription());
             }
         }
     }

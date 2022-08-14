@@ -40,7 +40,7 @@ namespace ClimbingAPI.Services
             if (!authorizationResult.Succeeded)
             {
                 _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
-                throw new UnAuthorizeException($"Authorization failed.");
+                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
             }
 
             var boulderEntity = _mapper.Map<Boulder>(dto);
@@ -92,7 +92,7 @@ namespace ClimbingAPI.Services
             if (!authorizationResult.Succeeded)
             {
                 _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
-                throw new UnAuthorizeException($"Authorization failed.");
+                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
             }
 
             var climbingSpot = GetClimbingSpotById(climbingSpotId);
@@ -116,7 +116,7 @@ namespace ClimbingAPI.Services
             if (!authorizationResult.Succeeded)
             {
                 _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
-                throw new UnAuthorizeException($"Authorization failed.");
+                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
             }
 
             var climbingSpot = GetClimbingSpotById(climbingSpotId);
@@ -149,7 +149,7 @@ namespace ClimbingAPI.Services
             if (!authorizationResult.Succeeded)
             {
                 _logger.LogError($"ERROR for: UPDATE action from ClimbingSpotService. Authorization failed.");
-                throw new UnAuthorizeException($"Authorization failed.");
+                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
             }
             var boulder = _dbContext.Boulder.FirstOrDefault(x => x.Id == boulderId);
             boulder = UpdateBoulderField(boulder, dto);
