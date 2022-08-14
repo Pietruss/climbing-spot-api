@@ -16,18 +16,27 @@ namespace ClimbingAPI.Tests.Validators
                 new UpdateUserPasswordDto { },
                 new UpdateUserPasswordDto
                 {//for empty fields
-                    ConfirmPassword = "",
-                    Password = ""
+                    ConfirmNewPassword = "",
+                    NewPassword = "",
+                    OldPassword = ""
                 },
                 new UpdateUserPasswordDto
                 {//for not enough characters
-                    ConfirmPassword = "12345",
-                    Password = "12345"
+                    ConfirmNewPassword = "12345",
+                    NewPassword = "12345",
+                    OldPassword = "wwwwasd"
                 },
                 new UpdateUserPasswordDto
                 {//for different password
-                    ConfirmPassword = "12345",
-                    Password = "123456"
+                    ConfirmNewPassword = "12345",
+                    NewPassword = "123456",
+                    OldPassword = "wwwwasd"
+                },
+                new UpdateUserPasswordDto
+                {//for the same old and new password
+                    ConfirmNewPassword = "123456",
+                    NewPassword = "123456",
+                    OldPassword = "123456"
                 }
             };
 
@@ -40,8 +49,8 @@ namespace ClimbingAPI.Tests.Validators
             //arrange
             var model = new UpdateUserPasswordDto()
             {
-                ConfirmPassword = "1234567",
-                Password = "1234567"
+                ConfirmNewPassword = "1234567",
+                NewPassword = "1234567"
             };
 
             var validator = new UpdateUserPasswordDtoValidator();
