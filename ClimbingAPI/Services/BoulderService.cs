@@ -129,6 +129,7 @@ namespace ClimbingAPI.Services
         {
             var climbingSpot =_dbContext
                 .ClimbingSpot
+                .AsNoTracking()
                 .Include(x => x.Boulder)
                 .FirstOrDefault(x => x.Id == id);
             if (climbingSpot is null)
