@@ -21,6 +21,7 @@ namespace ClimbingAPI.Controllers
 
         [HttpGet()]
         [AllowAnonymous]
+        [ResponseCache(Duration = 1200)]
         public ActionResult<IEnumerable<ClimbingSpotDto>> GetAll()
         {
             var result = _service.GetAll();
@@ -29,6 +30,7 @@ namespace ClimbingAPI.Controllers
 
         [HttpGet("{climbingSpotId}")]
         [AllowAnonymous]
+        [ResponseCache(Duration = 1200)]
         public ActionResult<ClimbingSpotDto> Get([FromRoute]int climbingSpotId)
         {
             var climbingSpot =_service.Get(climbingSpotId);
