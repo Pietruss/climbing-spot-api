@@ -3,6 +3,7 @@ using ClimbingAPI.Models.UserClimbingSpot;
 using ClimbingAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace ClimbingAPI.Controllers
 {
@@ -45,6 +46,14 @@ namespace ClimbingAPI.Controllers
         {
             _service.ChangePassword(dto, userId);
             return Ok();
+        }
+
+        [HttpPost("delete-user/{userId}")]
+        [Authorize]
+        public async Task<ActionResult> DeleteUser([FromBody] DeleteUserDto dto, [FromRoute] int userId)
+        {
+            await _service.DeleteUser(dto, userId);
+            return NoContent();
         }
     }
 }
