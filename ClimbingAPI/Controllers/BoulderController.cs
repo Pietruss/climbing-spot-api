@@ -27,6 +27,7 @@ namespace ClimbingAPI.Controllers
         [HttpGet]
         [Route("{boulderId}")]
         [AllowAnonymous]
+        [ResponseCache(Duration = 1200)]
         public ActionResult<BoulderDto> Get([FromRoute]int climbingSpotId, [FromRoute] int boulderId)
         {
             var boulderEntity = _service.Get(climbingSpotId, boulderId);
@@ -35,6 +36,7 @@ namespace ClimbingAPI.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        [ResponseCache(Duration = 1200)]
         public ActionResult<List<BoulderDto>> GetAll(int climbingSpotId)
         {
             var climbingList = _service.GetAll(climbingSpotId);
