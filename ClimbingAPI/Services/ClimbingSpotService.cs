@@ -35,34 +35,63 @@ namespace ClimbingAPI.Services
             _authorizationService = authorizationService;
             _userContext = userContext;
         }
-        public IEnumerable<ClimbingSpotDto> GetAll()
+        public async Task<IEnumerable<ClimbingSpotDto>> GetAll()
         {
             _logger.LogInformation("INFO for: GETALL action from ClimbingSpotService.");
 
-            var climbingSpots = _dbContext
+            var climbingSpots = await _dbContext
                 .ClimbingSpot
                 .Include(x => x.Address)
                 .Include(x => x.Boulder)
-                .ToList();
+                .ToListAsync();
 
             var climbingSpotsDto = _mapper.Map<List<ClimbingSpotDto>>(climbingSpots);
 
             return climbingSpotsDto;
         }
 
-        public ClimbingSpotDto Get(int id)
+        public ClimbingSpot GetClimbingSpotWithAddressAndBouldersById(int climbingSpotId)
         {
-            _logger.LogInformation($"INFO for: GET action from ClimbingSpotService. ID: \"{id}\".");
-
             var climbingSpot = _dbContext
                 .ClimbingSpot
                 .AsNoTracking()
                 .Include(x => x.Address)
                 .Include(x => x.Boulder)
-                .FirstOrDefault(x => x.Id == id);
+                .FirstOrDefault(x => x.Id == climbingSpotId);
 
-            if(climbingSpot is null)
-                throw new NotFoundException($"ClimbingSpot with ID: {id} not found.");
+            ValidateClimbingSpotExistance(climbingSpot, climbingSpotId);
+
+            return climbingSpot;
+        }
+
+        public ClimbingSpot GetAndValidateClimbingSpotById(int climbingSpotId)
+        {
+            var climbingSpot = _dbContext
+                .ClimbingSpot
+                .AsNoTracking()
+                .FirstOrDefault(x => x.Id == climbingSpotId);
+
+            ValidateClimbingSpotExistance(climbingSpot, climbingSpotId);
+
+            return climbingSpot;
+        }
+
+        private void ValidateClimbingSpotExistance(ClimbingSpot climbingSpot, int climbingSpotId)
+        {
+            if (climbingSpot is null)
+            {
+                _logger.LogError($"ERROR: action from Climbing Service GetClimbingSpotById(). Climbing Spot with ID: \"{climbingSpotId}\" not found.");
+                throw new NotFoundException($"Climbing Spot with ID: \"{climbingSpotId}\" not found.");
+            }
+        }
+
+        public ClimbingSpotDto Get(int climbingSpotId)
+        {
+            _logger.LogInformation($"INFO for: GET action from ClimbingSpotService. ID: \"{climbingSpotId}\".");
+
+            var climbingSpot = GetClimbingSpotWithAddressAndBouldersById(climbingSpotId);
+            if (climbingSpot is null)
+                throw new NotFoundException($"ClimbingSpot with ID: {climbingSpotId} not found.");
 
             var climbingSpotDto = _mapper.Map<ClimbingSpotDto>(climbingSpot);
 
@@ -73,14 +102,9 @@ namespace ClimbingAPI.Services
         {
             _logger.LogInformation("INFO for: CREATE action from ClimbingSpotService.");
 
-            var authorizationResult = Authorize(ResourceOperation.Create, new ClimbingSpotAuthorization() { });
-            if (!authorizationResult.Succeeded)
-            {
-                _logger.LogError($"ERROR for: CREATE action from ClimbingSpotService. Authorization failed.");
-                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
-            }
+            VerifyUserData(0, ResourceOperation.Create, Literals.Literals.CreateClimbingSpotAction.GetDescription(), out var climbingSpot);
 
-            var climbingSpot = _mapper.Map<ClimbingSpot>(dto);
+            climbingSpot = _mapper.Map<ClimbingSpot>(dto);
             climbingSpot.CreatedById = _userContext.GetUserId;
 
             _dbContext.ClimbingSpot.Add(climbingSpot);
@@ -125,25 +149,33 @@ namespace ClimbingAPI.Services
         {
             _logger.LogInformation($"INFO for: DELETE action from ClimbingSpotService. ID: \"{climbingSpotId}\".");
 
-            var climbingSpot = _dbContext.ClimbingSpot.FirstOrDefault(x => x.Id == climbingSpotId);
-            if (climbingSpot is null)
-            {
-                //I do not want to show user that mentioned record is not present in the database 
-                _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
-                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
-            }
-
-            var authorizationResult = Authorize(ResourceOperation.Delete, new ClimbingSpotAuthorization() { CreatedById = climbingSpot.CreatedById });
-            if (!authorizationResult.Succeeded)
-            {
-                _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
-                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
-            }
+            VerifyUserData(climbingSpotId, ResourceOperation.Delete, Literals.Literals.DeleteClimbingSpotAction.GetDescription(), out var climbingSpot);
 
             RemoveAllUserExceptFromOwner(climbingSpotId);
 
             _dbContext.ClimbingSpot.Remove(climbingSpot);
             _dbContext.SaveChanges();
+        }
+
+        private void VerifyUserData(int climbingSpotId, ResourceOperation resourceOperation, string operation, out ClimbingSpot climbingSpot)
+        {
+            climbingSpot = null;
+            if(resourceOperation != ResourceOperation.Create)
+            {
+                climbingSpot = _dbContext.ClimbingSpot.FirstOrDefault(x => x.Id == climbingSpotId);
+                if (climbingSpot is null)
+                {
+                    _logger.LogError($"ERROR for: {operation} action from ClimbingSpotService. Authorization failed.");
+                    throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
+                }
+            }
+
+            var authorizationResult = Authorize(resourceOperation, new ClimbingSpotAuthorization() { CreatedById = climbingSpot != null ? climbingSpot.CreatedById : null });
+            if (!authorizationResult.Succeeded)
+            {
+                _logger.LogError($"ERROR for: {operation} action from ClimbingSpotService. Authorization failed.");
+                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
+            }
         }
 
         private void RemoveAllUserExceptFromOwner(int climbingSpotId)
@@ -162,21 +194,7 @@ namespace ClimbingAPI.Services
         {
             _logger.LogError($"INFO for: UPDATE action from ClimbingSpotService. ID: \"{climbingSpotId}\".");
 
-            
-            var climbingSpot = _dbContext.ClimbingSpot.FirstOrDefault(x => x.Id == climbingSpotId);
-            if (climbingSpot is null)
-            {
-                //I do not want to show user that mentioned record is not present in the database 
-                _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
-                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
-            }
-
-            var authorizationResult = Authorize(ResourceOperation.Update, new ClimbingSpotAuthorization() { CreatedById = climbingSpot.CreatedById });
-            if (!authorizationResult.Succeeded)
-            {
-                _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
-                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
-            }
+            VerifyUserData(climbingSpotId, ResourceOperation.Update, Literals.Literals.UpdateClimbingSpotAction.GetDescription(), out var climbingSpot);
 
             climbingSpot.Description = dto.Description;
             climbingSpot.Name = dto.Name;
@@ -248,8 +266,6 @@ namespace ClimbingAPI.Services
             if (userClimbingSpotEntity is not null)
                 throw new BadRequestException(
                     $"User with ID: {userId} already assigned to climbing spot with ID: {climbingSpotId}.");
-
-
         }
 
         private AuthorizationResult Authorize(ResourceOperation resourceOperation, ClimbingSpotAuthorization climbingSpotAuthorization)

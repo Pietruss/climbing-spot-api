@@ -3,6 +3,7 @@ using ClimbingAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace ClimbingAPI.Controllers
 {
@@ -37,9 +38,9 @@ namespace ClimbingAPI.Controllers
         [HttpGet]
         [AllowAnonymous]
         [ResponseCache(Duration = 1200)]
-        public ActionResult<List<BoulderDto>> GetAll(int climbingSpotId)
+        public async Task<ActionResult<List<BoulderDto>>> GetAll(int climbingSpotId)
         {
-            var climbingList = _service.GetAll(climbingSpotId);
+            var climbingList = await _service.GetAll(climbingSpotId);
             return Ok(climbingList);
         }
 
@@ -58,9 +59,9 @@ namespace ClimbingAPI.Controllers
         }
 
         [HttpDelete]
-        public ActionResult DeleteAll([FromRoute] int climbingSpotId)
+        public async Task<ActionResult> DeleteAll([FromRoute] int climbingSpotId)
         {
-            _service.DeleteAll(climbingSpotId);
+            await _service.DeleteAll(climbingSpotId);
             return NoContent();
         }
     }

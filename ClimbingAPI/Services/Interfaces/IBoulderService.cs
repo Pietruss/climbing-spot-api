@@ -1,5 +1,6 @@
 ﻿using ClimbingAPI.Models.Boulder;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ClimbingAPI.Services.Interfaces
 {
@@ -7,9 +8,9 @@ namespace ClimbingAPI.Services.Interfaces
     {
         int Create(CreateBoulderModelDto dto, int climbingSpotId);
         BoulderDto Get(int climbingSpotId, int boulderId);
-        List<BoulderDto> GetAll(int climbingSpotId);
+        Task<List<BoulderDto>> GetAll(int climbingSpotId);
         void Delete(int climbingSpotId, int boulderId);
-        void DeleteAll(int climbingSpotId);
+        Task DeleteAll(int climbingSpotId);
         void Update(int climbingSpotId, int boulderId, UpdateBoulderDto dto);
     }
 }
