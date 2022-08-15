@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ClimbingAPI.Services
 {
@@ -255,6 +256,14 @@ namespace ClimbingAPI.Services
         {
             return _authorizationService.AuthorizeAsync(_userContext.User, climbingSpotAuthorization,
                 new ResourceOperationRequirement(resourceOperation)).Result;
+        }
+
+        public async Task<List<ClimbingSpot>> GetClimbingSpotAssignedToUser(int userId)
+        {
+            return await _dbContext
+                .ClimbingSpot
+                .AsNoTracking()
+                .Where(x => x.CreatedById == userId).ToListAsync();
         }
     }
 }
