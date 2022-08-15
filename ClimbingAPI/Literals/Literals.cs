@@ -20,6 +20,15 @@ namespace ClimbingAPI.Literals
         InvalidUsernameOrPassowrd,
 
         [Description("Invalid password.")]
-        InvalidPassowrd
+        InvalidPassowrd,
+
+        [Description("DELETE_USER")]
+        DeleteUserAction,
+
+        [Description("CHANGE_PASSWORD")]
+        ChangePasswordAction,
+
+        [Description("User assigned to climbing spot. Please remove climbing spot first and try again.")]
+        UserAssignedToClimbingSpot
     }
 }

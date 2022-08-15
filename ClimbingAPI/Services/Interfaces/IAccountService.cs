@@ -1,4 +1,5 @@
 ﻿using ClimbingAPI.Models.User;
+using System.Threading.Tasks;
 
 namespace ClimbingAPI.Services.Interfaces
 {
@@ -8,5 +9,6 @@ namespace ClimbingAPI.Services.Interfaces
         string GenerateJwt(LoginUserDto dto);
         void Update(UpdateUserDto dto, int userId);
         void ChangePassword(UpdateUserPasswordDto dto, int userId);
+        Task DeleteUser(DeleteUserDto dto, int userId);
     }
 }

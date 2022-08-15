@@ -11,7 +11,7 @@ namespace ClimbingAPI.Authorization
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, ResourceOperationRequirement requirement, AccountAuthorization accountAuthorization)
         {
             var userId = int.Parse(context.User.FindFirst(x => x.Type == ClaimTypes.NameIdentifier).Value);
-            if (requirement.ResourceOperation == ResourceOperation.Update)
+            if (requirement.ResourceOperation == ResourceOperation.Update || requirement.ResourceOperation == ResourceOperation.Delete)
             {
                 if (userId != accountAuthorization.UserId)
                     return Task.CompletedTask;
