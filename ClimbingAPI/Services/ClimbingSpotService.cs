@@ -35,34 +35,63 @@ namespace ClimbingAPI.Services
             _authorizationService = authorizationService;
             _userContext = userContext;
         }
-        public IEnumerable<ClimbingSpotDto> GetAll()
+        public async Task<IEnumerable<ClimbingSpotDto>> GetAll()
         {
             _logger.LogInformation("INFO for: GETALL action from ClimbingSpotService.");
 
-            var climbingSpots = _dbContext
+            var climbingSpots = await _dbContext
                 .ClimbingSpot
                 .Include(x => x.Address)
                 .Include(x => x.Boulder)
-                .ToList();
+                .ToListAsync();
 
             var climbingSpotsDto = _mapper.Map<List<ClimbingSpotDto>>(climbingSpots);
 
             return climbingSpotsDto;
         }
 
-        public ClimbingSpotDto Get(int id)
+        public ClimbingSpot GetClimbingSpotWithAddressAndBouldersById(int climbingSpotId)
         {
-            _logger.LogInformation($"INFO for: GET action from ClimbingSpotService. ID: \"{id}\".");
-
             var climbingSpot = _dbContext
                 .ClimbingSpot
                 .AsNoTracking()
                 .Include(x => x.Address)
                 .Include(x => x.Boulder)
-                .FirstOrDefault(x => x.Id == id);
+                .FirstOrDefault(x => x.Id == climbingSpotId);
 
-            if(climbingSpot is null)
-                throw new NotFoundException($"ClimbingSpot with ID: {id} not found.");
+            ValidateClimbingSpotExistance(climbingSpot, climbingSpotId);
+
+            return climbingSpot;
+        }
+
+        public ClimbingSpot GetAndValidateClimbingSpotById(int climbingSpotId)
+        {
+            var climbingSpot = _dbContext
+                .ClimbingSpot
+                .AsNoTracking()
+                .FirstOrDefault(x => x.Id == climbingSpotId);
+
+            ValidateClimbingSpotExistance(climbingSpot, climbingSpotId);
+
+            return climbingSpot;
+        }
+
+        private void ValidateClimbingSpotExistance(ClimbingSpot climbingSpot, int climbingSpotId)
+        {
+            if (climbingSpot is null)
+            {
+                _logger.LogError($"ERROR: action from Climbing Service GetClimbingSpotById(). Climbing Spot with ID: \"{climbingSpotId}\" not found.");
+                throw new NotFoundException($"Climbing Spot with ID: \"{climbingSpotId}\" not found.");
+            }
+        }
+
+        public ClimbingSpotDto Get(int climbingSpotId)
+        {
+            _logger.LogInformation($"INFO for: GET action from ClimbingSpotService. ID: \"{climbingSpotId}\".");
+
+            var climbingSpot = GetClimbingSpotWithAddressAndBouldersById(climbingSpotId);
+            if (climbingSpot is null)
+                throw new NotFoundException($"ClimbingSpot with ID: {climbingSpotId} not found.");
 
             var climbingSpotDto = _mapper.Map<ClimbingSpotDto>(climbingSpot);
 
@@ -248,8 +277,6 @@ namespace ClimbingAPI.Services
             if (userClimbingSpotEntity is not null)
                 throw new BadRequestException(
                     $"User with ID: {userId} already assigned to climbing spot with ID: {climbingSpotId}.");
-
-
         }
 
         private AuthorizationResult Authorize(ResourceOperation resourceOperation, ClimbingSpotAuthorization climbingSpotAuthorization)

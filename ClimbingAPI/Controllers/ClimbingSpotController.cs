@@ -4,6 +4,7 @@ using ClimbingAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ClimbingAPI.Controllers
 {
@@ -22,9 +23,9 @@ namespace ClimbingAPI.Controllers
         [HttpGet()]
         [AllowAnonymous]
         [ResponseCache(Duration = 1200)]
-        public ActionResult<IEnumerable<ClimbingSpotDto>> GetAll()
+        public async Task<ActionResult<IEnumerable<ClimbingSpotDto>>> GetAll()
         {
-            var result = _service.GetAll();
+            var result = await _service.GetAll();
             return Ok(result);
         }
 

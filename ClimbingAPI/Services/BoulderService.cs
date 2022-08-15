@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClimbingAPI.Services
 {
@@ -22,14 +23,16 @@ namespace ClimbingAPI.Services
         private readonly ILogger<BoulderService> _logger;
         private readonly IUserContextService _userContext;
         private readonly IAuthorizationService _authorizationService;
+        private readonly IClimbingSpotService _climbingSpotService;
 
-        public BoulderService(ClimbingDbContext dbContext, IMapper mapper, ILogger<BoulderService> logger, IUserContextService userContext, IAuthorizationService authorizationService)
+        public BoulderService(ClimbingDbContext dbContext, IMapper mapper, ILogger<BoulderService> logger, IUserContextService userContext, IAuthorizationService authorizationService, IClimbingSpotService climbingSpotService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _logger = logger;
             _userContext = userContext;
             _authorizationService = authorizationService;
+            _climbingSpotService = climbingSpotService;
         }
 
         public int Create(CreateBoulderModelDto dto, int climbingSpotId)
@@ -59,7 +62,7 @@ namespace ClimbingAPI.Services
         {
             _logger.LogInformation($"INFO for: GET action from BoulderService. Boulder Id: \"{boulderId}\", Climbing Spot Id: {climbingSpotId}.");
 
-            var climbingSpot = GetClimbingSpotById(climbingSpotId);
+            var climbingSpot = _climbingSpotService.GetClimbingSpotWithAddressAndBouldersById(climbingSpotId);
 
             var boulder = climbingSpot.Boulder.FirstOrDefault(x => x.Id == boulderId);
 
@@ -74,14 +77,21 @@ namespace ClimbingAPI.Services
             return boulderDto;
         }
 
-        public List<BoulderDto> GetAll(int climbingSpotId)
+        public async Task<List<BoulderDto>> GetAll(int climbingSpotId)
         {
             _logger.LogInformation($"INFO for: GETALL action from BoulderService. Climbing Spot Id: {climbingSpotId}.");
 
-            var climbingSpot = GetClimbingSpotById(climbingSpotId);
-            var boulderListDto = _mapper.Map<List<BoulderDto>>(climbingSpot.Boulder);
+            _climbingSpotService.GetAndValidateClimbingSpotById(climbingSpotId);
+
+            var boulderLists = await GetAllBoludersInClimbingSpot(climbingSpotId);
+            var boulderListDto = _mapper.Map<List<BoulderDto>>(boulderLists);
 
             return boulderListDto;
+        }
+
+        private async Task<List<Boulder>> GetAllBoludersInClimbingSpot(int climbingSpotId)
+        {
+            return await _dbContext.Boulder.Where(x => x.ClimbingSpotId == climbingSpotId).ToListAsync();
         }
 
         public void Delete(int climbingSpotId, int boulderId)
@@ -95,7 +105,7 @@ namespace ClimbingAPI.Services
                 throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
             }
 
-            var climbingSpot = GetClimbingSpotById(climbingSpotId);
+            var climbingSpot = _climbingSpotService.GetClimbingSpotWithAddressAndBouldersById(climbingSpotId);
             
             var boulder = climbingSpot.Boulder.FirstOrDefault(x => x.Id == boulderId);
             if (boulder is null)
@@ -108,7 +118,7 @@ namespace ClimbingAPI.Services
             _dbContext.SaveChanges();
         }
 
-        public void DeleteAll(int climbingSpotId)
+        public async Task DeleteAll(int climbingSpotId)
         {
             _logger.LogInformation($"INFO for: DELETEALL action from BoulderService. Climbing Spot Id: {climbingSpotId}.");
 
@@ -119,26 +129,10 @@ namespace ClimbingAPI.Services
                 throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
             }
 
-            var climbingSpot = GetClimbingSpotById(climbingSpotId);
-            _dbContext.RemoveRange(climbingSpot.Boulder);
+            var boulderLists = await GetAllBoludersInClimbingSpot(climbingSpotId);
+            _dbContext.RemoveRange(boulderLists);
 
             _dbContext.SaveChanges();
-        }
-
-        private ClimbingSpot GetClimbingSpotById(int id)
-        {
-            var climbingSpot =_dbContext
-                .ClimbingSpot
-                .AsNoTracking()
-                .Include(x => x.Boulder)
-                .FirstOrDefault(x => x.Id == id);
-            if (climbingSpot is null)
-            {
-                _logger.LogError($"ERROR: action from Boulder Service GetClimbingSpotById(). Climbing Spot with ID: \"{id}\" not found.");
-                throw new NotFoundException($"Climbing Spot with ID: \"{id}\" not found.");
-            }
-
-            return climbingSpot;
         }
 
         public void Update(int climbingSpotId, int boulderId, UpdateBoulderDto dto)
