@@ -39,12 +39,7 @@ namespace ClimbingAPI.Services
         {
             _logger.LogInformation($"INFO for: CREATE action from BoulderService. Climbing Spot ID: \"{climbingSpotId}\".");
 
-            var authorizationResult = Authorize(climbingSpotId, 0, ResourceOperation.Create);
-            if (!authorizationResult.Succeeded)
-            {
-                _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
-                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
-            }
+            VerifyUserData(climbingSpotId, 0, ResourceOperation.Create, Literals.Literals.CreateBoulderAction.GetDescription());
 
             var boulderEntity = _mapper.Map<Boulder>(dto);
             boulderEntity.ClimbingSpotId = climbingSpotId;
@@ -98,12 +93,7 @@ namespace ClimbingAPI.Services
         {
             _logger.LogInformation($"INFO for: DELETE action from BoulderService. Boulder Id: {boulderId}.");
 
-            var authorizationResult = Authorize(climbingSpotId, boulderId, ResourceOperation.Delete);
-            if (!authorizationResult.Succeeded)
-            {
-                _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
-                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
-            }
+            VerifyUserData(climbingSpotId, boulderId, ResourceOperation.Delete, Literals.Literals.DeleteBoulderAction.GetDescription());
 
             var climbingSpot = _climbingSpotService.GetClimbingSpotWithAddressAndBouldersById(climbingSpotId);
             
@@ -122,12 +112,7 @@ namespace ClimbingAPI.Services
         {
             _logger.LogInformation($"INFO for: DELETEALL action from BoulderService. Climbing Spot Id: {climbingSpotId}.");
 
-            var authorizationResult = Authorize(climbingSpotId, 0, ResourceOperation.Delete);
-            if (!authorizationResult.Succeeded)
-            {
-                _logger.LogError($"ERROR for: DELETE action from ClimbingSpotService. Authorization failed.");
-                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
-            }
+            VerifyUserData(climbingSpotId, 0, ResourceOperation.Delete, Literals.Literals.DeleteAllBouldersAction.GetDescription());
 
             var boulderLists = await GetAllBoludersInClimbingSpot(climbingSpotId);
             _dbContext.RemoveRange(boulderLists);
@@ -139,18 +124,24 @@ namespace ClimbingAPI.Services
         {
             _logger.LogInformation($"INFO for: UPDATE action from BoulderService. Boulder Id: {boulderId}.");
 
-            var authorizationResult = Authorize(climbingSpotId, boulderId, ResourceOperation.Update);
-            if (!authorizationResult.Succeeded)
-            {
-                _logger.LogError($"ERROR for: UPDATE action from ClimbingSpotService. Authorization failed.");
-                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
-            }
+            VerifyUserData(climbingSpotId, boulderId, ResourceOperation.Update, Literals.Literals.UpdateBoulderAction.GetDescription());
+
             var boulder = _dbContext.Boulder.FirstOrDefault(x => x.Id == boulderId);
             boulder = UpdateBoulderField(boulder, dto);
 
             WhoColumns.ModificationFiller(boulder, _userContext.GetUserId, DateTime.Now);
             _dbContext.Boulder.Update(boulder);
             _dbContext.SaveChanges();
+        }
+
+        private void VerifyUserData(int climbingSpotId, int boulderId, ResourceOperation resourceOperation, string operation)
+        {
+            var authorizationResult = Authorize(climbingSpotId, boulderId, resourceOperation);
+            if (!authorizationResult.Succeeded)
+            {
+                _logger.LogError($"ERROR for: {operation} action from ClimbingSpotService. Authorization failed.");
+                throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
+            }
         }
 
         private AuthorizationResult Authorize(int climbingSpotId, int boulderId, ResourceOperation resourceOperation)

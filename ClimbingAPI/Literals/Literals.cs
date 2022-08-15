@@ -29,6 +29,28 @@ namespace ClimbingAPI.Literals
         ChangePasswordAction,
 
         [Description("User assigned to climbing spot. Please remove climbing spot first and try again.")]
-        UserAssignedToClimbingSpot
+        UserAssignedToClimbingSpot,
+
+        [Description("DELETE_CLIMBING_SPOT")]
+        DeleteClimbingSpotAction,
+
+        [Description("UPDATE_CLIMBING_SPOT")]
+        UpdateClimbingSpotAction,
+
+        [Description("CREATE_CLIMBING_SPOT")]
+        CreateClimbingSpotAction,
+
+        [Description("UPDATE_BOULDER")]
+        UpdateBoulderAction,
+
+        [Description("DELETE_ALL_BOULDERS")]
+        DeleteAllBouldersAction,
+        
+        [Description("DELETE_BOULDER")]
+        DeleteBoulderAction,
+
+        [Description("CREATE_BOULDER")]
+        CreateBoulderAction
+
     }
 }
