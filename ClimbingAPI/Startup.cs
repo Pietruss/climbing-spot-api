@@ -115,6 +115,7 @@ namespace ClimbingAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserRoleSeeder seeder)
         {
+            app.UseResponseCaching();
             app.UseCors("FrontEndClient");
             seeder.Seed();
 
