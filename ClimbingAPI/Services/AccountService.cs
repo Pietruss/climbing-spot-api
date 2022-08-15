@@ -30,12 +30,13 @@ namespace ClimbingAPI.Services
         private readonly AuthenticationSettings _settings;
         private readonly IAuthorizationService _authorizationService;
         private readonly IUserContextService _userContext;
+        private readonly IClimbingSpotService _climbingSpotService;
 
         public AccountService()
         {
             
         }
-        public AccountService(IMapper mapper, ILogger<AccountService> logger, ClimbingDbContext dbContext, IPasswordHasher<User> passwordHasher, AuthenticationSettings settings, IAuthorizationService authorizationService, IUserContextService userContext)
+        public AccountService(IMapper mapper, ILogger<AccountService> logger, ClimbingDbContext dbContext, IPasswordHasher<User> passwordHasher, AuthenticationSettings settings, IAuthorizationService authorizationService, IUserContextService userContext, IClimbingSpotService climbingSpotService)
         {
             _mapper = mapper;
             _logger = logger;
@@ -44,6 +45,7 @@ namespace ClimbingAPI.Services
             _settings = settings;
             _authorizationService = authorizationService;
             _userContext = userContext;
+            _climbingSpotService = climbingSpotService;
         }
         public void Register(CreateUserDto dto)
         {
@@ -230,20 +232,12 @@ namespace ClimbingAPI.Services
 
         private async Task VerifyIfAnyClimbingSpotIsAssignedToUsec(int userId)
         {
-            var climbingSpots =  await GetClimbingSpotAssignedToUser(userId);
+            var climbingSpots =  await _climbingSpotService.GetClimbingSpotAssignedToUser(userId);
             if (climbingSpots.Any())
             {
                 _logger.LogError($"ERROR for: {Literals.Literals.UserAssignedToClimbingSpot.GetDescription()} action from AccountService. User is assigned to Climbing Spot.");
                 throw new BadRequestException(Literals.Literals.UserAssignedToClimbingSpot.GetDescription());
             }
-        }
-
-        private async Task<List<ClimbingSpot>> GetClimbingSpotAssignedToUser(int userId)
-        {
-            return await _dbContext
-                .ClimbingSpot
-                .AsNoTracking()
-                .Where(x => x.CreatedById == userId).ToListAsync();
         }
 
         private void VerifyUserData(int userId, string password, string operation, out User user, string newPassword = null)

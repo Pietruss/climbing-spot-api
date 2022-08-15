@@ -100,14 +100,22 @@ namespace ClimbingAPI
             services.AddScoped<IUserContextService, UserContextService>();
             services.AddHttpContextAccessor();
             services.AddSwaggerGen();
+            services.AddCors(options => 
+            {
+                options.AddPolicy("FrontEndClient", ApplicationBuilder =>
 
+                 ApplicationBuilder.AllowAnyMethod()
+                 .AllowAnyHeader()
+                 .AllowAnyOrigin()
+                );
+            });
             #endregion
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserRoleSeeder seeder)
         {
+            app.UseCors("FrontEndClient");
             seeder.Seed();
 
             if (env.IsDevelopment())

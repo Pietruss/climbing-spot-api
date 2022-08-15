@@ -1,6 +1,8 @@
-﻿using ClimbingAPI.Models.ClimbingSpot;
+﻿using ClimbingAPI.Entities;
+using ClimbingAPI.Models.ClimbingSpot;
 using ClimbingAPI.Models.UserClimbingSpot;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ClimbingAPI.Services.Interfaces
 {
@@ -12,5 +14,6 @@ namespace ClimbingAPI.Services.Interfaces
         void Delete(int climbingSpotId);
         void Update(UpdateClimbingSpotDto dto, int climbingSpotId);
         void AssignClimbingSpotToUserWithRole(UpdateUserClimbingSpotDto dto);
+        Task<List<ClimbingSpot>> GetClimbingSpotAssignedToUser(int userId);
     }
 }
