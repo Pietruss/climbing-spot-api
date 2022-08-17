@@ -4,14 +4,16 @@ using ClimbingAPI.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ClimbingAPI.Migrations
 {
     [DbContext(typeof(ClimbingDbContext))]
-    partial class ClimbingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220815173339_imageTable")]
+    partial class imageTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -158,22 +160,10 @@ namespace ClimbingAPI.Migrations
                     b.Property<int>("BoulderId")
                         .HasColumnType("int");
 
-                    b.Property<string>("CreatedByUserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreationDateTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<byte[]>("ImageData")
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("ImageTitle")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ModificationDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedByUserId")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

@@ -12,6 +12,7 @@ namespace ClimbingAPI.Entities
         public DbSet<Role> Role { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<UserClimbingSpotLinks> UserClimbingSpotLinks { get; set; }
+        public DbSet<Image> Images { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,10 +33,16 @@ namespace ClimbingAPI.Entities
                 .Property(x => x.City)
                 .IsRequired();
 
-            modelBuilder.Entity<Boulder.Boulder>()
-                .Property(x => x.Name)
+            modelBuilder.Entity<Boulder.Boulder>(eb =>
+            {
+                eb.Property(x => x.Name)
                 .IsRequired();
 
+                eb.HasOne(x => x.Image)
+                .WithOne(x => x.Boulder)
+                .HasForeignKey<Image>(x => x.BoulderId);
+            });
+            
             modelBuilder.Entity<Role>()
                 .Property(x => x.Name)
                 .IsRequired();

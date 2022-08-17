@@ -15,6 +15,7 @@ namespace ClimbingAPI.Entities.Boulder
         public DateTime ModificationDateTime { get; set; }
         public string CreatedByUserId { get; set; }
         public DateTime CreationDateTime { get; set; }
+        public Image Image { get; set; }
 
     }
 }

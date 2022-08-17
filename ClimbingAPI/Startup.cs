@@ -68,6 +68,7 @@ namespace ClimbingAPI
             services.AddScoped<IClimbingSpotService, ClimbingSpotService>();
             services.AddScoped<IBoulderService, BoulderService>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IImageService, ImageService>();
             #endregion
 
             #region Validators
@@ -86,6 +87,7 @@ namespace ClimbingAPI
             services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementClimbingSpotHandler>();
             services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementBoulderHandler>();
             services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementAccountHandler>();
+            services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementImageHandler>();
 
             #endregion
 

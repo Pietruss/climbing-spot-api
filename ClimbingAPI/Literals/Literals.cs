@@ -50,7 +50,19 @@ namespace ClimbingAPI.Literals
         DeleteBoulderAction,
 
         [Description("CREATE_BOULDER")]
-        CreateBoulderAction
+        CreateBoulderAction,
 
+        [Description("Image not found.")]
+        ImageNotFound,
+
+        [Description("UPLOAD_IMAGE")]
+        UploadImage,
+
+        [Description("Boulder has assigned image. Please delete the image and upload it again.")]
+        BoulderHasAssingedImage,
+
+
+        [Description("GET_IMAGE")]
+        GetImageAction
     }
 }
