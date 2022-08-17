@@ -2,6 +2,7 @@
 using ClimbingAPI.Authorization.AuthorizationEntity;
 using ClimbingAPI.Entities;
 using ClimbingAPI.Exceptions;
+using ClimbingAPI.Models.Image;
 using ClimbingAPI.Services.Interfaces;
 using ClimbingAPI.Utils;
 using Microsoft.AspNetCore.Authorization;
@@ -104,7 +105,7 @@ namespace ClimbingAPI.Services
             }
         }
 
-        public async Task<string> Get(int imageId)
+        public async Task<ImageDto> Get(int imageId)
         {
             _logger.LogInformation($"INFO for: {Literals.Literals.GetImageAction.GetDescription()} action from ImageService.");
 
@@ -115,10 +116,40 @@ namespace ClimbingAPI.Services
                 throw new NotFoundException(Literals.Literals.ImageNotFound.GetDescription());
             }
 
-            string imageBase64Data = Convert.ToBase64String(image.ImageData);
-            string imageDataURL = string.Format("data:image/jpg;base64,{0}", imageBase64Data);
+            string imageDataURL = string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(image.ImageData));
 
-            return imageDataURL;
+            return new ImageDto()
+            {
+                ImageDataUrl = imageDataURL,
+                ImageName = image.ImageTitle
+            };
+        }
+
+        public async Task Delete(int imageId, int boulderId)
+        {
+            _logger.LogInformation($"INFO for: {Literals.Literals.DeleteImageAction.GetDescription()} action from ImageService.");
+
+            await Authorize(ResourceOperation.Delete, Literals.Literals.DeleteImageAction.GetDescription(), boulderId);
+
+            var image = await GetImage(imageId);
+
+            _dbContext.Images.Remove(image);
+            _dbContext.SaveChanges();
+        }
+
+        private async Task<Image> GetImage(int imageId)
+        {
+            var image = await _dbContext
+                .Images
+                .FirstOrDefaultAsync(x => x.Id == imageId);
+
+            if (image == null)
+            {
+                _logger.LogError($"ERROR for: {Literals.Literals.DeleteImageAction.GetDescription()} action from ImageService. Image not found.");
+                throw new NotFoundException(Literals.Literals.DeleteImage.GetDescription());
+            }
+
+            return image;
         }
     }
 }

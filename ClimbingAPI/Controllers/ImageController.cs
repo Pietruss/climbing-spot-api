@@ -1,4 +1,5 @@
-﻿using ClimbingAPI.Services.Interfaces;
+﻿using ClimbingAPI.Models.Image;
+using ClimbingAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,10 +26,19 @@ namespace ClimbingAPI.Controllers
         }
 
         [HttpGet("{imageId}")]
-        public async Task<ActionResult<string>> Get([FromRoute] int imageId)
+        [ResponseCache(Duration = 1200)]
+        public async Task<ActionResult<ImageDto>> Get([FromRoute] int imageId)
         {
-            await _service.Get(imageId);
-            return Ok();
+            var imageDto = await _service.Get(imageId);
+            return Ok(imageDto);
+        }
+
+        [HttpDelete("/boulder/{boulderid}/image/{imageId}")]
+        [Authorize]
+        public async Task<ActionResult> Delete([FromRoute] int imageId, [FromRoute] int boulderId)
+        {
+            await _service.Delete(imageId, boulderId);
+            return NoContent();
         }
     }
 }
