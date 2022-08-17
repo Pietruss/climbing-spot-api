@@ -20,7 +20,7 @@ namespace ClimbingAPI.Authorization
         {
             var userId = int.Parse(context.User.FindFirst(x => x.Type == ClaimTypes.NameIdentifier).Value);
 
-            if (requirement.ResourceOperation == ResourceOperation.Create)
+            if (requirement.ResourceOperation == ResourceOperation.Create || requirement.ResourceOperation == ResourceOperation.Delete) 
             {
                 var userClimbingSpot = _dbContext.UserClimbingSpotLinks.FirstOrDefault(x => x.UserId == userId && (x.RoleId == (int)Roles.Admin || x.RoleId == (int)Roles.Manager || x.RoleId == (int)Roles.Routesetter) && x.ClimbingSpotId == imageAuthorization.ClimbingSpotId);
                 if (userClimbingSpot is null)
