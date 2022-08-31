@@ -37,6 +37,8 @@ namespace ClimbingAPI.Services
 
             await Authorize(ResourceOperation.Create, Literals.Literals.UploadImage.GetDescription(), boulderId);
 
+            ValidateImage(img);
+
             MemoryStream ms = new MemoryStream();
             img.CopyTo(ms);
 
@@ -48,6 +50,15 @@ namespace ClimbingAPI.Services
             WhoColumns.CreationFiller(image, _userContext.GetUserId, DateTime.Now);
             _dbContext.SaveChanges();
 
+        }
+
+        private void ValidateImage(IFormFile img)
+        {
+            if(img is null)
+            {
+                _logger.LogError($"ERROR for: {Literals.Literals.UploadImage} action from ImageService. Image is broken or empty.");
+                throw new BadRequestException(Literals.Literals.BrokenImage.GetDescription());
+            }
         }
 
         private Image CreateNewImage(IFormFile img, int boulderId, byte[] imageData)
