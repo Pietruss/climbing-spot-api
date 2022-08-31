@@ -1,4 +1,5 @@
 ﻿using ClimbingAPI.Entities;
+using ClimbingAPI.Entities.Boulder;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -60,6 +61,26 @@ namespace ClimbingAPI.Tests.Helpers
             var dbContext = scope.ServiceProvider.GetService<ClimbingDbContext>();
 
             dbContext.User.Remove(user);
+            dbContext.SaveChanges();
+        }
+
+        public static void SeedImage(Image image, WebApplicationFactory<Startup> factory)
+        {
+            var scopedFactory = factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopedFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetService<ClimbingDbContext>();
+
+            dbContext.Images.Add(image);
+            dbContext.SaveChanges();
+        }
+
+        public static void SeedBoulder(Boulder boulder, WebApplicationFactory<Startup> factory)
+        {
+            var scopedFactory = factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopedFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetService<ClimbingDbContext>();
+
+            dbContext.Boulder.Add(boulder);
             dbContext.SaveChanges();
         }
     }

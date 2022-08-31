@@ -68,6 +68,10 @@ namespace ClimbingAPI.Literals
         BoulderHasAssingedImage,
 
         [Description("GET_IMAGE")]
-        GetImageAction
+        GetImageAction,
+
+        [Description("Image is wrong or empty.")]
+        BrokenImage,
+
     }
 }
