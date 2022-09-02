@@ -19,7 +19,7 @@ namespace ClimbingAPI.Tests.Validators
                     ContactEmail = "test@gmail.com",
                     City = "Cracow",
                     Street = "Wiktorianska",
-                    ContactNumber = "123321123"
+                    ContactNumber = "+48532557343"
                 }
             };
 
