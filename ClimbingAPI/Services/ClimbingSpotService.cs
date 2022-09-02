@@ -64,16 +64,16 @@ namespace ClimbingAPI.Services
             return climbingSpot;
         }
 
-        public ClimbingSpot GetAndValidateClimbingSpotById(int climbingSpotId)
+        public async Task ValidateClimbingSpotById(int climbingSpotId)
         {
-            var climbingSpot = _dbContext
+            var climbingSpot = await _dbContext
                 .ClimbingSpot
                 .AsNoTracking()
-                .FirstOrDefault(x => x.Id == climbingSpotId);
+                .Where(x => x.Id == climbingSpotId)
+                .Select(x => new ClimbingSpot() {Id = x.Id })
+                .FirstOrDefaultAsync();
 
             ValidateClimbingSpotExistance(climbingSpot, climbingSpotId);
-
-            return climbingSpot;
         }
 
         private void ValidateClimbingSpotExistance(ClimbingSpot climbingSpot, int climbingSpotId)

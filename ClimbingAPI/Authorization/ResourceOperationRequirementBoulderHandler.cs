@@ -15,11 +15,11 @@ namespace ClimbingAPI.Authorization
         {
             _dbContext = dbContext;
         }
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
+        protected override async  Task<Task> HandleRequirementAsync(AuthorizationHandlerContext context,
             ResourceOperationRequirement requirement,
             BoulderAuthorization boulderAuthorization)
         {
-            var userClimbingSpotEntity = GetUserClimbingSpotLinks(context, boulderAuthorization);
+            var userClimbingSpotEntity = await GetUserClimbingSpotLinks(context, boulderAuthorization);
 
             if (requirement.ResourceOperation == ResourceOperation.Delete || requirement.ResourceOperation == ResourceOperation.Create || requirement.ResourceOperation == ResourceOperation.Update)
             {
@@ -28,7 +28,10 @@ namespace ClimbingAPI.Authorization
 
                 if(requirement.ResourceOperation == ResourceOperation.Update)
                 {
-                    var climbingSpot = _dbContext.ClimbingSpot.Include(x => x.Boulder).FirstOrDefault(x => x.Id == boulderAuthorization.ClimbingSpotId);
+                    var climbingSpot = _dbContext
+                        .ClimbingSpot
+                        .Include(x => x.Boulder)
+                        .FirstOrDefault(x => x.Id == boulderAuthorization.ClimbingSpotId);
                     if(climbingSpot is null || climbingSpot.Boulder is null)
                         return Task.CompletedTask;
 
@@ -42,12 +45,16 @@ namespace ClimbingAPI.Authorization
             return Task.CompletedTask;
         }
 
-        private UserClimbingSpotLinks GetUserClimbingSpotLinks(AuthorizationHandlerContext context, BoulderAuthorization boulderAuthorization)
+        private async Task<UserClimbingSpotLinks> GetUserClimbingSpotLinks(AuthorizationHandlerContext context, BoulderAuthorization boulderAuthorization)
         {
             var userId = context.User.FindFirst(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            return  _dbContext.UserClimbingSpotLinks.FirstOrDefault(x =>
+            return await _dbContext
+                .UserClimbingSpotLinks
+                .Where(x =>
                  x.UserId == int.Parse(userId) && x.ClimbingSpotId == boulderAuthorization.ClimbingSpotId && (x.RoleId == (int)Roles.Admin ||
-                 x.RoleId == (int)Roles.Manager || x.RoleId == (int)Roles.Routesetter));
+                 x.RoleId == (int)Roles.Manager || x.RoleId == (int)Roles.Routesetter))
+                .Select(x => new UserClimbingSpotLinks() {Id = x.Id })
+                .FirstOrDefaultAsync();
         }
     }
 }

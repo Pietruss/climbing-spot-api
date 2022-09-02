@@ -15,7 +15,7 @@ namespace ClimbingAPI.Services.Interfaces
         void Update(UpdateClimbingSpotDto dto, int climbingSpotId);
         void AssignClimbingSpotToUserWithRole(UpdateUserClimbingSpotDto dto);
         Task<List<int>> GetClimbingSpotAssignedToUser(int userId);
-        ClimbingSpot GetAndValidateClimbingSpotById(int climbingSpotId);
+        Task ValidateClimbingSpotById(int climbingSpotId);
         ClimbingSpot GetClimbingSpotWithAddressAndBouldersById(int climbingSpotId);
     }
 }

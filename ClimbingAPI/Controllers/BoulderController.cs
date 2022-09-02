@@ -19,19 +19,19 @@ namespace ClimbingAPI.Controllers
             _service = service;
         }
         [HttpPost]
-        public ActionResult CreateBoulder([FromBody]CreateBoulderModelDto dto, [FromRoute] int climbingSpotId)
+        public async Task<ActionResult> CreateBoulder([FromBody]CreateBoulderModelDto dto, [FromRoute] int climbingSpotId)
         {
-            var id = _service.Create(dto, climbingSpotId);
+            var id = await _service.Create(dto, climbingSpotId);
             return Created($"/climbingSpot/{climbingSpotId}/boulder/{id}", null);
         }
 
         [HttpGet]
         [Route("{boulderId}")]
         [AllowAnonymous]
-        [ResponseCache(Duration = 1200)]
-        public ActionResult<BoulderDto> Get([FromRoute]int climbingSpotId, [FromRoute] int boulderId)
+        [ResponseCache(Duraktion = 1200)]
+        public async Task<ActionResult<BoulderDto>> Get([FromRoute]int climbingSpotId, [FromRoute] int boulderId)
         {
-            var boulderEntity = _service.Get(climbingSpotId, boulderId);
+            var boulderEntity = await _service.Get(climbingSpotId, boulderId);
             return Ok(boulderEntity);
         }
 
@@ -45,16 +45,16 @@ namespace ClimbingAPI.Controllers
         }
 
         [HttpDelete("{boulderId}")]
-        public ActionResult Delete([FromRoute] int climbingSpotId, [FromRoute] int boulderId)
+        public async Task<ActionResult> Delete([FromRoute] int climbingSpotId, [FromRoute] int boulderId)
         {
-            _service.Delete(climbingSpotId, boulderId);
+            await _service.Delete(climbingSpotId, boulderId);
             return NoContent();
         }
 
         [HttpPatch("{boulderId}")]
-        public ActionResult Update([FromRoute] int climbingSpotId, [FromRoute] int boulderId, [FromBody] UpdateBoulderDto dto)
+        public async Task<ActionResult> Update([FromRoute] int climbingSpotId, [FromRoute] int boulderId, [FromBody] UpdateBoulderDto dto)
         {
-            _service.Update(climbingSpotId, boulderId, dto);
+            await _service.Update(climbingSpotId, boulderId, dto);
             return Ok();
         }
 
