@@ -17,6 +17,8 @@ namespace ClimbingAPI.Configuration
 
             builder.Property(x => x.ContactNumber)
                 .IsRequired();
+
+            builder.HasIndex(x => x.CreatedById);
         }
     }
 }

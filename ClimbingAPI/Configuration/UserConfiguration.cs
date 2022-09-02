@@ -16,6 +16,8 @@ namespace ClimbingAPI.Configuration
 
             builder.Property(x => x.FirstName)
                 .IsRequired();
+
+            builder.HasIndex(x => x.Email);
         }
     }
 }
