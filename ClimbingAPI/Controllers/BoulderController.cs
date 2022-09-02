@@ -28,7 +28,7 @@ namespace ClimbingAPI.Controllers
         [HttpGet]
         [Route("{boulderId}")]
         [AllowAnonymous]
-        [ResponseCache(Duraktion = 1200)]
+        [ResponseCache(Duration = 1200)]
         public async Task<ActionResult<BoulderDto>> Get([FromRoute]int climbingSpotId, [FromRoute] int boulderId)
         {
             var boulderEntity = await _service.Get(climbingSpotId, boulderId);
