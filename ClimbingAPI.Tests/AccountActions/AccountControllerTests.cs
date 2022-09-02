@@ -141,7 +141,7 @@ namespace ClimbingAPI.Tests
         {
             // arrange
              _accountServiceMock
-                 .Setup(e => e.GenerateJwt(It.IsAny<LoginUserDto>())).Returns("jwt");
+                 .Setup(e => e.GenerateJwt(It.IsAny<LoginUserDto>())).ReturnsAsync("jwt");
 
             var loginDto = new LoginUserDto
             {

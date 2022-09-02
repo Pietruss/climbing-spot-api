@@ -26,25 +26,25 @@ namespace ClimbingAPI.Controllers
         }
 
         [HttpPost("login")]
-        public ActionResult Login([FromBody]LoginUserDto dto)
+        public async Task<ActionResult> Login([FromBody]LoginUserDto dto)
         {
-            var token = _service.GenerateJwt(dto);
+            var token = await _service.GenerateJwt(dto);
             return Ok(token);
         }
 
         [HttpPatch("update-user/{userId}")]
         [Authorize]
-        public ActionResult Update([FromBody] UpdateUserDto dto, [FromRoute] int userId)
+        public async Task<ActionResult> Update([FromBody] UpdateUserDto dto, [FromRoute] int userId)
         {
-            _service.Update(dto, userId);
+            await _service.Update(dto, userId);
             return Ok();
         }
 
         [HttpPatch("change-password/{userId}")]
         [Authorize]
-        public ActionResult ChangePassword([FromBody] UpdateUserPasswordDto dto, [FromRoute] int userId)
+        public async  Task<ActionResult> ChangePassword([FromBody] UpdateUserPasswordDto dto, [FromRoute] int userId)
         {
-            _service.ChangePassword(dto, userId);
+            await _service.ChangePassword(dto, userId);
             return Ok();
         }
 

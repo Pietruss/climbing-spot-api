@@ -274,12 +274,14 @@ namespace ClimbingAPI.Services
                 new ResourceOperationRequirement(resourceOperation)).Result;
         }
 
-        public async Task<List<ClimbingSpot>> GetClimbingSpotAssignedToUser(int userId)
+        public async Task<List<int>> GetClimbingSpotAssignedToUser(int userId)
         {
             return await _dbContext
                 .ClimbingSpot
                 .AsNoTracking()
-                .Where(x => x.CreatedById == userId).ToListAsync();
+                .Where(x => x.CreatedById == userId)
+                .Select(x => x.Id)
+                .ToListAsync();
         }
     }
 }

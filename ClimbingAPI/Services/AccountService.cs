@@ -76,11 +76,11 @@ namespace ClimbingAPI.Services
             };
         }
 
-        public string GenerateJwt(LoginUserDto dto)
+        public async Task<string> GenerateJwt(LoginUserDto dto)
         {
             _logger.LogInformation("INFO for: GENERATEJWT action from AccountService.");
 
-            var user = GetUserByEmail(dto.Email);
+            var user = await GetUserByEmail(dto.Email);
             if (user is null)
             {
                 _logger.LogError("Invalid username or password.");
@@ -119,10 +119,13 @@ namespace ClimbingAPI.Services
             }
         }
 
-        public User GetUserByEmail(string email)
+        public async Task<User> GetUserByEmail(string email)
         {
-            return _dbContext.User
-                .FirstOrDefault(x => x.Email == email);
+            return await _dbContext
+                .User
+                .Where(x => x.Email == email)
+                .Select(x => new User() { Id = x.Id, PasswordHash = x.PasswordHash, FirstName = x.FirstName, LastName = x.LastName, DateOfBirth = x.DateOfBirth })
+                .FirstOrDefaultAsync();
         }
 
         public IEnumerable<Claim> GenerateClaims(User user)
@@ -135,7 +138,7 @@ namespace ClimbingAPI.Services
             };
         }
 
-        public void Update(UpdateUserDto dto, int userId)
+        public async Task Update(UpdateUserDto dto, int userId)
         {
             _logger.LogInformation($"INFO for: UPDATE action from AccountService. User Id: {userId}.");
 
@@ -146,7 +149,7 @@ namespace ClimbingAPI.Services
                 throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
             }
 
-            var user = GetUserById(userId);
+            var user = await GetUserById(userId);
             if(user is null)
             {
                 _logger.LogError($"ERROR for: UPDATE action from ClimbingSpotService. User with id not found {userId}.");
@@ -170,9 +173,13 @@ namespace ClimbingAPI.Services
             return user;
         }
 
-        private User GetUserById(int userId)
+        private async Task<User> GetUserById(int userId)
         {
-            return _dbContext.User.FirstOrDefault(x => x.Id == userId);
+            return await _dbContext
+                 .User
+                 .Where(x => x.Id == userId)
+                 .Select(x => new User() { Id = x.Id, PasswordHash = x.PasswordHash, Email = x.Email, FirstName = x.FirstName, LastName = x.LastName, DateOfBirth = x.DateOfBirth, CreatedByUserId = x.CreatedByUserId, CreationDateTime = x.CreationDateTime})
+                 .FirstOrDefaultAsync();
         }
 
         private AuthorizationResult Authorize(ResourceOperation resourceOperation, AccountAuthorization accountAuthorization)
@@ -181,11 +188,11 @@ namespace ClimbingAPI.Services
                 new ResourceOperationRequirement(resourceOperation)).Result;
         }
 
-        public void ChangePassword(UpdateUserPasswordDto dto, int userId)
+        public async Task ChangePassword(UpdateUserPasswordDto dto, int userId)
         {
             _logger.LogInformation($"INFO for: {Literals.Literals.ChangePasswordAction.GetDescription()} action from AccountService. User Id: {userId}.");
 
-            VerifyUserData(userId, dto.OldPassword, Literals.Literals.ChangePasswordAction.GetDescription(), out User user, dto.NewPassword);
+            var user = await VerifyUserData(userId, dto.OldPassword, Literals.Literals.ChangePasswordAction.GetDescription(), dto.NewPassword);
 
             UpdateUserPassword(dto, user);
         }
@@ -209,7 +216,7 @@ namespace ClimbingAPI.Services
         {
             _logger.LogInformation($"INFO for: {Literals.Literals.DeleteUserAction.GetDescription()} action from AccountService. User Id: {userId}.");
 
-            VerifyUserData(userId, dto.Password, Literals.Literals.DeleteUserAction.GetDescription(), out User user);
+            var user = await VerifyUserData(userId, dto.Password, Literals.Literals.DeleteUserAction.GetDescription());
 
             await VerifyIfAnyClimbingSpotIsAssignedToUsec(userId);
 
@@ -227,7 +234,11 @@ namespace ClimbingAPI.Services
 
         private async Task<List<UserClimbingSpotLinks>> GetUserClimbingSpotsEntities(int userId)
         {
-            return await _dbContext.UserClimbingSpotLinks.Where(x => x.UserId == userId).ToListAsync();
+            return await _dbContext
+                .UserClimbingSpotLinks
+                .Where(x => x.UserId == userId)
+                .Select(x => new UserClimbingSpotLinks() { Id = x.Id})
+                .ToListAsync();
         }
 
         private async Task VerifyIfAnyClimbingSpotIsAssignedToUsec(int userId)
@@ -240,7 +251,7 @@ namespace ClimbingAPI.Services
             }
         }
 
-        private void VerifyUserData(int userId, string password, string operation, out User user, string newPassword = null)
+        private async Task<User> VerifyUserData(int userId, string password, string operation, string newPassword = null)
         {
             var authorizationResult = Authorize(ResourceOperation.Delete, new AccountAuthorization() { UserId = userId });
             if (!authorizationResult.Succeeded)
@@ -249,7 +260,7 @@ namespace ClimbingAPI.Services
                 throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
             }
 
-            user = GetUserById(userId);
+            var user = await GetUserById(userId);
             if (user is null)
             {
                 _logger.LogError($"ERROR for: {operation} action from AccountService. User not found.");
@@ -272,6 +283,8 @@ namespace ClimbingAPI.Services
                     throw new BadRequestException(Literals.Literals.PasswordsAreIdentical.GetDescription());
                 }
             }
+
+            return user;
         }
     }
 }
