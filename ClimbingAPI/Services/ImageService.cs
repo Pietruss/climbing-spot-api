@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ClimbingAPI.Services
@@ -91,25 +92,29 @@ namespace ClimbingAPI.Services
 
         private async Task<int> GetClimbingSpotId(int boulderId)
         {
-            var boulder = await _dbContext
+            var ClimbingSpotId = await _dbContext
                 .Boulder
-                .FirstOrDefaultAsync(x => x.Id == boulderId);
+                .Where(x => x.Id == boulderId)
+                .Select(x => x.ClimbingSpotId)
+                .FirstOrDefaultAsync();
 
-            if (boulder is null)
+            if (ClimbingSpotId == 0)
             {
                 _logger.LogError($"ERROR for: {Literals.Literals.UploadImage.GetDescription()} action from ImageService. Authorization failed.");
                 throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
             }
-            return boulder.ClimbingSpotId;
+            return ClimbingSpotId;
         }
 
         private async Task ValidateBoulder(int boulderId)
         {
             var image = await _dbContext
                 .Images
-                .FirstOrDefaultAsync(x => x.BoulderId == boulderId);
+                .Where(x => x.BoulderId == boulderId)
+                .Select(x => x.Id)
+                .FirstOrDefaultAsync();
 
-            if(image != null)
+            if(image != 0)
             {
                 _logger.LogError($"ERROR for: {Literals.Literals.UploadImage.GetDescription()} action from ImageService. Image is already assigned to boulder.");
                 throw new BadRequestException(Literals.Literals.BoulderHasAssingedImage.GetDescription());
@@ -120,13 +125,8 @@ namespace ClimbingAPI.Services
         {
             _logger.LogInformation($"INFO for: {Literals.Literals.GetImageAction.GetDescription()} action from ImageService.");
 
-            var image = await _dbContext.Images.FirstOrDefaultAsync(x => x.Id == imageId);
-            if(image is null)
-            {
-                _logger.LogError($"ERROR for: {Literals.Literals.GetImageAction.GetDescription()} action from ImageService. Image with id {imageId} not found.");
-                throw new NotFoundException(Literals.Literals.ImageNotFound.GetDescription());
-            }
-
+            var image = await GetImage(imageId); 
+            
             string imageDataURL = string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(image.ImageData));
 
             return new ImageDto()
@@ -150,9 +150,7 @@ namespace ClimbingAPI.Services
 
         private async Task<Image> GetImage(int imageId)
         {
-            var image = await _dbContext
-                .Images
-                .FirstOrDefaultAsync(x => x.Id == imageId);
+            var image = await _dbContext.Images.Where(x => x.Id == imageId).Select(x => new Image () {Id = x.Id, ImageData = x.ImageData, ImageTitle = x.ImageTitle }).FirstOrDefaultAsync();
 
             if (image == null)
             {

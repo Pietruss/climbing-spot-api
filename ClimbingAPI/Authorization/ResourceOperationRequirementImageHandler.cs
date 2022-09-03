@@ -2,6 +2,7 @@
 using ClimbingAPI.Entities;
 using ClimbingAPI.Models.Role;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -16,13 +17,16 @@ namespace ClimbingAPI.Authorization
             _dbContext = dbContext;
         }
 
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, ResourceOperationRequirement requirement, ImageAuthorization imageAuthorization)
+        protected override async Task<Task> HandleRequirementAsync(AuthorizationHandlerContext context, ResourceOperationRequirement requirement, ImageAuthorization imageAuthorization)
         {
             var userId = int.Parse(context.User.FindFirst(x => x.Type == ClaimTypes.NameIdentifier).Value);
 
             if (requirement.ResourceOperation == ResourceOperation.Create || requirement.ResourceOperation == ResourceOperation.Delete) 
             {
-                var userClimbingSpot = _dbContext.UserClimbingSpotLinks.FirstOrDefault(x => x.UserId == userId && (x.RoleId == (int)Roles.Admin || x.RoleId == (int)Roles.Manager || x.RoleId == (int)Roles.Routesetter) && x.ClimbingSpotId == imageAuthorization.ClimbingSpotId);
+                var userClimbingSpot = await _dbContext.UserClimbingSpotLinks
+                    .Where(x => x.UserId == userId && (x.RoleId == (int)Roles.Admin || x.RoleId == (int)Roles.Manager || x.RoleId == (int)Roles.Routesetter) && x.ClimbingSpotId == imageAuthorization.ClimbingSpotId)
+                    .Select(x => new UserClimbingSpotLinks() {Id = x.Id })
+                    .FirstOrDefaultAsync();
                 if (userClimbingSpot is null)
                     return Task.CompletedTask;
             }

@@ -2,6 +2,7 @@
 using ClimbingAPI.Authorization;
 using ClimbingAPI.Authorization.AuthorizationEntity;
 using ClimbingAPI.Entities;
+using ClimbingAPI.Entities.Address;
 using ClimbingAPI.Exceptions;
 using ClimbingAPI.Models.ClimbingSpot;
 using ClimbingAPI.Models.Role;
@@ -41,8 +42,10 @@ namespace ClimbingAPI.Services
 
             var climbingSpots = await _dbContext
                 .ClimbingSpot
+                .AsNoTracking()
                 .Include(x => x.Address)
                 .Include(x => x.Boulder)
+                .Select(x => new ClimbingSpot() { Id = x.Id, Name = x.Name, Description = x.Description, ContactEmail = x.ContactEmail, Address = new Address() { Street = x.Address.Street, City = x.Address.City, PostalCode = x.Address.PostalCode }, Boulder = x.Boulder })
                 .ToListAsync();
 
             var climbingSpotsDto = _mapper.Map<List<ClimbingSpotDto>>(climbingSpots);
@@ -50,30 +53,33 @@ namespace ClimbingAPI.Services
             return climbingSpotsDto;
         }
 
-        public ClimbingSpot GetClimbingSpotWithAddressAndBouldersById(int climbingSpotId)
+        public async Task<ClimbingSpot> GetClimbingSpotWithAddressAndBouldersById(int climbingSpotId)
         {
-            var climbingSpot = _dbContext
+            var climbingSpot = await _dbContext
                 .ClimbingSpot
                 .AsNoTracking()
+                .Where(x => x.Id == climbingSpotId)
                 .Include(x => x.Address)
                 .Include(x => x.Boulder)
-                .FirstOrDefault(x => x.Id == climbingSpotId);
+                .Select(x => new ClimbingSpot() { Id = x.Id, Name = x.Name, Description = x.Description, ContactEmail = x.ContactEmail, Address = new Address() { Street = x.Address.Street, City = x.Address.City, PostalCode = x.Address.PostalCode }, Boulder = x.Boulder })
+                .FirstOrDefaultAsync();
+                
 
             ValidateClimbingSpotExistance(climbingSpot, climbingSpotId);
 
             return climbingSpot;
         }
 
-        public ClimbingSpot GetAndValidateClimbingSpotById(int climbingSpotId)
+        public async Task ValidateClimbingSpotById(int climbingSpotId)
         {
-            var climbingSpot = _dbContext
+            var climbingSpot = await _dbContext
                 .ClimbingSpot
                 .AsNoTracking()
-                .FirstOrDefault(x => x.Id == climbingSpotId);
+                .Where(x => x.Id == climbingSpotId)
+                .Select(x => new ClimbingSpot() {Id = x.Id })
+                .FirstOrDefaultAsync();
 
             ValidateClimbingSpotExistance(climbingSpot, climbingSpotId);
-
-            return climbingSpot;
         }
 
         private void ValidateClimbingSpotExistance(ClimbingSpot climbingSpot, int climbingSpotId)
@@ -85,11 +91,11 @@ namespace ClimbingAPI.Services
             }
         }
 
-        public ClimbingSpotDto Get(int climbingSpotId)
+        public async Task<ClimbingSpotDto> Get(int climbingSpotId)
         {
             _logger.LogInformation($"INFO for: GET action from ClimbingSpotService. ID: \"{climbingSpotId}\".");
 
-            var climbingSpot = GetClimbingSpotWithAddressAndBouldersById(climbingSpotId);
+            var climbingSpot = await GetClimbingSpotWithAddressAndBouldersById(climbingSpotId);
             if (climbingSpot is null)
                 throw new NotFoundException($"ClimbingSpot with ID: {climbingSpotId} not found.");
 
@@ -98,7 +104,7 @@ namespace ClimbingAPI.Services
             return climbingSpotDto;
         }
 
-        public int Create(CreateClimbingSpotDto dto)
+        public async Task<int> Create(CreateClimbingSpotDto dto)
         {
             _logger.LogInformation("INFO for: CREATE action from ClimbingSpotService.");
 
@@ -114,16 +120,19 @@ namespace ClimbingAPI.Services
 
             _dbContext.SaveChanges();
 
-            AssignClimbingSpotToUser(_userContext.GetUserId, climbingSpot.Id);
+            await AssignClimbingSpotToUser(_userContext.GetUserId, climbingSpot.Id);
 
             _dbContext.SaveChanges();
 
             return climbingSpot.Id;
         }
 
-        private void AssignClimbingSpotToUser(int? userId, int climbingSpotId)
-        { 
-            var climbingSpotUser = _dbContext.UserClimbingSpotLinks.FirstOrDefault(x => x.UserId == userId && x.ClimbingSpotId == null);
+        private async Task AssignClimbingSpotToUser(int? userId, int climbingSpotId)
+        {
+            var climbingSpotUser = await _dbContext
+                .UserClimbingSpotLinks
+                .Where(x => x.UserId == userId && x.ClimbingSpotId == null)
+                .FirstOrDefaultAsync();
             if (climbingSpotUser is null && userId != null)
             {
                     var userClimbingSpotEntity = new UserClimbingSpotLinks()
@@ -162,7 +171,10 @@ namespace ClimbingAPI.Services
             climbingSpot = null;
             if(resourceOperation != ResourceOperation.Create)
             {
-                climbingSpot = _dbContext.ClimbingSpot.FirstOrDefault(x => x.Id == climbingSpotId);
+                climbingSpot = _dbContext
+                    .ClimbingSpot
+                    .FirstOrDefault(x => x.Id == climbingSpotId);
+                    
                 if (climbingSpot is null)
                 {
                     _logger.LogError($"ERROR for: {operation} action from ClimbingSpotService. Authorization failed.");
@@ -180,7 +192,10 @@ namespace ClimbingAPI.Services
 
         private void RemoveAllUserExceptFromOwner(int climbingSpotId)
         {
-            var userClimbingSpots = _dbContext.UserClimbingSpotLinks.Where(x => x.ClimbingSpotId == climbingSpotId);
+            var userClimbingSpots = _dbContext
+                .UserClimbingSpotLinks
+                .Where(x => x.ClimbingSpotId == climbingSpotId);
+                
             foreach (var user in userClimbingSpots)
             {
                 if (user.UserId == _userContext.GetUserId)
@@ -192,7 +207,7 @@ namespace ClimbingAPI.Services
 
         public void Update(UpdateClimbingSpotDto dto, int climbingSpotId)
         {
-            _logger.LogError($"INFO for: UPDATE action from ClimbingSpotService. ID: \"{climbingSpotId}\".");
+            _logger.LogInformation($"INFO for: UPDATE action from ClimbingSpotService. ID: \"{climbingSpotId}\".");
 
             VerifyUserData(climbingSpotId, ResourceOperation.Update, Literals.Literals.UpdateClimbingSpotAction.GetDescription(), out var climbingSpot);
 
@@ -208,13 +223,13 @@ namespace ClimbingAPI.Services
             _dbContext.SaveChanges();
         }
 
-        public void AssignClimbingSpotToUserWithRole(UpdateUserClimbingSpotDto dto)
+        public async Task AssignClimbingSpotToUserWithRole(UpdateUserClimbingSpotDto dto)
         {
             _logger.LogInformation("INFO for: AssignClimbingSpotToUserWithRole action from AccountService.");
 
-            Validate(dto.UserId, dto.ClimbingSpotId, dto.RoleId, _userContext.User);
+            await Validate(dto.UserId, dto.ClimbingSpotId, dto.RoleId, _userContext.User);
 
-            var userClimbingSpotEntity = GetUserClimbingSpot(dto.UserId, dto.ClimbingSpotId, dto.RoleId);
+            var userClimbingSpotEntity = await GetUserClimbingSpot(dto.UserId, dto.ClimbingSpotId, dto.RoleId);
 
             if (userClimbingSpotEntity is null)
             {
@@ -239,30 +254,49 @@ namespace ClimbingAPI.Services
             _dbContext.SaveChanges();
         }
 
-        private UserClimbingSpotLinks GetUserClimbingSpot(int userId, int climbingSpotId, int roleId)
+        private async Task<UserClimbingSpotLinks> GetUserClimbingSpot(int userId, int climbingSpotId, int roleId)
         {
-            return _dbContext.UserClimbingSpotLinks.FirstOrDefault(x => (x.UserId == userId && x.ClimbingSpotId == null) || (x.UserId == userId && x.ClimbingSpotId == climbingSpotId && x.RoleId != roleId));
+            return await _dbContext
+                .UserClimbingSpotLinks
+                .Where(x => (x.UserId == userId && x.ClimbingSpotId == null) || (x.UserId == userId && x.ClimbingSpotId == climbingSpotId && x.RoleId != roleId))
+                .Select(x => new UserClimbingSpotLinks() { Id = x.Id })
+                .FirstOrDefaultAsync();
         }
 
-        private void Validate(int userId, int climbingSpotId, int roleId, ClaimsPrincipal userPrincipal)
+        private async Task Validate(int userId, int climbingSpotId, int roleId, ClaimsPrincipal userPrincipal)
         {
-            var user = _dbContext.User.FirstOrDefault(x => x.Id == userId);
+            var user = await _dbContext
+                .User
+                .Where(x => x.Id == userId)
+                .Select(x => new User() { Id = x.Id })
+                .FirstOrDefaultAsync();
             if (user is null)
                 throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
 
-            var climbingSpot = _dbContext.ClimbingSpot.FirstOrDefault(x => x.Id == climbingSpotId);
+            var climbingSpot = await _dbContext
+                .ClimbingSpot
+                .Where(x => x.Id == climbingSpotId)
+                .Select(x => new ClimbingSpot() { Id = x.Id })
+                .FirstOrDefaultAsync();
             if (climbingSpot is null)
                 throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
 
             //checking if user is assigned to climbing spot. If not means that is not a manager or admin in that climbingSpot
             var userClaimId = userPrincipal.FindFirst(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            var userAssignedToClimbingSpot = _dbContext.UserClimbingSpotLinks.FirstOrDefault(x =>
-                x.UserId == int.Parse(userClaimId) && x.ClimbingSpotId == climbingSpotId && (x.RoleId == (int)Roles.Admin || x.RoleId == (int)Roles.Manager));
+            var userAssignedToClimbingSpot = await _dbContext
+                .UserClimbingSpotLinks
+                .Where(x =>
+                x.UserId == int.Parse(userClaimId) && x.ClimbingSpotId == climbingSpotId && (x.RoleId == (int)Roles.Admin || x.RoleId == (int)Roles.Manager))
+                .Select(x => new UserClimbingSpotLinks() { Id = x.Id })
+                .FirstOrDefaultAsync();
             if (userAssignedToClimbingSpot is null)
                 throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
 
-            var userClimbingSpotEntity =
-                _dbContext.UserClimbingSpotLinks.FirstOrDefault(x => x.UserId == userId && x.ClimbingSpotId == climbingSpotId && x.RoleId == roleId);
+            var userClimbingSpotEntity = await _dbContext
+                .UserClimbingSpotLinks
+                .Where(x => x.UserId == userId && x.ClimbingSpotId == climbingSpotId && x.RoleId == roleId)
+                .Select(x => new UserClimbingSpotLinks() { Id = x.Id })
+                .FirstOrDefaultAsync();
             if (userClimbingSpotEntity is not null)
                 throw new BadRequestException(
                     $"User with ID: {userId} already assigned to climbing spot with ID: {climbingSpotId}.");
@@ -274,12 +308,14 @@ namespace ClimbingAPI.Services
                 new ResourceOperationRequirement(resourceOperation)).Result;
         }
 
-        public async Task<List<ClimbingSpot>> GetClimbingSpotAssignedToUser(int userId)
+        public async Task<List<int>> GetClimbingSpotAssignedToUser(int userId)
         {
             return await _dbContext
                 .ClimbingSpot
                 .AsNoTracking()
-                .Where(x => x.CreatedById == userId).ToListAsync();
+                .Where(x => x.CreatedById == userId)
+                .Select(x => x.Id)
+                .ToListAsync();
         }
     }
 }

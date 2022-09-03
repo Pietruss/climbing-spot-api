@@ -9,13 +9,13 @@ namespace ClimbingAPI.Services.Interfaces
     public interface IClimbingSpotService
     {
         Task<IEnumerable<ClimbingSpotDto>> GetAll();
-        ClimbingSpotDto Get(int climbingSpotId);
-        int Create(CreateClimbingSpotDto dto);
+        Task<ClimbingSpotDto> Get(int climbingSpotId);
+        Task<int> Create(CreateClimbingSpotDto dto);
         void Delete(int climbingSpotId);
         void Update(UpdateClimbingSpotDto dto, int climbingSpotId);
-        void AssignClimbingSpotToUserWithRole(UpdateUserClimbingSpotDto dto);
-        Task<List<ClimbingSpot>> GetClimbingSpotAssignedToUser(int userId);
-        ClimbingSpot GetAndValidateClimbingSpotById(int climbingSpotId);
-        ClimbingSpot GetClimbingSpotWithAddressAndBouldersById(int climbingSpotId);
+        Task AssignClimbingSpotToUserWithRole(UpdateUserClimbingSpotDto dto);
+        Task<List<int>> GetClimbingSpotAssignedToUser(int userId);
+        Task ValidateClimbingSpotById(int climbingSpotId);
+        Task<ClimbingSpot> GetClimbingSpotWithAddressAndBouldersById(int climbingSpotId);
     }
 }
