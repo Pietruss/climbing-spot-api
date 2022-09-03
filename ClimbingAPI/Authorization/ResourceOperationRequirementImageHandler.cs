@@ -25,9 +25,9 @@ namespace ClimbingAPI.Authorization
             {
                 var userClimbingSpot = await _dbContext.UserClimbingSpotLinks
                     .Where(x => x.UserId == userId && (x.RoleId == (int)Roles.Admin || x.RoleId == (int)Roles.Manager || x.RoleId == (int)Roles.Routesetter) && x.ClimbingSpotId == imageAuthorization.ClimbingSpotId)
-                    .Select(x => x.Id)
+                    .Select(x => new UserClimbingSpotLinks() {Id = x.Id })
                     .FirstOrDefaultAsync();
-                if (userClimbingSpot == 0)
+                if (userClimbingSpot is null)
                     return Task.CompletedTask;
             }
 

@@ -32,16 +32,16 @@ namespace ClimbingAPI.Controllers
         [HttpGet("{climbingSpotId}")]
         [AllowAnonymous]
         [ResponseCache(Duration = 1200)]
-        public ActionResult<ClimbingSpotDto> Get([FromRoute]int climbingSpotId)
+        public async Task<ActionResult<ClimbingSpotDto>> Get([FromRoute]int climbingSpotId)
         {
-            var climbingSpot =_service.Get(climbingSpotId);
+            var climbingSpot = await _service.Get(climbingSpotId);
             return Ok(climbingSpot);
         }
 
         [HttpPost]
-        public ActionResult Create([FromBody]CreateClimbingSpotDto dto)
+        public async Task<ActionResult> Create([FromBody]CreateClimbingSpotDto dto)
         {
-            var id = _service.Create(dto);
+            var id = await _service.Create(dto);
             return Created($"/climbingSpot/{id}", null);
         }
 
@@ -60,9 +60,9 @@ namespace ClimbingAPI.Controllers
         }
 
         [HttpPost("assign-climbing-spot")]
-        public ActionResult AssignClimbingSpotToUser([FromBody] UpdateUserClimbingSpotDto dto)
+        public async Task<ActionResult> AssignClimbingSpotToUser([FromBody] UpdateUserClimbingSpotDto dto)
         {
-            _service.AssignClimbingSpotToUserWithRole(dto);
+            await _service.AssignClimbingSpotToUserWithRole(dto);
             return Ok();
         }
     }
