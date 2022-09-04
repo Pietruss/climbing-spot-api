@@ -46,9 +46,9 @@ namespace ClimbingAPI.Controllers
         }
 
         [HttpDelete("{climbingSpotId}")]
-        public ActionResult Delete([FromRoute] int climbingSpotId)
+        public async Task<ActionResult> Delete([FromRoute] int climbingSpotId)
         {
-            _service.Delete(climbingSpotId);
+            await _service.Delete(climbingSpotId);
             return NoContent();
         }
 
