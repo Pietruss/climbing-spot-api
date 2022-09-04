@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClimbingAPI", "ClimbingAPI.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClimbingAPI.Tests", "..\ClimbingAPI.Tests\ClimbingAPI.Tests.csproj", "{78026580-F3CA-49CC-8679-07393F5C0EDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmark", "..\Benchmark\Benchmark.csproj", "{97DFA172-8232-4121-8D47-A2D886D8EEEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmark", "..\Benchmark\Benchmark.csproj", "{97DFA172-8232-4121-8D47-A2D886D8EEEB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

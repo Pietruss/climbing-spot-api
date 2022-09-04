@@ -9,6 +9,7 @@ using ClimbingAPI.Models.Role;
 using ClimbingAPI.Models.UserClimbingSpot;
 using ClimbingAPI.Services.Interfaces;
 using ClimbingAPI.Utils;
+using EntityManager;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -154,13 +155,14 @@ namespace ClimbingAPI.Services
             }
         }
 
-        public void Delete(int climbingSpotId)
+        public async Task Delete(int climbingSpotId)
         {
             _logger.LogInformation($"INFO for: DELETE action from ClimbingSpotService. ID: \"{climbingSpotId}\".");
 
             VerifyUserData(climbingSpotId, ResourceOperation.Delete, Literals.Literals.DeleteClimbingSpotAction.GetDescription(), out var climbingSpot);
 
-            RemoveAllUserExceptFromOwner(climbingSpotId);
+            var userClimbingSpotManager = new UserClimbingSpotManager(_dbContext);
+            await userClimbingSpotManager.ManageUserClimbingSpotEntities(climbingSpotId, _userContext.GetUserId);
 
             _dbContext.ClimbingSpot.Remove(climbingSpot);
             _dbContext.SaveChanges();
@@ -187,21 +189,6 @@ namespace ClimbingAPI.Services
             {
                 _logger.LogError($"ERROR for: {operation} action from ClimbingSpotService. Authorization failed.");
                 throw new UnAuthorizeException(Literals.Literals.AuthorizationFailed.GetDescription());
-            }
-        }
-
-        private void RemoveAllUserExceptFromOwner(int climbingSpotId)
-        {
-            var userClimbingSpots = _dbContext
-                .UserClimbingSpotLinks
-                .Where(x => x.ClimbingSpotId == climbingSpotId);
-                
-            foreach (var user in userClimbingSpots)
-            {
-                if (user.UserId == _userContext.GetUserId)
-                    user.ClimbingSpotId = null;
-                else
-                    _dbContext.UserClimbingSpotLinks.Remove(user);
             }
         }
 
@@ -259,7 +246,6 @@ namespace ClimbingAPI.Services
             return await _dbContext
                 .UserClimbingSpotLinks
                 .Where(x => (x.UserId == userId && x.ClimbingSpotId == null) || (x.UserId == userId && x.ClimbingSpotId == climbingSpotId && x.RoleId != roleId))
-                .Select(x => new UserClimbingSpotLinks() { Id = x.Id })
                 .FirstOrDefaultAsync();
         }
 

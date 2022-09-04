@@ -11,7 +11,7 @@ namespace ClimbingAPI.Services.Interfaces
         Task<IEnumerable<ClimbingSpotDto>> GetAll();
         Task<ClimbingSpotDto> Get(int climbingSpotId);
         Task<int> Create(CreateClimbingSpotDto dto);
-        void Delete(int climbingSpotId);
+        Task Delete(int climbingSpotId);
         void Update(UpdateClimbingSpotDto dto, int climbingSpotId);
         Task AssignClimbingSpotToUserWithRole(UpdateUserClimbingSpotDto dto);
         Task<List<int>> GetClimbingSpotAssignedToUser(int userId);
