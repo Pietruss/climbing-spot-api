@@ -29,7 +29,7 @@ namespace ClimbingAPI.Tests
         };
 
         private readonly HttpClient _client;
-        private Mock<IAccountService> _accountServiceMock = new Mock<IAccountService>();
+        private readonly Mock<IAccountService> _accountServiceMock = new();
         private readonly WebApplicationFactory<Startup> _factory;
 
         public AccountControllerTests(WebApplicationFactory<Startup> factory)
@@ -104,8 +104,8 @@ namespace ClimbingAPI.Tests
         public void GenerateClaims_ForGivenUser_ReturnsFilledValuesInClaimsList(DateTime? dateOfBirth, string email, string firstName, string lastName, int id)
         {
             // arrange
-            AccountServiceJwtHelper accountService = new AccountServiceJwtHelper();
-            User userTemplate = new User
+            AccountServiceJwtHelper accountService = new();
+            User userTemplate = new()
             {
                  DateOfBirth = dateOfBirth,
                  Email = email,
@@ -113,7 +113,7 @@ namespace ClimbingAPI.Tests
                  LastName = lastName,
                  Id = id
             };
-            List<Claim> initialClaimsList = new List<Claim>
+            List<Claim> initialClaimsList = new()
             {
                 new Claim(ClaimTypes.NameIdentifier, userTemplate.Id.ToString()),
                 new Claim(ClaimTypes.Name, $"{userTemplate.FirstName} {userTemplate.LastName}"),

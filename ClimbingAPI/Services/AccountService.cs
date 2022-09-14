@@ -7,17 +7,10 @@ using ClimbingAPI.Models.User;
 using ClimbingAPI.Services.Helpers.AccountServiceHelpers.Interfaces;
 using ClimbingAPI.Services.Interfaces;
 using ClimbingAPI.Utils;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ClimbingAPI.Services
@@ -28,10 +21,6 @@ namespace ClimbingAPI.Services
         private readonly ILogger<AccountService> _logger;
         private readonly ClimbingDbContext _dbContext;
         private readonly IPasswordHasher<User> _passwordHasher;
-        private readonly AuthenticationSettings _settings;
-        private readonly IAuthorizationService _authorizationService;
-        private readonly IUserContextService _userContext;
-        private readonly IClimbingSpotService _climbingSpotService;
         private readonly IAccountServiceGetDataHelper _accountServiceGetDataHelper;
         private readonly IAccountServiceUpdateHelper _accountServiceUpdateHelper;
         private readonly IAccountServiceJwtHelper _accountServiceJwtHelper;
@@ -42,16 +31,12 @@ namespace ClimbingAPI.Services
         {
             
         }
-        public AccountService(IMapper mapper, ILogger<AccountService> logger, ClimbingDbContext dbContext, IPasswordHasher<User> passwordHasher, AuthenticationSettings settings, IAuthorizationService authorizationService, IUserContextService userContext, IClimbingSpotService climbingSpotService, IAccountServiceGetDataHelper accountServiceGetDataHelper, IAccountServiceUpdateHelper accountServiceUpdateHelper, IAccountServiceJwtHelper accountServiceJwtHelper, IAccountServiceVerifier accountServiceVerifier, IAccountServiceCreateAndRemoveHelper accountServiceCreateAndRemoveHelper)
+        public AccountService(IMapper mapper, ILogger<AccountService> logger, ClimbingDbContext dbContext, IPasswordHasher<User> passwordHasher, IAccountServiceGetDataHelper accountServiceGetDataHelper, IAccountServiceUpdateHelper accountServiceUpdateHelper, IAccountServiceJwtHelper accountServiceJwtHelper, IAccountServiceVerifier accountServiceVerifier, IAccountServiceCreateAndRemoveHelper accountServiceCreateAndRemoveHelper)
         {
             _mapper = mapper;
             _logger = logger;
             _dbContext = dbContext;
             _passwordHasher = passwordHasher;
-            _settings = settings;
-            _authorizationService = authorizationService;
-            _userContext = userContext;
-            _climbingSpotService = climbingSpotService;
             _accountServiceGetDataHelper = accountServiceGetDataHelper;
             _accountServiceUpdateHelper = accountServiceUpdateHelper;
             _accountServiceJwtHelper = accountServiceJwtHelper;

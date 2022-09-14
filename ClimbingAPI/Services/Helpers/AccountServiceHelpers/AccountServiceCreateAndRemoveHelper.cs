@@ -6,7 +6,7 @@ namespace ClimbingAPI.Services.Helpers.AccountServiceHelpers
 {
     public class AccountServiceCreateAndRemoveHelper: IAccountServiceCreateAndRemoveHelper
     {
-        private IAccountServiceGetDataHelper _accountServiceGetDataHelper;
+        private readonly IAccountServiceGetDataHelper _accountServiceGetDataHelper;
         private readonly ClimbingDbContext _dbContext;
 
         public AccountServiceCreateAndRemoveHelper(IAccountServiceGetDataHelper accountServiceGetDataHelper, ClimbingDbContext dbContext)

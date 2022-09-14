@@ -108,10 +108,9 @@ namespace ClimbingAPI.Services
         public async Task<int> Create(CreateClimbingSpotDto dto)
         {
             _logger.LogInformation("INFO for: CREATE action from ClimbingSpotService.");
+            VerifyUserData(0, ResourceOperation.Create, Literals.Literals.CreateClimbingSpotAction.GetDescription(), out _);
 
-            VerifyUserData(0, ResourceOperation.Create, Literals.Literals.CreateClimbingSpotAction.GetDescription(), out var climbingSpot);
-
-            climbingSpot = _mapper.Map<ClimbingSpot>(dto);
+            ClimbingSpot climbingSpot = _mapper.Map<ClimbingSpot>(dto);
             climbingSpot.CreatedById = _userContext.GetUserId;
 
             _dbContext.ClimbingSpot.Add(climbingSpot);
@@ -184,7 +183,7 @@ namespace ClimbingAPI.Services
                 }
             }
 
-            var authorizationResult = Authorize(resourceOperation, new ClimbingSpotAuthorization() { CreatedById = climbingSpot != null ? climbingSpot.CreatedById : null });
+            var authorizationResult = Authorize(resourceOperation, new ClimbingSpotAuthorization() { CreatedById = climbingSpot?.CreatedById });
             if (!authorizationResult.Succeeded)
             {
                 _logger.LogError($"ERROR for: {operation} action from ClimbingSpotService. Authorization failed.");
