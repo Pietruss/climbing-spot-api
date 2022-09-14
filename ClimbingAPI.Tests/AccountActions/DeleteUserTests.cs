@@ -65,7 +65,7 @@ namespace ClimbingAPI.Tests.AccountActions
         [Fact]
         public async Task DeleteUser_ForGivenUser_ReturnsNoContentStatus()
         {
-            Seed(out User user, out DeleteUserDto deleteUserDto, out HttpContent httpContent);
+            Seed(out _, out _, out HttpContent httpContent);
 
             //act
             var result = await _client.PostAsync($"/account/delete-user/1", httpContent);
@@ -77,7 +77,7 @@ namespace ClimbingAPI.Tests.AccountActions
         [Fact]
         public async Task DeleteUser_ForUserWithExisitingClimbingSpot_ReturnsBadRequest()
         {
-            Seed(out User user, out DeleteUserDto deleteUserDto, out HttpContent httpContent);
+            Seed(out User user, out _, out HttpContent httpContent);
 
             var userClimbingSpot = new ClimbingSpot()
             {

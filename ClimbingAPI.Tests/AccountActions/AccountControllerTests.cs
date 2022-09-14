@@ -1,6 +1,7 @@
 using ClimbingAPI.Entities;
 using ClimbingAPI.Models.User;
 using ClimbingAPI.Services;
+using ClimbingAPI.Services.Helpers;
 using ClimbingAPI.Services.Interfaces;
 using ClimbingAPI.Tests.Helpers;
 using FluentAssertions;
@@ -28,7 +29,7 @@ namespace ClimbingAPI.Tests
         };
 
         private readonly HttpClient _client;
-        private Mock<IAccountService> _accountServiceMock = new Mock<IAccountService>();
+        private readonly Mock<IAccountService> _accountServiceMock = new();
         private readonly WebApplicationFactory<Startup> _factory;
 
         public AccountControllerTests(WebApplicationFactory<Startup> factory)
@@ -103,8 +104,8 @@ namespace ClimbingAPI.Tests
         public void GenerateClaims_ForGivenUser_ReturnsFilledValuesInClaimsList(DateTime? dateOfBirth, string email, string firstName, string lastName, int id)
         {
             // arrange
-            AccountService accountService = new AccountService();
-            User userTemplate = new User
+            AccountServiceJwtHelper accountService = new();
+            User userTemplate = new()
             {
                  DateOfBirth = dateOfBirth,
                  Email = email,
@@ -112,7 +113,7 @@ namespace ClimbingAPI.Tests
                  LastName = lastName,
                  Id = id
             };
-            List<Claim> initialClaimsList = new List<Claim>
+            List<Claim> initialClaimsList = new()
             {
                 new Claim(ClaimTypes.NameIdentifier, userTemplate.Id.ToString()),
                 new Claim(ClaimTypes.Name, $"{userTemplate.FirstName} {userTemplate.LastName}"),
@@ -141,7 +142,7 @@ namespace ClimbingAPI.Tests
         {
             // arrange
              _accountServiceMock
-                 .Setup(e => e.GenerateJwt(It.IsAny<LoginUserDto>())).ReturnsAsync("jwt");
+                 .Setup(e => e.Login(It.IsAny<LoginUserDto>())).ReturnsAsync("jwt");
 
             var loginDto = new LoginUserDto
             {

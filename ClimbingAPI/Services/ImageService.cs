@@ -23,7 +23,7 @@ namespace ClimbingAPI.Services
         private readonly IUserContextService _userContext;
         private readonly IAuthorizationService _authorizationService;
 
-        public ImageService(ILogger<ImageService> logger, ClimbingDbContext dbContext, IUserContextService userContext, IBoulderService boulderService, IAuthorizationService authorizationService)
+        public ImageService(ILogger<ImageService> logger, ClimbingDbContext dbContext, IUserContextService userContext, IAuthorizationService authorizationService)
         {
             _logger = logger;
             _dbContext = dbContext;
@@ -40,7 +40,7 @@ namespace ClimbingAPI.Services
 
             ValidateImage(img);
 
-            MemoryStream ms = new MemoryStream();
+            MemoryStream ms = new();
             img.CopyTo(ms);
 
             await ValidateBoulder(boulderId);
@@ -62,7 +62,7 @@ namespace ClimbingAPI.Services
             }
         }
 
-        private Image CreateNewImage(IFormFile img, int boulderId, byte[] imageData)
+        private static Image CreateNewImage(IFormFile img, int boulderId, byte[] imageData)
         {
            return new Image()
             {

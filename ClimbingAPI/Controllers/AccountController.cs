@@ -28,7 +28,7 @@ namespace ClimbingAPI.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> Login([FromBody]LoginUserDto dto)
         {
-            var token = await _service.GenerateJwt(dto);
+            var token = await _service.Login(dto);
             return Ok(token);
         }
 

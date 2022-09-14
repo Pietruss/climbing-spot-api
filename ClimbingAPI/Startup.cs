@@ -7,6 +7,9 @@ using ClimbingAPI.Models.User;
 using ClimbingAPI.Models.UserClimbingSpot;
 using ClimbingAPI.Models.Validator;
 using ClimbingAPI.Services;
+using ClimbingAPI.Services.Helpers;
+using ClimbingAPI.Services.Helpers.AccountServiceHelpers;
+using ClimbingAPI.Services.Helpers.AccountServiceHelpers.Interfaces;
 using ClimbingAPI.Services.Interfaces;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -69,6 +72,12 @@ namespace ClimbingAPI
             services.AddScoped<IBoulderService, BoulderService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IImageService, ImageService>();
+
+            services.AddScoped<IAccountServiceVerifier, AccountServiceVerifier>();
+            services.AddScoped<IAccountServiceJwtHelper, AccountServiceJwtHelper>();
+            services.AddScoped<IAccountServiceUpdateHelper, AccountServiceUpdateHelper>();
+            services.AddScoped<IAccountServiceGetDataHelper, AccountServiceGetDataHelper>();
+            services.AddScoped<IAccountServiceCreateAndRemoveHelper, AccountServiceCreateAndRemoveHelper>();
             #endregion
 
             #region Validators
