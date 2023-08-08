@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Text;
 using ClimbingAPI.Authorization;
 using ClimbingAPI.Entities;
@@ -104,9 +105,9 @@ namespace ClimbingAPI
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddScoped<ErrorHandlingMiddleware>();
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-            services.AddDbContext<ClimbingDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DbConnection")));
+            services.AddDbContext<ClimbingDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddScoped<UserRoleSeeder>();
+            //services.AddScoped<UserRoleSeeder>();
 
             services.AddScoped<IUserContextService, UserContextService>();
             services.AddHttpContextAccessor();
@@ -124,11 +125,11 @@ namespace ClimbingAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserRoleSeeder seeder)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ClimbingDbContext context)
         {
             app.UseResponseCaching();
             app.UseCors("FrontEndClient");
-            seeder.Seed();
+            //seeder.Seed();
 
             if (env.IsDevelopment())
             {
@@ -156,6 +157,11 @@ namespace ClimbingAPI
             {
                 endpoints.MapControllers();
             });
+
+            if (context.Database.GetPendingMigrations().Any())
+            {
+                context.Database.Migrate();
+            }
         }
     }
 }

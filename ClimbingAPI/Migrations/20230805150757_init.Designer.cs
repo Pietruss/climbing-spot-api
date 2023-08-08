@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClimbingAPI.Migrations
 {
     [DbContext(typeof(ClimbingDbContext))]
-    [Migration("20220408170716_drop-roleid-from-user-table")]
-    partial class droproleidfromusertable
+    [Migration("20230805150757_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,15 +28,21 @@ namespace ClimbingAPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Author")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModificationTime")
+                    b.Property<string>("CreatedByUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationDateTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ModificationDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedByUserId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PostalCode")
                         .HasColumnType("nvarchar(max)");
@@ -56,14 +62,17 @@ namespace ClimbingAPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Author")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("ClimbingSpotId")
                         .HasColumnType("int");
 
                     b.Property<int?>("CreatedById")
                         .HasColumnType("int");
+
+                    b.Property<string>("CreatedByUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationDateTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -71,8 +80,11 @@ namespace ClimbingAPI.Migrations
                     b.Property<string>("Level")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModificationTime")
+                    b.Property<DateTime>("ModificationDateTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedByUserId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -97,9 +109,6 @@ namespace ClimbingAPI.Migrations
                     b.Property<int>("AddressId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Author")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ContactEmail")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -111,14 +120,20 @@ namespace ClimbingAPI.Migrations
                     b.Property<int?>("CreatedById")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CreatedById1")
-                        .HasColumnType("int");
+                    b.Property<string>("CreatedByUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationDateTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModificationTime")
+                    b.Property<DateTime>("ModificationDateTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedByUserId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -130,9 +145,45 @@ namespace ClimbingAPI.Migrations
                     b.HasIndex("AddressId")
                         .IsUnique();
 
-                    b.HasIndex("CreatedById1");
+                    b.HasIndex("CreatedById");
 
                     b.ToTable("ClimbingSpot");
+                });
+
+            modelBuilder.Entity("ClimbingAPI.Entities.Image", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BoulderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedByUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ModificationDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedByUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BoulderId")
+                        .IsUnique();
+
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("ClimbingAPI.Entities.Role", b =>
@@ -141,6 +192,18 @@ namespace ClimbingAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatedByUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ModificationDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedByUserId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -158,15 +221,18 @@ namespace ClimbingAPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ClimbingSpotId")
-                        .HasColumnType("int");
+                    b.Property<string>("CreatedByUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationDateTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -176,15 +242,18 @@ namespace ClimbingAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("ModificationDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedByUserId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RoleId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("Email");
 
                     b.ToTable("User");
                 });
@@ -199,6 +268,18 @@ namespace ClimbingAPI.Migrations
                     b.Property<int?>("ClimbingSpotId")
                         .HasColumnType("int");
 
+                    b.Property<string>("CreatedByUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ModificationDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedByUserId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("RoleId")
                         .HasColumnType("int");
 
@@ -206,6 +287,10 @@ namespace ClimbingAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClimbingSpotId", "UserId");
+
+                    b.HasIndex("ClimbingSpotId", "UserId", "RoleId");
 
                     b.ToTable("UserClimbingSpotLinks");
                 });
@@ -235,25 +320,32 @@ namespace ClimbingAPI.Migrations
 
                     b.HasOne("ClimbingAPI.Entities.User", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById1");
+                        .HasForeignKey("CreatedById");
 
                     b.Navigation("Address");
 
                     b.Navigation("CreatedBy");
                 });
 
-            modelBuilder.Entity("ClimbingAPI.Entities.User", b =>
+            modelBuilder.Entity("ClimbingAPI.Entities.Image", b =>
                 {
-                    b.HasOne("ClimbingAPI.Entities.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId");
+                    b.HasOne("ClimbingAPI.Entities.Boulder.Boulder", "Boulder")
+                        .WithOne("Image")
+                        .HasForeignKey("ClimbingAPI.Entities.Image", "BoulderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Role");
+                    b.Navigation("Boulder");
                 });
 
             modelBuilder.Entity("ClimbingAPI.Entities.Address.Address", b =>
                 {
                     b.Navigation("ClimbingSpot");
+                });
+
+            modelBuilder.Entity("ClimbingAPI.Entities.Boulder.Boulder", b =>
+                {
+                    b.Navigation("Image");
                 });
 
             modelBuilder.Entity("ClimbingAPI.Entities.ClimbingSpot", b =>

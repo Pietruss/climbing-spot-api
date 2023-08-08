@@ -1,13 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31112.23
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClimbingAPI", "ClimbingAPI.csproj", "{32A6F21F-934B-422D-A930-6617DC37EA67}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClimbingAPI.Tests", "..\ClimbingAPI.Tests\ClimbingAPI.Tests.csproj", "{78026580-F3CA-49CC-8679-07393F5C0EDA}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmark", "..\Benchmark\Benchmark.csproj", "{97DFA172-8232-4121-8D47-A2D886D8EEEB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +15,6 @@ Global
 		{32A6F21F-934B-422D-A930-6617DC37EA67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32A6F21F-934B-422D-A930-6617DC37EA67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32A6F21F-934B-422D-A930-6617DC37EA67}.Release|Any CPU.Build.0 = Release|Any CPU
-		{78026580-F3CA-49CC-8679-07393F5C0EDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{78026580-F3CA-49CC-8679-07393F5C0EDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{78026580-F3CA-49CC-8679-07393F5C0EDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{78026580-F3CA-49CC-8679-07393F5C0EDA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{97DFA172-8232-4121-8D47-A2D886D8EEEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{97DFA172-8232-4121-8D47-A2D886D8EEEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{97DFA172-8232-4121-8D47-A2D886D8EEEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{97DFA172-8232-4121-8D47-A2D886D8EEEB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
